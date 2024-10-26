@@ -21,10 +21,10 @@ namespace SnakeGame
 		backGroundMusic.openFromFile(settings->soundPath + "Clinthammer__Background_Music.wav");
 #endif
 		backGroundMusic.setLoop(true);
-		loadSound(SoundType::OnKeyHit, "Owlstorm__Snake_hit.wav");
-		loadSound(SoundType::OnLose, "Maodin204__Lose.wav");
-		loadSound(SoundType::OnSnakeHit, "Theevilsocks__menu-hover.wav");
-		loadSound(SoundType::OnSessionStart, "Timgormly__Enter.wav");
+		LoadSound(SoundType::OnKeyHit, "Owlstorm__Snake_hit.wav");
+		LoadSound(SoundType::OnLose, "Maodin204__Lose.wav");
+		LoadSound(SoundType::OnSnakeHit, "Theevilsocks__menu-hover.wav");
+		LoadSound(SoundType::OnSessionStart, "Timgormly__Enter.wav");
 	}
 
 	bool Game::IsGameShuttingDown() const
@@ -136,7 +136,7 @@ namespace SnakeGame
 		return lastSessionScore;
 	}
 
-	void Game::loadSound(const SoundType type, std::string fileName)
+	void Game::LoadSound(const SoundType type, std::string fileName)
 	{
 		Settings* settings = Settings::GetSettings();
 		soundBuffers.push_back(std::make_unique<sf::SoundBuffer>());

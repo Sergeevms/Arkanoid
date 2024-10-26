@@ -10,24 +10,6 @@ namespace SnakeGame
 		None, Left, Up, Rigth, Down
 	};
 
-	const static std::unordered_map<Direction, sf::Vector2f> directionVectorsF
-	{
-		{Direction::Up, {0.f, -1.f}},
-		{Direction::Down, {0.f, 1.f}},
-		{Direction::Left, {-1.f, 0.f}},
-		{Direction::Rigth, {1.f, 0.f}}
-	};
-
-	const static std::unordered_map<Direction, sf::Vector2i> directionVectorsI
-	{
-		{Direction::Up, {0, -1}},
-		{Direction::Down, {0, 1}},
-		{Direction::Left, {-1, 0}},
-		{Direction::Rigth, {1, 0}}
-	};
-	
-	Direction OppossiteDirection(Direction);
-
 	enum class RelativePosition
 	{
 		TopLeft, TopMiddle, TopRight, MiddleLeft, Center, BottomLeft
@@ -52,15 +34,7 @@ namespace SnakeGame
 	{
 		Min, Middle, Max
 	};
-
-	const static std::unordered_map<Direction, float> directionToRotation
-	{
-		{Direction::Up, 0.f},
-		{Direction::Rigth, 90.f},
-		{Direction::Down, 180.f},
-		{Direction::Left, 270.f}
-	};
-
+		
 	struct TextStyle
 	{
 		sf::Font font;

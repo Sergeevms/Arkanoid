@@ -19,12 +19,6 @@
     <Filter Include="Source Files\GameStates">
       <UniqueIdentifier>{337d211a-af8c-4896-a98c-3fe10af36e5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Map">
-      <UniqueIdentifier>{6d03eb9b-f128-4c91-81e0-d73d3ac0129f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Map">
-      <UniqueIdentifier>{a90b170a-c6dc-4dfc-b2d7-ab61ca8954a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\InputHandlers">
       <UniqueIdentifier>{d71025c1-19cf-46e0-8415-5a36c300b5a3}</UniqueIdentifier>
     </Filter>
@@ -51,18 +45,6 @@
     <ClCompile Include="PlayingState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="MapObject.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Apple.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="PlayingInputHandler.cpp">
       <Filter>Source Files\InputHandlers</Filter>
-    </ClCompile>
-    <ClCompile Include="Snake.cpp">
-      <Filter>Source Files\Map</Filter>
     </ClCompile>
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files</Filter>
@@ -143,26 +122,11 @@
     <ClInclude Include="PlayingState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="MapObject.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Apple.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files\Map</Filter>
-    </ClInclude>
     <ClInclude Include="BaseInputHandler.h">
       <Filter>Header Files\InputHandlers</Filter>
     </ClInclude>
     <ClInclude Include="PlayingInputHandler.h">
       <Filter>Header Files\InputHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="Snake.h">
-      <Filter>Header Files\Map</Filter>
     </ClInclude>
     <ClInclude Include="PauseState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -206,15 +170,5 @@
     <ClInclude Include="IListDrawable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Levels\generateSnake.lvl" />
-    <None Include="Resources\Levels\firstLevel.lvl" />
-    <None Include="Resources\Levels\micro2.lvl" />
-    <None Include="Resources\Levels\micro.lvl" />
-    <None Include="Resources\Levels\TemporaryWall.lvlt" />
-    <None Include="Resources\Levels\TemporaryWallSmaller.lvlt" />
-    <None Include="Resources\Levels\secondLevel.lvl" />
-    <None Include="Resources\Levels\generateSnakeMini.lvl" />
   </ItemGroup>
 </Project>

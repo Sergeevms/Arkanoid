@@ -80,7 +80,7 @@ namespace SnakeGame
 		{
 			for (int i = 1; i <= settings->bigRecordsSize; ++i)
 			{
-				recordTable.insert({ settings->defaultPlayerName, i * settings->difficultyToScore.at(settings->difficultyLevelCount - 1)});
+				recordTable.insert({ settings->defaultPlayerName, i * 10});
 			}
 		}
 	}

@@ -13,8 +13,6 @@ namespace SnakeGame
 		MainMenu();
 		virtual ~MainMenu() = default;
 		void SwitchChecked();
-		int GetSelectedDifficulty();
-		void SwitchLevelMode();
 	private:
 		CheckBoxMenuNode* InitializeCheckBoxNode(MenuNode* parent, const std::wstring& newName, bool checked, float spacing, const sf::Texture& checkTexture,
 			TextStyle* nodeStyle = nullptr, MenuNodeActivateReaction reaction = MenuNodeActivateReaction::None, bool* correspondingOption = nullptr, MenuStyle* newSubMenuStyle = nullptr);

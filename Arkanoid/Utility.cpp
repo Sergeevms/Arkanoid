@@ -17,35 +17,6 @@ namespace SnakeGame
         characterSize = newSize;
     }
 
-    Direction SnakeGame::OppossiteDirection(Direction direction)
-    {
-        switch (direction)
-        {
-        case Direction::Left:
-        {
-            return Direction::Rigth;
-            break;
-        }
-        case Direction::Rigth:
-        {
-            return Direction::Left;
-            break;
-        }
-        case Direction::Up:
-        {
-            return Direction::Down;
-            break;
-        }
-        case Direction::Down:
-        {
-            return Direction::Up;
-            break;
-        }
-        default:
-            return Direction::None;
-        }
-    }
-
     void LoadTexture(std::string const& fileName, sf::Texture& texture)
     {
 #ifndef NDEBUG

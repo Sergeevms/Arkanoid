@@ -50,6 +50,6 @@ namespace SnakeGame
 		std::vector<std::unique_ptr<BaseState>> stateStack;
 		std::vector<std::unique_ptr<sf::SoundBuffer>> soundBuffers;
 		std::unordered_map<SoundType, sf::Sound> sounds;
-		void loadSound(const SoundType type, std::string fileName);
+		void LoadSound(const SoundType type, std::string fileName);
 	};
 }

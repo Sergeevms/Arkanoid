@@ -7,21 +7,15 @@
 namespace SnakeGame
 {
 	class Game;
-	class Snake;
 	class PlayingState;
 	struct Settings;
 
 	class PlayingInputHandler : public BaseInputHandler
 	{
 	public:
-		PlayingInputHandler(Snake* currentSnake, PlayingState* currentState);
-		void TurnSnakeUp();
-		void TurnSnakeRight();
-		void TurnSnakeDown();
-		void TurnSnakeLeft();
+		PlayingInputHandler(PlayingState* currentState);
 		void PauseGame();
 	private:
-		Snake* snake;
 		PlayingState* state;
 	};
 }

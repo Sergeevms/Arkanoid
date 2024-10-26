@@ -141,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Apple.cpp" />
     <ClCompile Include="BaseInputHandler.cpp" />
     <ClCompile Include="BaseMenuInputHandler.cpp" />
     <ClCompile Include="BaseState.cpp" />
@@ -152,8 +151,6 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MainMenuInputHandler.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="GeneralMenu.cpp" />
     <ClCompile Include="NotPlayingWindow.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
@@ -166,12 +163,9 @@
     <ClCompile Include="RecordsStateMenus.cpp" />
     <ClCompile Include="RecordTable.cpp" />
     <ClCompile Include="Settings.cpp" />
-    <ClCompile Include="Snake.cpp" />
     <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Apple.h" />
     <ClInclude Include="BaseInputHandler.h" />
     <ClInclude Include="BaseMenuInputHandler.h" />
     <ClInclude Include="BaseState.h" />
@@ -182,8 +176,6 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MainMenuInputHandler.h" />
     <ClInclude Include="MainMenuState.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="MapObject.h" />
     <ClInclude Include="GeneralMenu.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PauseState.h" />
@@ -195,19 +187,7 @@
     <ClInclude Include="RecordsStateMenus.h" />
     <ClInclude Include="RecordTable.h" />
     <ClInclude Include="Settings.h" />
-    <ClInclude Include="Snake.h" />
     <ClInclude Include="Utility.h" />
-    <ClInclude Include="Wall.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Levels\generateSnake.lvl" />
-    <None Include="Resources\Levels\generateSnakeMini.lvl" />
-    <None Include="Resources\Levels\firstLevel.lvl" />
-    <None Include="Resources\Levels\secondLevel.lvl" />
-    <None Include="Resources\Levels\micro.lvl" />
-    <None Include="Resources\Levels\micro2.lvl" />
-    <None Include="Resources\Levels\TemporaryWall.lvlt" />
-    <None Include="Resources\Levels\TemporaryWallSmaller.lvlt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
