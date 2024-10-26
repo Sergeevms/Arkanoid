@@ -6,7 +6,7 @@
 #include "Utility.h"
 #include "PlayingInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	PlayingState::PlayingState() : BaseState()
 	{		

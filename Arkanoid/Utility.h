@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <concepts>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class Direction
 	{

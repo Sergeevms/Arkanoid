@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <map>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	struct Settings;
 

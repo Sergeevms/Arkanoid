@@ -2,7 +2,7 @@
 #include "GeneralMenu.h"
 #include "IListDrawable.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	class CheckBoxMenuNode;
 	class LevelSelectMenuNode;

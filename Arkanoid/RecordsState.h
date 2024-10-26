@@ -5,7 +5,7 @@
 #include "IListDrawable.h"
 #include "Utility.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class RecordStateWindowType
 	{

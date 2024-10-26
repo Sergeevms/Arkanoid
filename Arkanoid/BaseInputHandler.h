@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	//Enum for action type to connect it to input key
 	enum class ActionsTypesOnInput

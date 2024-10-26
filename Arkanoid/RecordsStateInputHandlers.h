@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "BaseMenuInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	class Game;
 	class RecordsState;

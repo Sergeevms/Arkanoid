@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class ActionsTypesOnInput;
 

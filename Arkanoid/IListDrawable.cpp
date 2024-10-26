@@ -3,7 +3,7 @@
 #include "Utility.h"
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 
 	sf::FloatRect GetListRect(const std::vector<IListDrawable*> itemList, const sf::Vector2f position, 

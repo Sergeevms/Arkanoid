@@ -4,7 +4,7 @@
 #include "Settings.h"
 #include "BaseState.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	PauseStateInputHandler::PauseStateInputHandler(PauseMenu* currentMenu) :
 		BaseMenuInputHandler(currentMenu)

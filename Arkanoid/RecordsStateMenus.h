@@ -1,6 +1,6 @@
 #pragma once
 #include "GeneralMenu.h"
-namespace SnakeGame
+namespace Arkanoid
 {
 	class RecordsStateNameMenu : public GeneralMenu
 	{

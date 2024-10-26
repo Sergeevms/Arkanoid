@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	PlayingInputHandler::PlayingInputHandler(PlayingState* currentState)
 		: BaseInputHandler(), state(currentState)

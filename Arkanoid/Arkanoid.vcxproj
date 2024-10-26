@@ -147,7 +147,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="IListDrawable.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainLoop.cpp" />
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MainMenuInputHandler.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="IListDrawable.h" />
     <ClInclude Include="NotPlayingWindow.h" />
-    <ClInclude Include="MainLoop.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MainMenuInputHandler.h" />
     <ClInclude Include="MainMenuState.h" />

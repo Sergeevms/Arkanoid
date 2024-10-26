@@ -2,7 +2,7 @@
 #include "Settings.h"
 #include "Game.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	void BaseInputHandler::HandleInputEvents(const std::vector<sf::Event>& input)
 	{	

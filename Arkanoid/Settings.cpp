@@ -3,7 +3,7 @@
 #include "BaseInputHandler.h"
 #include "Utility.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	Settings* Settings::settings = nullptr;
 

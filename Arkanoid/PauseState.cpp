@@ -3,7 +3,7 @@
 #include "Settings.h"
 #include "PauseStateInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	PauseState::PauseState() : 
 		BaseState(), menu()

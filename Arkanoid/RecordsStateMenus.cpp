@@ -1,6 +1,6 @@
 #include "RecordsStateMenus.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	RecordsStateNameMenu::RecordsStateNameMenu() : GeneralMenu()
 	{

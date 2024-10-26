@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class SoundType
 	{

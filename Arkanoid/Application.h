@@ -3,13 +3,13 @@
 #include "Game.h"
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
-	class MainLoop
+	class Application
 	{
 	public:
-		MainLoop();
-		~MainLoop() = default;
+		Application();
+		~Application() = default;
 		void Run();
 	private:
 		std::unique_ptr<sf::RenderWindow> window;

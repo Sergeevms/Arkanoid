@@ -4,7 +4,7 @@
 
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	RecordTable::RecordTable()
 	{

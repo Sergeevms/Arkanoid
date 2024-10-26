@@ -3,7 +3,7 @@
 #include <vector>
 #include "BaseInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	//Game state types
 	enum class GameState

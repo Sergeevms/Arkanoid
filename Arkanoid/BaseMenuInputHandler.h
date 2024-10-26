@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseInputHandler.h"
-namespace SnakeGame
+namespace Arkanoid
 {
     class GeneralMenu;
     enum class MenuNodeActivateReaction;

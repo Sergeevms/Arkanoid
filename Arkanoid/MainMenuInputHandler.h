@@ -5,7 +5,7 @@
 
 #include "BaseMenuInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
     class MainMenu;
     

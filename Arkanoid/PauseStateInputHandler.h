@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 
-namespace SnakeGame
+namespace Arkanoid
 {
     class PauseMenu;
 

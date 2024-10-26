@@ -2,7 +2,7 @@
 #include "Utility.h"
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
     void TextStyle::Init(const std::string fontName, const sf::Color newColor, const sf::Text::Style newTextStyle, const unsigned int newSize)
     {

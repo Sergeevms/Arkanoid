@@ -4,7 +4,7 @@
 #include "RecordsStateMenus.h"
 #include "RecordsState.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
     RecordsStateNameDialogInputHandler::RecordsStateNameDialogInputHandler(RecordsStateNameMenu* currentMenu, RecordsState* currentState) :
 		BaseMenuInputHandler(currentMenu), state(currentState)

@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseState.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
     class Apple;
     class AppleFactory;

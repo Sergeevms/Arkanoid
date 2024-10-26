@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "IListDrawable.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class MenuNodeActivateReaction
 	{

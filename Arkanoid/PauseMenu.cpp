@@ -1,6 +1,6 @@
 #include "PauseMenu.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	PauseMenu::PauseMenu() : GeneralMenu()
 	{

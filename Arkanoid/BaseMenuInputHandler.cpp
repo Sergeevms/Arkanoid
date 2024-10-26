@@ -1,7 +1,7 @@
 #include "BaseMenuInputHandler.h"
 #include "GeneralMenu.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	BaseMenuInputHandler::BaseMenuInputHandler(GeneralMenu* currentMenu) : 
 		BaseInputHandler(), menu(currentMenu)

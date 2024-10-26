@@ -1,7 +1,7 @@
 #include "BaseState.h"
 #include "BaseInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	void BaseState::HandleInput(const std::vector<sf::Event>& input)
 	{

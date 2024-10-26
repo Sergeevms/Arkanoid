@@ -2,7 +2,7 @@
 #include "Settings.h"
 #include "MainMenuInputHandler.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	MainMenuState::MainMenuState() 
 	{

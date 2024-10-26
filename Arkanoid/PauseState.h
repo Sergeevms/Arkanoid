@@ -2,7 +2,7 @@
 #include "BaseState.h"
 #include "PauseMenu.h"
 
-namespace  SnakeGame
+namespace  Arkanoid
 {
 	class PauseState : public BaseState
 	{

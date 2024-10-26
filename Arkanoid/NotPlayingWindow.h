@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	enum class RelativePosition;
 	class BaseInputHandler;

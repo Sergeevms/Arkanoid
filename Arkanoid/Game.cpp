@@ -7,7 +7,7 @@
 #include "RecordsState.h"
 #include "PauseState.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	Game* Game::game = nullptr;
 

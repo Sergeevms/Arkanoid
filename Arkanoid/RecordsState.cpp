@@ -5,7 +5,7 @@
 #include "Settings.h"
 #include "Game.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	RecordsState::RecordsState(const bool fromGame) : BaseState()
 	{

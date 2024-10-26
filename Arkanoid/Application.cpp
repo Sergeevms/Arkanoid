@@ -1,19 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "MainLoop.h"
+#include "Application.h"
 #include "Settings.h"
 
 
-namespace SnakeGame
+namespace Arkanoid
 {
-	MainLoop::MainLoop()
+	Application::Application()
 	{
 		Settings* settings = Settings::GetSettings();
 		window = std::make_unique<sf::RenderWindow>(sf::VideoMode(settings->screenWidth, settings->screenHeight), settings->gameName);
 	}
 
-	void MainLoop::Run()
+	void Application::Run()
 	{
+		const unsigned seed = static_cast<unsigned int>(time(nullptr));
+		srand(seed);
+
 		sf::Clock clock;
 		float lastTime = clock.getElapsedTime().asSeconds();
 		Game* game = Game::GetGame();

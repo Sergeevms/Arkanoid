@@ -1,11 +1,9 @@
-#include "MainLoop.h"
+#include "Application.h"
 
 
 int main()
 {
-	const unsigned seed = static_cast<unsigned int>(time(nullptr));
-	srand(seed);
-	SnakeGame::MainLoop mainLoop;
-	mainLoop.Run();
+	Arkanoid::Application app;
+	app.Run();
 	return 0;
 }

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "Settings.h"
 
-namespace SnakeGame
+namespace Arkanoid
 {
 	void MenuNode::Init(MenuNode * parent, const std::wstring & newName, MenuStyle* newSubMenuStyle)
 	{
