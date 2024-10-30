@@ -1,5 +1,5 @@
-#include "GeneralMenu.h"
 #include <assert.h>
+#include "GeneralMenu.h"
 #include "Settings.h"
 
 namespace Arkanoid
@@ -127,6 +127,27 @@ namespace Arkanoid
 		Draw(window, position, origin);
 	}
 
+	void GeneralMenu::PressSelected()
+	{
+		MenuNode* selectedNode = currentNode->GetCurrentlySelectedChild();
+		if (selectedNode == nullptr)
+		{
+			return;
+		}
+		else if (auto callBack = selectedNode->GetCallBack())
+		{
+			callBack(selectedNode);
+			return;
+		}
+		else
+		{
+			currentNode = selectedNode;
+			currentNode->SetStyle(&headerStyle);
+			currentNode->GetCurrentlySelectedChild()->SetStyle(&selectedStyle);
+			return;
+		}
+	}
+
 	bool GeneralMenu::ExpandSelected()
 	{		
 		MenuNode* newNode = currentNode->GetCurrentlySelectedChild();
@@ -187,33 +208,21 @@ namespace Arkanoid
 		
 	}
 
-
-	MenuNodeActivateReaction GeneralMenu::GetReaction() const
-	{
-		if (activateReactions.contains(currentNode->GetCurrentlySelectedChild()))
-		{
-			return activateReactions.at(currentNode->GetCurrentlySelectedChild());
-		}
-		else
-		{
-			return MenuNodeActivateReaction::None;
-		}
-	}
-
-	MenuNode* GeneralMenu::InitializeRootNode(const std::wstring& newName, TextStyle* nodeStyle, MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle)
+	MenuNode* GeneralMenu::InitializeRootNode(const std::wstring& newName, TextStyle* nodeStyle, MenuStyle* newSubMenuStyle)
 	{
 		rootNode = std::make_unique<MenuNode>();
-		ConfigurateNode(rootNode.get(), nullptr, newName, nodeStyle, reaction, newSubMenuStyle);
+		ConfigurateNode(rootNode.get(), nullptr, newName, nodeStyle, nullptr, newSubMenuStyle);
 		return rootNode.get();
 	}
 
-	MenuNode* GeneralMenu::InitializeNode(MenuNode* parent, const std::wstring& newName, TextStyle* nodeStyle, MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle)
+	MenuNode* GeneralMenu::InitializeNode(MenuNode* parent, const std::wstring& newName, 
+		TextStyle* nodeStyle, std::function<void(MenuNode*)> onPressCallback, MenuStyle* newSubMenuStyle)
 	{
 		if (parent)
 		{
 			parent->AddChild(std::make_unique<MenuNode>());
 			MenuNode* newNode = parent->GetChilds().back();
-			ConfigurateNode(newNode, parent, newName, nodeStyle, reaction, newSubMenuStyle);
+			ConfigurateNode(newNode, parent, newName, nodeStyle, onPressCallback, newSubMenuStyle);
 			return newNode;
 		}
 		else
@@ -222,10 +231,11 @@ namespace Arkanoid
 		}
 	}
 
-	void GeneralMenu::ConfigurateNode(MenuNode* node, MenuNode* parent, const std::wstring& newName,
-		TextStyle* nodeStyle, MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle)
+	void GeneralMenu::ConfigurateNode(MenuNode* node, MenuNode* parent, const std::wstring& newName, 
+		TextStyle* nodeStyle, std::function<void(MenuNode*)> onPressCallback, MenuStyle* newSubMenuStyle)
 	{
 		node->Init(parent, newName, newSubMenuStyle);
+		node->SetCallBack(onPressCallback);
 		if (nodeStyle)
 		{
 			node->SetStyle(nodeStyle);
@@ -234,14 +244,20 @@ namespace Arkanoid
 		{
 			node->SetStyle(&normalStyle);
 		}
-		if (reaction != MenuNodeActivateReaction::None)
-		{
-			activateReactions[node] = reaction;
-		}
 	}
 
 	void MenuNode::ClearChildNodes()
 	{
 		childNodes.clear();
+	}
+
+	std::function<void(MenuNode*)> MenuNode::GetCallBack()
+	{
+		return onPressCallBack;
+	}
+
+	void MenuNode::SetCallBack(std::function<void(MenuNode*)> callBack)
+	{
+		onPressCallBack = callBack;
 	}
 }

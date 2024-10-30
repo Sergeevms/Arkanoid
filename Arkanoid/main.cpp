@@ -2,8 +2,7 @@
 
 
 int main()
-{
-	Arkanoid::Application app;
-	app.Run();
+{	
+	Arkanoid::Application::GetInstance().Run();
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include "RecordsState.h"
 #include "RecordTable.h"
+#include "Application.h"
 #include "RecordsStateInputHandlers.h"
 #include "RecordsStateMenus.h"
 #include "Settings.h"
@@ -13,8 +14,8 @@ namespace Arkanoid
 		table->Deserialize();
 		if (fromGame)
 		{
-			windows.emplace_back(std::make_unique<RecordStateGameWindow>(table.get(), this));
-			windows.emplace_back(std::make_unique<RecordsStateEnterNameDialog>(this));
+			windows.emplace_back(std::make_unique<RecordStateGameWindow>(table.get()));
+			windows.emplace_back(std::make_unique<RecordsStateEnterNameDialog>());
 		}
 		else
 		{
@@ -42,7 +43,7 @@ namespace Arkanoid
 		case RecordStateWindowType::NameInput:
 		{
 			windows.pop_back();
-			windows.emplace_back(std::make_unique<NameEnteringWindow>(this));
+			windows.emplace_back(std::make_unique<NameEnteringWindow>());
 			break;
 		}
 		case RecordStateWindowType::RecordTable:
@@ -50,11 +51,11 @@ namespace Arkanoid
 			NameEnteringWindow* window = dynamic_cast<NameEnteringWindow*>(windows.back().get());
 			if (window)
 			{
-				table.get()->AddRecord(window->GetName(), Game::GetGame()->GetLastSessionScore());
+				table.get()->AddRecord(window->GetName(), Application::GetInstance().GetGame()->GetLastSessionScore());
 			}
 			else
 			{
-				table.get()->AddRecord(Settings::GetSettings()->defaultPlayerName, Game::GetGame()->GetLastSessionScore());
+				table.get()->AddRecord(Application::GetSettings()->defaultPlayerName, Application::GetInstance().GetGame()->GetLastSessionScore());
 			}
 			table.get()->Serialize();
 			windows.pop_back();
@@ -65,34 +66,34 @@ namespace Arkanoid
 		}
 	}
 
-	RecordsStateEnterNameDialog::RecordsStateEnterNameDialog(RecordsState* currentState) : menu(std::make_unique<RecordsStateNameMenu>())
+	RecordsStateEnterNameDialog::RecordsStateEnterNameDialog() : menu(std::make_unique<RecordsStateNameMenu>())
 	{
-		inputHandler = std::make_unique<RecordsStateNameDialogInputHandler>(menu.get(), currentState);
-		background.setFillColor({ 0, 0, 0, 255 });
+		inputHandler = std::make_unique<BaseMenuInputHandler>(menu.get());
+		background.setFillColor(sf::Color::Black);
 		background.setOutlineColor(sf::Color::White);
-		background.setOutlineThickness(Settings::GetSettings()->popUpBorder);
+		background.setOutlineThickness(Application::GetSettings()->popUpBorder);
 	}
 
 	void RecordsStateEnterNameDialog::Draw(sf::RenderWindow& window)
 	{
 		sf::FloatRect rect = menu.get()->GetRect();
-		background.setSize({ rect.width + Settings::GetSettings()->popUpSpacing, rect.height + Settings::GetSettings()->popUpSpacing });
+		background.setSize({ rect.width + Application::GetSettings()->popUpSpacing, rect.height + Application::GetSettings()->popUpSpacing });
 		SetOriginByRelative(background, relativePositions.at(RelativePosition::Center));
-		background.setPosition(Settings::GetSettings()->ScreenCenter());
+		background.setPosition(Application::GetSettings()->ScreenCenter());
 		window.draw(background);
-		menu.get()->Draw(window, Settings::GetSettings()->ScreenCenter(), RelativePosition::Center);
+		menu.get()->Draw(window, Application::GetSettings()->ScreenCenter(), RelativePosition::Center);
 	}
 
-	NameEnteringWindow::NameEnteringWindow(RecordsState* state)
+	NameEnteringWindow::NameEnteringWindow()
 	{
-		inputHandler = std::make_unique<RecordsStateNameEnteringInputHandler>(state, &name);
+		inputHandler = std::make_unique<RecordsStateNameEnteringInputHandler>(&name);
 		textStyle.Init("Roboto-Regular.ttf");
 		header.SetStyle(&textStyle);
 		header.setString(L"Имя:");
 		name.SetStyle(&textStyle);
-		background.setFillColor({ 0, 0, 0, 255 });
+		background.setFillColor(sf::Color::Black);
 		background.setOutlineColor(sf::Color::White);
-		background.setOutlineThickness(Settings::GetSettings()->popUpBorder);
+		background.setOutlineThickness(Application::GetSettings()->popUpBorder);
 	}
 
 	void NameEnteringWindow::Draw(sf::RenderWindow& window)
@@ -101,7 +102,7 @@ namespace Arkanoid
 		itemList.push_back(&header);
 		itemList.push_back(&name);
 
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 
 		sf::FloatRect rect = GetListRect(itemList, { 0.f, 0.f }, RelativePosition::TopLeft, Orientation::Vertical, Alignment::Middle, 20.f);
 		background.setSize({ rect.width + settings->popUpSpacing, rect.height + settings->popUpSpacing });
@@ -119,7 +120,7 @@ namespace Arkanoid
 
 	RecordStateMenuWindow::RecordStateMenuWindow(RecordTable* records) : table(records)
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		inputHandler = std::make_unique<RecordsStateMenuInputHandler>();
 		headerTextStyle.Init("Roboto-Regular.ttf", sf::Color::White, sf::Text::Bold, 40);	
 		header.SetStyle(&headerTextStyle);
@@ -144,7 +145,7 @@ namespace Arkanoid
 		window.draw(background);
 		DrawableList rows(Orientation::Vertical, Alignment::Middle, 10.f);
 		int rowNumber = 0;
-		for (auto& rowText : table->GetRecords(Settings::GetSettings()->bigRecordsSize))
+		for (auto& rowText : table->GetRecords(Application::GetSettings()->bigRecordsSize))
 		{
 			textRows[rowNumber].setString(rowText);
 			rows.AddItem(&(textRows[rowNumber]));
@@ -155,21 +156,21 @@ namespace Arkanoid
 		list.push_back(&header);
 		list.push_back(&rows);
 
-		DrawList(window, list, Settings::GetSettings()->ScreenCenter(), RelativePosition::Center, Orientation::Vertical, Alignment::Middle, 40.f);
+		DrawList(window, list, Application::GetSettings()->ScreenCenter(), RelativePosition::Center, Orientation::Vertical, Alignment::Middle, 40.f);
 	}
 
-	RecordStateGameWindow::RecordStateGameWindow(RecordTable* records, RecordsState* state) : table(records)
+	RecordStateGameWindow::RecordStateGameWindow(RecordTable* records) : table(records)
 	{
 		menu = std::make_unique<RecordsStateMenu>();
 
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 
-		inputHandler = std::make_unique<RecordsStateTableDialogInputHandler>(menu.get(), state);
+		inputHandler = std::make_unique<BaseMenuInputHandler>(menu.get());
 		headerTextStyle.Init("Roboto-Regular.ttf", sf::Color::White, sf::Text::Bold, 40);
 		headerTexts.reserve(3);
 		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, L"Количество");
 		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, L"очков:");
-		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, std::to_wstring(Game::GetGame()->GetLastSessionScore()));
+		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, std::to_wstring(Application::GetInstance().GetGame()->GetLastSessionScore()));
 
 		rowTextStyle.Init("Roboto-Regular.ttf");
 		textRows.reserve(settings->smallRecordsSize);
@@ -178,12 +179,12 @@ namespace Arkanoid
 			CreateListDrawableTextInVector(textRows, &rowTextStyle);
 		}
 
-		background.setFillColor({ 0, 0, 0, 255 });
+		background.setFillColor(sf::Color::Black);
 		background.setOutlineColor(sf::Color::White);
 		background.setOutlineThickness(settings->popUpBorder);
 		background.setPosition(settings->ScreenCenter());
 
-		overAllBackground.setFillColor({ 255, 255, 255, 128 });
+		overAllBackground.setFillColor(settings->halfTrasparentWhite);
 		overAllBackground.setSize(settings->ScreenSize());
 		overAllBackground.setPosition(settings->ScreenCenter());
 		SetOriginByRelative(overAllBackground, relativePositions.at(RelativePosition::Center));
@@ -199,7 +200,7 @@ namespace Arkanoid
 
 		DrawableList rows(Orientation::Vertical, Alignment::Middle, 10.f);
 		int rowNumber = 0;
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		for (auto& rowText : table->GetRecords(settings->smallRecordsSize))
 		{
 			textRows[rowNumber].setString(rowText);

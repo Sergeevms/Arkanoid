@@ -1,41 +1,55 @@
 #include "BaseMenuInputHandler.h"
 #include "GeneralMenu.h"
+#include "Application.h"
 
 namespace Arkanoid
 {
 	BaseMenuInputHandler::BaseMenuInputHandler(GeneralMenu* currentMenu) : 
 		BaseInputHandler(), menu(currentMenu)
 	{
-		actionMapping[ActionsTypesOnInput::Up] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(this)) { currentHandler->SelectPrevious(); }};
-		actionMapping[ActionsTypesOnInput::Down] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(this)) { currentHandler->SelectNext(); }};
-		actionMapping[ActionsTypesOnInput::Forward] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(this)) { currentHandler->ActivateCurrent(); }};
-		actionMapping[ActionsTypesOnInput::Back] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(this)) { currentHandler->GoBack(); }};
+		actionMapping[ActionsTypesOnInput::Up] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(handler)) 
+				{ 
+					if (currentHandler->GetMenu()) 
+						currentHandler->GetMenu()->SelectPrevious();
+				}
+			};
+
+		actionMapping[ActionsTypesOnInput::Down] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(handler))
+				{
+					if (currentHandler->GetMenu())
+						currentHandler->GetMenu()->SelectNext(); 
+				}
+			};
+
+		actionMapping[ActionsTypesOnInput::Forward] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(handler)) 
+				{ 
+					if (currentHandler->GetMenu())
+						currentHandler->GetMenu()->PressSelected(); 
+				}
+			};
+
+		actionMapping[ActionsTypesOnInput::Back] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto currentHandler = dynamic_cast<BaseMenuInputHandler*>(handler)) 
+				{ 
+					if (currentHandler->GetMenu())
+						currentHandler->GetMenu()->ReturnToPrevious(); 
+				}
+			};
 	}
 
-	void BaseMenuInputHandler::SelectNext()
+	GeneralMenu* BaseMenuInputHandler::GetMenu()
 	{
-		menu->SelectNext();
-	}
-
-	void BaseMenuInputHandler::SelectPrevious()
-	{
-		menu->SelectPrevious();
-	}
-
-	void BaseMenuInputHandler::ActivateCurrent()
-	{
-		if (!menu->ExpandSelected())
-		{
-			activateMapping.at(menu->GetReaction()) (this);
-		}
-	}
-
-	void BaseMenuInputHandler::GoBack()
-	{
-		menu->ReturnToPrevious();
+		return menu;
 	}
 }

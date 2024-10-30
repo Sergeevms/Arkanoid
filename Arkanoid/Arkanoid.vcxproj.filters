@@ -66,17 +66,11 @@
     <ClCompile Include="MainMenuState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenuInputHandler.cpp">
-      <Filter>Source Files\InputHandlers</Filter>
-    </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="PauseStateInputHandler.cpp">
-      <Filter>Source Files\InputHandlers</Filter>
     </ClCompile>
     <ClCompile Include="RecordsState.cpp">
       <Filter>Source Files\GameStates</Filter>
@@ -137,17 +131,11 @@
     <ClInclude Include="MainMenuState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenuInputHandler.h">
-      <Filter>Header Files\InputHandlers</Filter>
-    </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Header Files\Menu</Filter>
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="PauseStateInputHandler.h">
-      <Filter>Header Files\InputHandlers</Filter>
     </ClInclude>
     <ClInclude Include="RecordsState.h">
       <Filter>Header Files\GameStates</Filter>

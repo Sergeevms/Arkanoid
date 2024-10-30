@@ -3,7 +3,6 @@
 namespace Arkanoid
 {
     class GeneralMenu;
-    enum class MenuNodeActivateReaction;
 
     /*Extended BasedInputHandler with tipical actions for menu states.
     * Added map for reacting on menu nodes that needs some actions
@@ -13,13 +12,9 @@ namespace Arkanoid
     public:
         BaseMenuInputHandler(GeneralMenu* currentMenu);
         virtual ~BaseMenuInputHandler() = default;
-        virtual void SelectNext();
-        virtual void SelectPrevious();
-        virtual void ActivateCurrent();
-        virtual void GoBack();
+        virtual GeneralMenu* GetMenu();
     protected:
         GeneralMenu* menu;
-        std::unordered_map<MenuNodeActivateReaction, HandlerAction> activateMapping;
     };
 }
 

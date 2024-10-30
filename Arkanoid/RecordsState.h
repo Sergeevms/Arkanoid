@@ -35,7 +35,7 @@ namespace Arkanoid
 	class RecordsStateEnterNameDialog : public NotPlayingWindow
 	{
 	public:
-		RecordsStateEnterNameDialog(RecordsState* state);
+		RecordsStateEnterNameDialog();
 		virtual ~RecordsStateEnterNameDialog() = default;
 		virtual void Draw(sf::RenderWindow& window) override;
 	private:
@@ -49,7 +49,7 @@ namespace Arkanoid
 	class NameEnteringWindow : public NotPlayingWindow
 	{
 	public:
-		NameEnteringWindow(RecordsState* state);
+		NameEnteringWindow();
 		virtual ~NameEnteringWindow() = default;
 		virtual void Draw(sf::RenderWindow& window) override;
 		std::wstring GetName() const;
@@ -83,7 +83,7 @@ namespace Arkanoid
 	class RecordStateGameWindow : public NotPlayingWindow
 	{
 	public:
-		RecordStateGameWindow(RecordTable* records, RecordsState* state);
+		RecordStateGameWindow(RecordTable* records);
 		virtual ~RecordStateGameWindow() = default;
 		virtual void Draw(sf::RenderWindow& window) override;
 	private:

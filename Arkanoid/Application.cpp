@@ -1,15 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Application.h"
-#include "Settings.h"
+#include "BaseState.h"
 
 
 namespace Arkanoid
 {
-	Application::Application()
+	Application::Application() :
+		window(sf::VideoMode(GetSettings()->screenWidth, GetSettings()->screenHeight), GetSettings()->gameName), game(std::make_unique<Game>())
 	{
-		Settings* settings = Settings::GetSettings();
-		window = std::make_unique<sf::RenderWindow>(sf::VideoMode(settings->screenWidth, settings->screenHeight), settings->gameName);
+	}
+
+	Application& Application::GetInstance()
+	{
+		static Application application;
+		return application;
+	}
+
+	Game* Application::GetGame()
+	{
+		return game.get();
 	}
 
 	void Application::Run()
@@ -19,17 +29,17 @@ namespace Arkanoid
 
 		sf::Clock clock;
 		float lastTime = clock.getElapsedTime().asSeconds();
-		Game* game = Game::GetGame();
+		Game* game = Application::GetInstance().GetGame();
 
-		while (window->isOpen())
+		while (window.isOpen())
 		{		
 			std::vector<sf::Event> inputEvents;
 			sf::Event event;
-			while (window->pollEvent(event))
+			while (window.pollEvent(event))
 			{
 				if (event.type == sf::Event::Closed)
 				{
-					window->close();
+					window.close();
 				}
 				if (event.type == sf::Event::KeyPressed || event.type == sf::Event::TextEntered)
 				{
@@ -43,13 +53,13 @@ namespace Arkanoid
 
 			game->Update(deltaTime, inputEvents);
 			
-			window->clear();
-			game->Draw(*window);
-			window->display();
+			window.clear();
+			game->Draw(window);
+			window.display();
 
 			if (game->IsGameShuttingDown())
 			{
-				window->close();
+				window.close();
 			}
 		}
 	}

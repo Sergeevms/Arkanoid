@@ -1,21 +1,22 @@
-#include <functional>
 #include "PlayingInputHandler.h"
-#include "PlayingState.h"
-#include "Game.h"
-#include "Settings.h"
+#include "BaseState.h"
+#include "Application.h"
 
 namespace Arkanoid
 {
-	PlayingInputHandler::PlayingInputHandler(PlayingState* currentState)
-		: BaseInputHandler(), state(currentState)
+	PlayingInputHandler::PlayingInputHandler() :
+		BaseInputHandler()
 	{
+		actionMapping[ActionsTypesOnInput::Pause] = 
+			[](BaseInputHandler* handler)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Pause);
+			};
 
-		actionMapping[ActionsTypesOnInput::Pause] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<PlayingInputHandler*>(this)) { currentHandler->PauseGame(); }}; 
+		actionMapping[ActionsTypesOnInput::RecordTable] =
+			[](BaseInputHandler* handler)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
+			};
 	};
-
-	void PlayingInputHandler::PauseGame()
-	{
-		Game::GetGame()->SwitchToState(GameState::Pause);
-	}
 }

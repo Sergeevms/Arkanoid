@@ -8,15 +8,8 @@ namespace Arkanoid
 
 	struct Settings
 	{
-		static Settings* GetSettings()
-		{
-			if (settings == nullptr)
-			{
-				settings = new Settings();
-			}
-			return settings;
-		};
-		
+		Settings();
+
 		sf::Vector2f ScreenCenter();
 		sf::Vector2f ScreenSize();
 
@@ -30,6 +23,8 @@ namespace Arkanoid
 		float popUpBorder;
 		int smallRecordsSize;
 		int bigRecordsSize;
+
+		sf::Color halfTrasparentWhite;
 
 		//Sound settings
 
@@ -48,8 +43,5 @@ namespace Arkanoid
 		
 		//Control settings
 		std::unordered_map<sf::Keyboard::Key, ActionsTypesOnInput> keyMap;
-	private:
-		Settings();
-		static Settings* settings;
 	};
 };

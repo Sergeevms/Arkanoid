@@ -1,56 +1,30 @@
-#include "RecordsStateInputHandlers.h"
-#include "Settings.h"
-#include "Game.h"
-#include "RecordsStateMenus.h"
 #include "RecordsState.h"
+#include "RecordsStateMenus.h"
+#include "RecordsStateInputHandlers.h"
+#include "Application.h"
 
 namespace Arkanoid
 {
-    RecordsStateNameDialogInputHandler::RecordsStateNameDialogInputHandler(RecordsStateNameMenu* currentMenu, RecordsState* currentState) :
-		BaseMenuInputHandler(currentMenu), state(currentState)
-    {
-		activateMapping[MenuNodeActivateReaction::EnterName] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateNameDialogInputHandler*>(this)) { currentHandler->ToNameTyping(); }};
-		activateMapping[MenuNodeActivateReaction::SkipName] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateNameDialogInputHandler*>(this)) { currentHandler->ToRecordTable(); }};
-    }
-
-	void RecordsStateNameDialogInputHandler::ToNameTyping()
+	RecordsStateNameEnteringInputHandler::RecordsStateNameEnteringInputHandler(sf::Text* nameText) :
+		BaseInputHandler(), name(nameText)
 	{
-		state->SwitchToWindow(RecordStateWindowType::NameInput);
-	}
+		actionMapping[ActionsTypesOnInput::BackSpace] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto currentHandler = dynamic_cast<RecordsStateNameEnteringInputHandler*>(handler))
+				{
+					currentHandler->RemoveSymbol();
+				}
+			};
 
-	void RecordsStateNameDialogInputHandler::ToRecordTable()
-	{
-		state->SwitchToWindow(RecordStateWindowType::RecordTable);
-	}
-
-	RecordsStateTableDialogInputHandler::RecordsStateTableDialogInputHandler(RecordsStateMenu* currentMenu, RecordsState* currentState) :
-		BaseMenuInputHandler(currentMenu)
-	{
-		activateMapping[MenuNodeActivateReaction::MainMenu] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateTableDialogInputHandler*>(this)) { currentHandler->ToMainMenu(); }};
-		activateMapping[MenuNodeActivateReaction::Play] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateTableDialogInputHandler*>(this)) { currentHandler->RestartGame(); }};
-	}
-
-	void RecordsStateTableDialogInputHandler::RestartGame()
-	{
-		Game::GetGame()->SwitchToState(GameState::Playing);
-	}
-
-	void RecordsStateTableDialogInputHandler::ToMainMenu()
-	{
-		Game::GetGame()->SwitchToState(GameState::MainMenu);
-	}
-
-	RecordsStateNameEnteringInputHandler::RecordsStateNameEnteringInputHandler(RecordsState* currentState, sf::Text* nameText) :
-		BaseInputHandler(), state(currentState), name(nameText)
-	{
-		actionMapping[ActionsTypesOnInput::BackSpace] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateNameEnteringInputHandler*>(this)) { currentHandler->RemoveSymbol(); }};
-		actionMapping[ActionsTypesOnInput::Forward] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateNameEnteringInputHandler*>(this)) { currentHandler->ToRecordTable(); }};
+		actionMapping[ActionsTypesOnInput::Forward] = 
+			[](BaseInputHandler* handler)
+			{
+				if (auto state = dynamic_cast<RecordsState*> (Application::GetInstance().GetGame()->GetState()))
+				{
+					state->SwitchToWindow(RecordStateWindowType::RecordTable);
+				}
+			};
 	}
 
 	void RecordsStateNameEnteringInputHandler::HandleInputEvents(const std::vector<sf::Event>& input)
@@ -69,12 +43,12 @@ namespace Arkanoid
 			}
 			case (sf::Event::KeyPressed):
 			{
-				Settings* settings = Settings::GetSettings();
+				Settings* settings = Application::GetSettings();
 				if (settings->keyMap.contains(inputEvent.key.code))
 				{
 					if (actionMapping.contains(settings->keyMap[inputEvent.key.code]))
 					{
-						Game::GetGame()->PlaySound(SoundType::OnKeyHit);
+						Application::GetInstance().GetGame()->PlaySound(SoundType::OnKeyHit);
 						actionMapping.at(settings->keyMap[inputEvent.key.code]) (this);
 					}
 				}
@@ -82,11 +56,6 @@ namespace Arkanoid
 			}
 			}
 		}
-	}
-
-	void RecordsStateNameEnteringInputHandler::ToRecordTable()
-	{
-		state->SwitchToWindow(RecordStateWindowType::RecordTable);
 	}
 
 	void RecordsStateNameEnteringInputHandler::RemoveSymbol()
@@ -101,12 +70,10 @@ namespace Arkanoid
 
 	RecordsStateMenuInputHandler::RecordsStateMenuInputHandler()
 	{
-		actionMapping[ActionsTypesOnInput::Back] = [this](BaseInputHandler* handler)
-			{if (auto currentHandler = dynamic_cast<RecordsStateMenuInputHandler*>(this)) { currentHandler->ToMainMenu(); }};
-	}
-
-	void RecordsStateMenuInputHandler::ToMainMenu()
-	{
-		Game::GetGame()->SwitchToState(GameState::MainMenu);
+		actionMapping[ActionsTypesOnInput::Back] =
+			[](BaseInputHandler*)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::MainMenu);
+			};
 	}
 }

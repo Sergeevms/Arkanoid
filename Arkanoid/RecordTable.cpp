@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "Settings.h"
+#include "Application.h"
 
 namespace Arkanoid
 {
@@ -22,7 +23,7 @@ namespace Arkanoid
 		const std::multimap<int, std::wstring> orderedTable = GetOrderedTable();
 		int index = 1;
 		std::multimap<int, std::wstring>::const_reverse_iterator current = orderedTable.rbegin();
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		while (current != orderedTable.rend() && index <= count)
 		{
 			std::wostringstream currentString;
@@ -36,7 +37,7 @@ namespace Arkanoid
 
 	bool RecordTable::Serialize() const
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		std::wofstream output(settings->recordsFileName);
 		if (output.is_open())
 		{
@@ -60,7 +61,7 @@ namespace Arkanoid
 
 	void RecordTable::Deserialize()
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		recordTable.clear();
 		recordTable.reserve(settings->bigRecordsSize);
 		std::wifstream input(settings->recordsFileName);

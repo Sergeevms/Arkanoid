@@ -1,12 +1,13 @@
 #include <assert.h>
 #include "Utility.h"
 #include "Settings.h"
+#include "Application.h"
 
 namespace Arkanoid
 {
     void TextStyle::Init(const std::string fontName, const sf::Color newColor, const sf::Text::Style newTextStyle, const unsigned int newSize)
     {
-        Settings* settings = Settings::GetSettings();
+        Settings* settings = Application::GetSettings();
 #ifdef _DEBUG
         assert(font.loadFromFile(settings->fontPath + fontName));
 #else
@@ -20,9 +21,9 @@ namespace Arkanoid
     void LoadTexture(std::string const& fileName, sf::Texture& texture)
     {
 #ifndef NDEBUG
-        assert(texture.loadFromFile(Settings::GetSettings()->texturePath + fileName));
+        assert(texture.loadFromFile(Application::GetSettings()->texturePath + fileName));
 #else 
-        texture.loadFromFile(Settings::GetSettings()->texturePath + fileName);
+        texture.loadFromFile(Application::GetSettings()->texturePath + fileName);
 #endif
     }
 

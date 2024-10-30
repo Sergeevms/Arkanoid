@@ -1,24 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <functional>
 #include "Utility.h"
 #include "IListDrawable.h"
 
 namespace Arkanoid
 {
-	enum class MenuNodeActivateReaction
-	{
-		None,
-		Play,
-		Records,
-		SwitchOption,
-		SwitchDifficulty,
-		Exit,
-		MainMenu,
-		EnterName,
-		SkipName
-	};
-
 	struct MenuStyle
 	{
 		Orientation orientation{ Orientation::Vertical };
@@ -45,9 +33,12 @@ namespace Arkanoid
 		virtual std::vector<MenuNode*> GetChilds();
 		virtual void SetSelectedChildID(int id);
 		virtual void ClearChildNodes();
+		std::function<void(MenuNode*)> GetCallBack();
+		void SetCallBack(std::function<void(MenuNode*)> callBack);
 	protected:
 		std::unique_ptr<ListDrawableText> text = std::make_unique<ListDrawableText>();
 		std::vector<std::unique_ptr<MenuNode>> childNodes;
+		std::function<void(MenuNode*)> onPressCallBack;
 	private:
 		int selectedChildID{ -1 };
 		MenuStyle* subMenuStyle{ nullptr };
@@ -60,12 +51,12 @@ namespace Arkanoid
 		virtual ~GeneralMenu() {};
 		virtual void Draw(sf::RenderWindow& window, const sf::Vector2f& position, RelativePosition origin = RelativePosition::TopMiddle) const;
 		virtual void Draw(sf::RenderWindow& window, const sf::Vector2f& position, const Orientation orientation, const Alignment alignment) override;
+		virtual void PressSelected();
 		virtual bool ExpandSelected();
 		virtual void ReturnToPrevious();
 		virtual void SelectNext() const;
 		virtual void SelectPrevious() const;
 		virtual sf::FloatRect GetRect() const override;
-		MenuNodeActivateReaction GetReaction() const;
 	protected:
 		TextStyle headerStyle;
 		TextStyle selectedStyle;
@@ -73,13 +64,12 @@ namespace Arkanoid
 		std::unique_ptr<MenuNode> rootNode;
 		MenuNode* currentNode{ nullptr };
 		MenuStyle subMenuStyle;
-		std::unordered_map<MenuNode*, MenuNodeActivateReaction> activateReactions;
 		virtual MenuNode* InitializeRootNode(const std::wstring& newName, TextStyle* nodeStyle,
-			MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle = nullptr);
+			MenuStyle* newSubMenuStyle = nullptr);
 		virtual MenuNode* InitializeNode(MenuNode* parent, const std::wstring& newName, TextStyle* nodeStyle,
-			MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle = nullptr);
-		void ConfigurateNode(MenuNode* node, MenuNode* parent,
-			const std::wstring& newName, TextStyle* nodeStyle, MenuNodeActivateReaction reaction, MenuStyle* newSubMenuStyle = nullptr);
+			std::function<void(MenuNode*)> onPressCallback = nullptr, MenuStyle* newSubMenuStyle = nullptr);
+		virtual void ConfigurateNode(MenuNode* node, MenuNode* parent,
+				const std::wstring& newName, TextStyle* nodeStyle, std::function<void(MenuNode*)> onPressCallback = nullptr, MenuStyle* newSubMenuStyle = nullptr);
 	};
 }
 

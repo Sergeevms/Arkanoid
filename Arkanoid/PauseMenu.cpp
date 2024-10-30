@@ -1,4 +1,6 @@
 #include "PauseMenu.h"
+#include "Application.h"
+#include "BaseState.h"
 
 namespace Arkanoid
 {
@@ -8,8 +10,17 @@ namespace Arkanoid
 		normalStyle.Init("Roboto-Regular.ttf");
 		selectedStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		
-		currentNode = InitializeRootNode(L"Пауза", &headerStyle, MenuNodeActivateReaction::None, &subMenuStyle);
-		InitializeNode(currentNode, L"Выйти из игры", &selectedStyle, MenuNodeActivateReaction::MainMenu);
-		InitializeNode(currentNode, L"Продолжить", &normalStyle, MenuNodeActivateReaction::Play);
+		currentNode = InitializeRootNode(L"Пауза", &headerStyle, &subMenuStyle);
+		InitializeNode(currentNode, L"Выйти из игры", &selectedStyle,
+			[](MenuNode*)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::MainMenu);
+			});
+
+		InitializeNode(currentNode, L"Продолжить", &normalStyle,
+			[](MenuNode*)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Playing);
+			});
 	}
 }

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "Game.h"
+#include "Application.h"
 #include "Settings.h"
 #include "BaseState.h"
 #include "PlayingState.h"
@@ -9,11 +10,9 @@
 
 namespace Arkanoid
 {
-	Game* Game::game = nullptr;
-
 	Game::Game()
 	{	
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		stateStack.emplace_back(std::make_unique<MainMenuState>());
 #ifdef _DEBUG
 		assert(backGroundMusic.openFromFile(settings->soundPath + "Clinthammer__Background_Music.wav"));
@@ -106,7 +105,7 @@ namespace Arkanoid
 
 	void Game::SwitchMusicPlaying(bool playing)
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		if (playing && settings->musicOn)
 		{
 			backGroundMusic.play();
@@ -119,7 +118,7 @@ namespace Arkanoid
 
 	void Game::PlaySound(const SoundType sound)
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		if (sounds.contains(sound) && settings->soundOn)
 		{
 			sounds.at(sound).play();
@@ -131,14 +130,26 @@ namespace Arkanoid
 		lastSessionScore = score;
 	}
 
-	int Game::GetLastSessionScore()
+	int Game::GetLastSessionScore() const
 	{
 		return lastSessionScore;
 	}
 
+	BaseState* Game::GetState() const
+	{
+		if (stateStack.empty())
+		{
+			return nullptr;
+		}
+		else
+		{
+			return stateStack.back().get();
+		}
+	}
+
 	void Game::LoadSound(const SoundType type, std::string fileName)
 	{
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 		soundBuffers.push_back(std::make_unique<sf::SoundBuffer>());
 #ifdef _DEBUG
 		assert((*soundBuffers.back()).loadFromFile(settings->soundPath + fileName));

@@ -14,22 +14,13 @@ namespace Arkanoid
 		OnSessionStart
 	};
 
-	class BaseState;
 	enum class GameState;
+	class BaseState;
 
 	class Game
 	{
 	public:
-		static Game* GetGame()
-		{
-			if (game == nullptr)
-			{
-				game = new Game();
-			}
-			return game;
-		};
-
-		Game(Game&) = delete;
+		Game();
 
 		bool IsGameShuttingDown() const;
 		void Update(const float deltaTime, const std::vector<sf::Event>& inputEvents);
@@ -39,11 +30,10 @@ namespace Arkanoid
 		void SwitchMusicPlaying(bool playing);
 		void PlaySound(const SoundType sound);
 		void SetLastSessionScore(const int score);
-		int GetLastSessionScore();
+		int GetLastSessionScore() const;
+		BaseState* GetState() const;
 
 	private:
-		Game();
-		static Game* game;
 		bool isShuttingDown{ false };
 		int lastSessionScore{ 0 };
 		sf::Music backGroundMusic;

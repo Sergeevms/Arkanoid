@@ -1,18 +1,19 @@
 #include "PauseState.h"
+#include "Application.h"
 #include "Utility.h"
 #include "Settings.h"
-#include "PauseStateInputHandler.h"
+#include "BaseMenuInputHandler.h"
 
 namespace Arkanoid
 {
 	PauseState::PauseState() : 
 		BaseState(), menu()
 	{
-		inputHandler = std::make_unique<PauseStateInputHandler>(&menu);
-		Settings* settings = Settings::GetSettings();
+		inputHandler = std::make_unique<BaseMenuInputHandler>(&menu);
+		Settings* settings = Application::GetSettings();
 		overallBackground.setPosition(relativePositions.at(RelativePosition::TopLeft));
-		overallBackground.setSize({ static_cast<float>(settings->screenWidth), static_cast<float>(settings->screenHeight) });
-		overallBackground.setFillColor({255, 255, 255, 125});
+		overallBackground.setSize(settings->ScreenSize());
+		overallBackground.setFillColor(settings->halfTrasparentWhite);
 
 		sf::FloatRect menuRect = menu.GetRect();
 		menuBackground.setSize({menuRect.width + settings->popUpSpacing, menuRect.height + settings->popUpSpacing });
@@ -27,6 +28,6 @@ namespace Arkanoid
 	{
 		window.draw(overallBackground);
 		window.draw(menuBackground);
-		menu.Draw(window, { Settings::GetSettings()->ScreenCenter() }, RelativePosition::Center);
+		menu.Draw(window, { Application::GetSettings()->ScreenCenter() }, RelativePosition::Center);
 	}
 }

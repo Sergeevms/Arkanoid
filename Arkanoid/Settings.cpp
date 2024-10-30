@@ -5,8 +5,6 @@
 
 namespace Arkanoid
 {
-	Settings* Settings::settings = nullptr;
-
 	Settings::Settings()
 	{
 		resourcesPath = "Resources\\";
@@ -23,6 +21,10 @@ namespace Arkanoid
 		popUpBorder = 5.f;
 		musicOn = true;
 		soundOn = true;
+
+		halfTrasparentWhite = sf::Color::White;
+		halfTrasparentWhite.a = 125;
+
 		keyMap[sf::Keyboard::W] = ActionsTypesOnInput::Up;
 		keyMap[sf::Keyboard::D] = ActionsTypesOnInput::Right;
 		keyMap[sf::Keyboard::S] = ActionsTypesOnInput::Down;
@@ -31,6 +33,8 @@ namespace Arkanoid
 		keyMap[sf::Keyboard::P] = ActionsTypesOnInput::Pause;
 		keyMap[sf::Keyboard::Enter] = ActionsTypesOnInput::Forward;
 		keyMap[sf::Keyboard::BackSpace] = ActionsTypesOnInput::BackSpace;
+
+		keyMap[sf::Keyboard::R] = ActionsTypesOnInput::RecordTable;
 
 		recordsFileName = "Records.dat";
 		smallRecordsSize = 5;

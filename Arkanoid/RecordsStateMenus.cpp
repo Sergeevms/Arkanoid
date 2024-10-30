@@ -1,4 +1,6 @@
 #include "RecordsStateMenus.h"
+#include "Application.h"
+#include "RecordsState.h"
 
 namespace Arkanoid
 {
@@ -8,9 +10,23 @@ namespace Arkanoid
 		normalStyle.Init("Roboto-Regular.ttf");
 		selectedStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 				
-		currentNode = InitializeRootNode(L"Ввести имя?", &headerStyle, MenuNodeActivateReaction::None, &subMenuStyle);
-		InitializeNode(currentNode, L"Нет", &selectedStyle, MenuNodeActivateReaction::SkipName);
-		InitializeNode(currentNode, L"Да", &normalStyle, MenuNodeActivateReaction::EnterName);
+		currentNode = InitializeRootNode(L"Ввести имя?", &headerStyle, &subMenuStyle);
+		InitializeNode(currentNode, L"Нет", &selectedStyle,
+			[](MenuNode*)
+			{
+				if (auto state = dynamic_cast<RecordsState*>(Application::GetInstance().GetGame()->GetState()))
+				{
+					state->SwitchToWindow(RecordStateWindowType::RecordTable);
+				}
+			});
+		InitializeNode(currentNode, L"Да", &normalStyle,
+			[](MenuNode*)
+			{
+				if (auto state = dynamic_cast<RecordsState*>(Application::GetInstance().GetGame()->GetState()))
+				{
+					state->SwitchToWindow(RecordStateWindowType::NameInput);
+				}
+			});
 	}
 
 	RecordsStateMenu::RecordsStateMenu() : GeneralMenu()
@@ -19,9 +35,17 @@ namespace Arkanoid
 		normalStyle.Init("Roboto-Regular.ttf");
 		selectedStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		
-		currentNode = InitializeRootNode(L"", &headerStyle, MenuNodeActivateReaction::None, &subMenuStyle);
-		InitializeNode(currentNode, L"Начать игру", &selectedStyle, MenuNodeActivateReaction::Play);
-		InitializeNode(currentNode, L"В главное меню", &normalStyle, MenuNodeActivateReaction::MainMenu);
+		currentNode = InitializeRootNode(L"", &headerStyle, &subMenuStyle);
+		InitializeNode(currentNode, L"Начать игру", &selectedStyle, 
+			[](MenuNode*)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Playing);
+			});
+		InitializeNode(currentNode, L"В главное меню", &normalStyle,
+			[](MenuNode*)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::MainMenu);
+			});
 	}
 
 	void RecordsStateMenu::Draw(sf::RenderWindow& window, const sf::Vector2f& position, RelativePosition origin) const

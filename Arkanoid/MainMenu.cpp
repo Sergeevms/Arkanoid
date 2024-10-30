@@ -1,6 +1,8 @@
 #include "MainMenu.h"
+#include "Application.h"
 #include "Settings.h"
 #include "IListDrawable.h"
+#include "BaseState.h"
 
 namespace Arkanoid
 {
@@ -11,44 +13,52 @@ namespace Arkanoid
 		selectedStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		LoadTexture("Check.png", checkTexture);
 
-		currentNode = InitializeRootNode(L"Змейка", &headerStyle, MenuNodeActivateReaction::None, &subMenuStyle);
-		InitializeNode(currentNode, L"Начать игру", &selectedStyle, MenuNodeActivateReaction::Play);
-		InitializeNode(currentNode, L"Таблица рекордов", &normalStyle, MenuNodeActivateReaction::Records);
-		MenuNode* settingsNode = InitializeNode(currentNode, L"Настройки", &normalStyle, MenuNodeActivateReaction::None, &subMenuStyle);
-		InitializeNode(currentNode, L"Выход", &normalStyle, MenuNodeActivateReaction::Exit);
+		currentNode = InitializeRootNode(L"Змейка", &headerStyle, &subMenuStyle);
+		InitializeNode(currentNode, L"Начать игру", &selectedStyle,
+			[](MenuNode*) 
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Playing);
+			});
+
+		InitializeNode(currentNode, L"Таблица рекордов", &normalStyle, 
+			[](MenuNode*) 
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
+			});
+
+		MenuNode* settingsNode = InitializeNode(currentNode, L"Настройки", &normalStyle, nullptr, &subMenuStyle);
+
+		InitializeNode(currentNode, L"Выход", &normalStyle,
+			[](MenuNode*) 
+			{
+				Application::GetInstance().GetGame()->ShutDown();
+			});
 		
-		Settings* settings = Settings::GetSettings();
+		Settings* settings = Application::GetSettings();
 
-		InitializeCheckBoxNode(settingsNode, L"Звук", settings->soundOn, 30.f, checkTexture, &selectedStyle, MenuNodeActivateReaction::SwitchOption, &(settings->soundOn));
-		InitializeCheckBoxNode(settingsNode, L"Музыка", settings->musicOn, 30.f, checkTexture, &normalStyle, MenuNodeActivateReaction::SwitchOption,  &(settings->musicOn));
+		auto switchOption = [](MenuNode* node)
+			{
+				if (CheckBoxMenuNode* currentNode = dynamic_cast<CheckBoxMenuNode*> (node))
+				{
+					currentNode->SwitchChecked();
+				}
+			};
+		InitializeCheckBoxNode(settingsNode, L"Звук", settings->soundOn, 30.f, checkTexture, &selectedStyle, switchOption, &(settings->soundOn));
+		InitializeCheckBoxNode(settingsNode, L"Музыка", settings->musicOn, 30.f, checkTexture, &normalStyle, switchOption, &(settings->musicOn));
 	}
 
-	void MainMenu::SwitchChecked()
-	{
-		CheckBoxMenuNode* selectedNode;
-		if (selectedNode = dynamic_cast<CheckBoxMenuNode*>(currentNode->GetCurrentlySelectedChild()))
-		{
-			
-			*(nodeToCorrespodingOption.at(selectedNode)) = !(*(nodeToCorrespodingOption.at(selectedNode)));
-			selectedNode->SetChecked(*(nodeToCorrespodingOption.at(selectedNode)));
-			
-		}
-	}
-
-
-	CheckBoxMenuNode* MainMenu::InitializeCheckBoxNode(MenuNode* parent, const std::wstring& newName, bool checked,
-		float spacing, const sf::Texture& checkTexture, TextStyle* nodeStyle, MenuNodeActivateReaction reaction, bool* correspondingOption, MenuStyle* newSubMenuStyle)
+	CheckBoxMenuNode* MainMenu::InitializeCheckBoxNode(MenuNode* parent, const std::wstring& newName, bool checked, float spacing, 
+		const sf::Texture& checkTexture, TextStyle* nodeStyle, std::function<void(MenuNode*)> onPressCallBack, bool* correspondingOption, MenuStyle* newSubMenuStyle)
 	{
 		if (parent)
-		{	
+		{
 			parent->AddChild(std::make_unique<CheckBoxMenuNode>(checkTexture));
 			CheckBoxMenuNode* newNode = dynamic_cast<CheckBoxMenuNode*>(parent->GetChilds().back());
-			ConfigurateNode(newNode, parent, newName, nodeStyle, reaction, newSubMenuStyle);
-			newNode->SetChecked(checked);
+			ConfigurateNode(newNode, parent, newName, nodeStyle, onPressCallBack, newSubMenuStyle);
 			newNode->SetSpacing(spacing);
 			if (correspondingOption)
 			{
-				nodeToCorrespodingOption[newNode] = correspondingOption;
+				newNode->SetCorrespondingOption(correspondingOption);
 			}
 			return newNode;
 		}
@@ -68,9 +78,13 @@ namespace Arkanoid
 		return GetListRect(std::vector<IListDrawable*> { text.get(), checkBox.get() }, {0.f, 0.f}, RelativePosition::TopLeft, Orientation::Horizontal, Alignment::Middle, spacing);
 	}
 
-	void CheckBoxMenuNode::SetChecked(const bool checked)
+	void CheckBoxMenuNode::SwitchChecked()	
 	{
-		checkBox->SetChecked(checked);
+		if (option)
+		{
+			*option = !(*option);
+			checkBox->SetChecked(*option);
+		}
 	}
 
 	void CheckBoxMenuNode::SetStyle(const TextStyle* newStyle)
@@ -84,10 +98,16 @@ namespace Arkanoid
 		spacing = newSpacing;
 	}
 
+	void CheckBoxMenuNode::SetCorrespondingOption(bool * correspondingOption)
+	{
+		option = correspondingOption;
+		checkBox->SetChecked(*option);
+	}
+
 	CheckBox::CheckBox(const sf::Texture& checkTexture)
 	{
 		check.setTexture(checkTexture);
-		box.setFillColor({ 255, 255, 255, 0 });
+		box.setFillColor(sf::Color::Transparent);
 		box.setOutlineThickness(3.f);
 	}
 

@@ -1,4 +1,5 @@
 #include "BaseInputHandler.h"
+#include "Application.h"
 #include "Settings.h"
 #include "Game.h"
 
@@ -6,8 +7,8 @@ namespace Arkanoid
 {
 	void BaseInputHandler::HandleInputEvents(const std::vector<sf::Event>& input)
 	{	
-		Settings* settings = Settings::GetSettings();
-		Game* game = Game::GetGame();
+		Settings* settings = Application::GetSettings();
+		Game* game = Application::GetInstance().GetGame();
 		for (auto& inputEvent : input)
 		{
 			if (settings->keyMap.contains(inputEvent.key.code))

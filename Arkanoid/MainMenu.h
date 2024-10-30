@@ -5,21 +5,15 @@
 namespace Arkanoid
 {
 	class CheckBoxMenuNode;
-	class LevelSelectMenuNode;
 
 	class MainMenu : public GeneralMenu
 	{
 	public:
 		MainMenu();
 		virtual ~MainMenu() = default;
-		void SwitchChecked();
 	private:
 		CheckBoxMenuNode* InitializeCheckBoxNode(MenuNode* parent, const std::wstring& newName, bool checked, float spacing, const sf::Texture& checkTexture,
-			TextStyle* nodeStyle = nullptr, MenuNodeActivateReaction reaction = MenuNodeActivateReaction::None, bool* correspondingOption = nullptr, MenuStyle* newSubMenuStyle = nullptr);
-		std::unordered_map<MenuNode*, int> nodeToDifficultyLevel;
-		std::unordered_map<MenuNode*, bool*> nodeToCorrespodingOption;
-		MenuNode* levelSelectionNode;
-		CheckBoxMenuNode* levelModeNodeOption;
+			TextStyle* nodeStyle = nullptr, std::function<void(MenuNode*)> onPressCallBack = nullptr, bool* correspondingOption = nullptr, MenuStyle* newSubMenuStyle = nullptr);
 		sf::Texture checkTexture;
 	};
 
@@ -48,18 +42,13 @@ namespace Arkanoid
 		std::wstring GetString() const;
 		void virtual Draw(sf::RenderWindow& window, const sf::Vector2f& position, const Orientation orientation, const Alignment alignment) override;
 		virtual sf::FloatRect GetRect() const override;
-		void SetChecked(const bool checked);
+		void SwitchChecked();
 		virtual void SetStyle(const TextStyle* newStyle) override;
 		void SetSpacing(const float newSpacing);
+		void SetCorrespondingOption(bool * correspondingOption);
 	private:
 		std::unique_ptr<CheckBox> checkBox;
 		float spacing{ 30.f };
-	};
-
-	class LevelSelectMenuNode : public MenuNode
-	{
-	public:
-		virtual ~LevelSelectMenuNode() = default;
-	private:
+		bool* option{ nullptr };
 	};
 }

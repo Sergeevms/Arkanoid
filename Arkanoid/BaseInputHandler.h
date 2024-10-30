@@ -16,7 +16,10 @@ namespace Arkanoid
 		Back,
 		Forward,
 		Pause,
-		BackSpace
+		BackSpace,
+
+
+		RecordTable
 	};
 
 	class Game;
