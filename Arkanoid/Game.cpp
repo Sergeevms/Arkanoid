@@ -34,17 +34,7 @@ namespace Arkanoid
 	void Game::Update(const float deltaTime, const std::vector<sf::Event>& inputEvents)
 	{
 		stateStack.rbegin()->get()->HandleInput(inputEvents);
-		if (dynamic_cast<PauseState*>(stateStack.rbegin()->get()))
-		{
-			stateStack.rbegin()->get()->Update(deltaTime);
-		}
-		else
-		{
-			for (auto& state : stateStack)
-			{
-				state.get()->Update(deltaTime);
-			}
-		}
+		stateStack.rbegin()->get()->Update(deltaTime);
 	}
 
 	void Game::Draw(sf::RenderWindow& window) const

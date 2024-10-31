@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="BaseInputHandler.cpp" />
     <ClCompile Include="BaseMenuInputHandler.cpp" />
     <ClCompile Include="BaseState.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="NotPlayingWindow.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PauseState.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayingInputHandler.cpp" />
     <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="RecordsState.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="BaseInputHandler.h" />
     <ClInclude Include="BaseMenuInputHandler.h" />
     <ClInclude Include="BaseState.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="GeneralMenu.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PauseState.h" />
+    <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayingInputHandler.h" />
     <ClInclude Include="PlayingState.h" />
     <ClInclude Include="RecordsState.h" />

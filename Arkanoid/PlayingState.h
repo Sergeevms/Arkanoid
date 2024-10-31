@@ -3,8 +3,9 @@
 
 namespace Arkanoid
 {
-    class Apple;
-    class AppleFactory;
+    class Platform;
+    class Ball;
+
     class PlayingState :
         public BaseState
     {
@@ -14,6 +15,8 @@ namespace Arkanoid
         virtual void Draw(sf::RenderWindow& window) const override;
         virtual void Update(const float deltaTime) override;
     private:
+        std::unique_ptr<Platform> platform;
+        std::unique_ptr<Ball> ball;
         bool isGameOvered{ false };
         bool sessionStarted{ false };
         int scoreCount{ 0 };

@@ -6,12 +6,16 @@
 #include "Game.h"
 #include "Utility.h"
 #include "PlayingInputHandler.h"
+#include "Platform.h"
+#include "Ball.h"
 
 namespace Arkanoid
 {
 	PlayingState::PlayingState() : BaseState()
-	{		
-		inputHandler = std::make_unique<PlayingInputHandler>();
+	{	
+		ball = std::make_unique<Ball>();
+		platform = std::make_unique<Platform>();
+		inputHandler = std::make_unique<PlayingInputHandler>(platform.get());
 		Settings* settings = Application::GetSettings();
 
 #ifdef _DEBUG
@@ -34,20 +38,22 @@ namespace Arkanoid
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
 	{
+		platform->Draw(window);
+		ball->Draw(window);
 		window.draw(scoreText);
 	}
 
 	void PlayingState::Update(const float deltaTime)
 	{
-		Settings* settings = Application::GetSettings();
-		Game* game = Application::GetInstance().GetGame();
 		if (isGameOvered)
 		{
 			Application::GetInstance().GetGame()->SwitchMusicPlaying(false);
 		}
 		else
 		{
-			Game* game = Application::GetInstance().GetGame();
+			platform->Update(deltaTime);
+			ball->Update(deltaTime);
+			ball->CheckPlatformCollision(platform.get());
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace Arkanoid
 	enum class Direction
 	{
 		None, Left, Up, Rigth, Down
-	};
+	};	
 
 	enum class RelativePosition
 	{
@@ -76,7 +76,7 @@ namespace Arkanoid
 	{
 		const sf::FloatRect objectBoundRect = object.getLocalBounds();
 		const float xScale = desiredSize.x / objectBoundRect.width;
-		const float yScale = desiredSize.y / objectBoundRect.width;
+		const float yScale = desiredSize.y / objectBoundRect.height;
 		object.setScale(xScale, yScale);
 	}
 
@@ -92,4 +92,6 @@ namespace Arkanoid
 	}
 
 	RelativePosition RelativePositionByOrientationAndAlignment(const Orientation orientation, const Alignment alignment);
+
+	sf::Vector2f DirectionVecFromDegree(const float angleDegree);
 }

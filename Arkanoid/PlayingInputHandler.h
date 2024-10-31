@@ -6,9 +6,15 @@
 
 namespace Arkanoid
 {
+	class Platform;
+	enum class Direction;
+
 	class PlayingInputHandler : public BaseInputHandler
 	{
 	public:
-		PlayingInputHandler();
+		PlayingInputHandler(Platform* platform);
+		virtual void HandleInputEvents(const std::vector<sf::Event>& input) override;
+	private:
+		Platform* platform;
 	};
 }

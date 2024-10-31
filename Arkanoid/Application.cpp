@@ -28,11 +28,12 @@ namespace Arkanoid
 		srand(seed);
 
 		sf::Clock clock;
-		float lastTime = clock.getElapsedTime().asSeconds();
 		Game* game = Application::GetInstance().GetGame();
 
 		while (window.isOpen())
-		{		
+		{
+			const float startTime = clock.getElapsedTime().asSeconds();
+
 			std::vector<sf::Event> inputEvents;
 			sf::Event event;
 			while (window.pollEvent(event))
@@ -47,11 +48,7 @@ namespace Arkanoid
 				}
 			}
 
-			float currentTime = clock.getElapsedTime().asSeconds();
-			float deltaTime = currentTime - lastTime;
-			lastTime = currentTime;
-
-			game->Update(deltaTime, inputEvents);
+			game->Update(GetSettings()->timePerFrame, inputEvents);
 			
 			window.clear();
 			game->Draw(window);
@@ -61,6 +58,14 @@ namespace Arkanoid
 			{
 				window.close();
 			}
+
+			const float endTime = clock.getElapsedTime().asSeconds();
+			const float deltaTime = endTime - startTime;
+
+			if (deltaTime < GetSettings()->timePerFrame)
+			{
+				sf::sleep(sf::seconds(GetSettings()->timePerFrame - deltaTime));
+			}			
 		}
 	}
 }

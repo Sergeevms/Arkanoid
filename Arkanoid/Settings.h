@@ -6,8 +6,9 @@ namespace Arkanoid
 {
 	enum class ActionsTypesOnInput;
 
-	struct Settings
+	class Settings
 	{
+	public:
 		Settings();
 
 		sf::Vector2f ScreenCenter();
@@ -21,6 +22,7 @@ namespace Arkanoid
 		std::wstring defaultPlayerName;
 		float popUpSpacing;
 		float popUpBorder;
+		float timePerFrame;
 		int smallRecordsSize;
 		int bigRecordsSize;
 
@@ -34,7 +36,6 @@ namespace Arkanoid
 		//Paths to files
 
 		std::string resourcesPath;
-		std::wstring levelPath;
 		std::string soundPath;
 		std::string fontPath;
 		std::string texturePath;
@@ -43,5 +44,15 @@ namespace Arkanoid
 		
 		//Control settings
 		std::unordered_map<sf::Keyboard::Key, ActionsTypesOnInput> keyMap;
+
+		//Platform settings
+
+		sf::Vector2f platformSize;
+		float platformSpeed;
+
+		//Ball settings
+
+		float ballDiameter;
+		float ballSpeed;
 	};
 };

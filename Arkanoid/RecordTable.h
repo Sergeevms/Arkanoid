@@ -6,8 +6,6 @@
 
 namespace Arkanoid
 {
-	struct Settings;
-
 	class RecordTable
 	{
 	public:

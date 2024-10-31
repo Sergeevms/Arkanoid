@@ -50,4 +50,11 @@ namespace Arkanoid
         }
         return relativeOrigin;
     }
+
+    sf::Vector2f DirectionVecFromDegree(const float angleDegree)
+    {
+        const float pi = acos(-1.f);
+        const float angleRadian = (pi / 180.f) * angleDegree;
+        return { cos(angleRadian), sin(angleRadian) };           
+    }
 }

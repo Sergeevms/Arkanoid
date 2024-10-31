@@ -18,12 +18,10 @@ namespace Arkanoid
 		Pause,
 		BackSpace,
 
-
+//Temporary Action type for testing Record table on Game Over
 		RecordTable
 	};
 
-	class Game;
-	struct Settings;
 	class BaseInputHandler;
 	typedef std::function<void(BaseInputHandler*)> HandlerAction;
 
