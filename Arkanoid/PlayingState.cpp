@@ -12,10 +12,10 @@
 namespace Arkanoid
 {
 	PlayingState::PlayingState() : BaseState()
-	{	
-		ball = std::make_unique<Ball>();
-		platform = std::make_unique<Platform>();
-		inputHandler = std::make_unique<PlayingInputHandler>(platform.get());
+	{
+		gameObjects.push_back(std::make_shared<Platform>());
+		gameObjects.push_back(std::make_shared<Ball>());
+		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		Settings* settings = Application::GetSettings();
 
 #ifdef _DEBUG
@@ -34,12 +34,15 @@ namespace Arkanoid
 		scoreText.setPosition({ settings->screenWidth - 10.f, 5.f });
 
 		Application::GetInstance().GetGame()->SwitchMusicPlaying(true);
+		ResetSessionDelay();
 	}
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
 	{
-		platform->Draw(window);
-		ball->Draw(window);
+		for (auto& object : gameObjects)
+		{
+			object->Draw(window);
+		}
 		window.draw(scoreText);
 	}
 
@@ -51,9 +54,23 @@ namespace Arkanoid
 		}
 		else
 		{
-			platform->Update(deltaTime);
-			ball->Update(deltaTime);
-			ball->CheckPlatformCollision(platform.get());
+			if (sessionDelay <= 0.f)
+			{
+				for (auto& object : gameObjects)
+				{
+					object->Update(deltaTime);
+				}
+				std::dynamic_pointer_cast<Ball>(gameObjects[1])->CheckPlatformCollision(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
+			}
+			else
+			{
+				sessionDelay -= deltaTime;
+			}
 		}
+	}
+
+	void PlayingState::ResetSessionDelay()
+	{
+		sessionDelay = Application::GetSettings()->sessionDelayTime;
 	}
 }

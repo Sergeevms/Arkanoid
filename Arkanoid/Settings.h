@@ -23,6 +23,7 @@ namespace Arkanoid
 		float popUpSpacing;
 		float popUpBorder;
 		float timePerFrame;
+		float sessionDelayTime;
 		int smallRecordsSize;
 		int bigRecordsSize;
 

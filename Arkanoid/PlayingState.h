@@ -3,8 +3,7 @@
 
 namespace Arkanoid
 {
-    class Platform;
-    class Ball;
+    class GameObject;
 
     class PlayingState :
         public BaseState
@@ -14,11 +13,12 @@ namespace Arkanoid
         virtual ~PlayingState() = default;
         virtual void Draw(sf::RenderWindow& window) const override;
         virtual void Update(const float deltaTime) override;
+        void ResetSessionDelay();
     private:
-        std::unique_ptr<Platform> platform;
-        std::unique_ptr<Ball> ball;
+        std::vector<std::shared_ptr<GameObject>> gameObjects;
         bool isGameOvered{ false };
         bool sessionStarted{ false };
+        float sessionDelay{ 0.f };
         int scoreCount{ 0 };
         sf::Font font;
         sf::Text scoreText;

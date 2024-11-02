@@ -50,6 +50,8 @@ namespace Arkanoid
 
 		ballDiameter = 10.f;
 		ballSpeed = 400.f;
+
+		sessionDelayTime = 1.f;
 	}
 
 
