@@ -146,6 +146,7 @@
     <ClCompile Include="BaseMenuInputHandler.cpp" />
     <ClCompile Include="BaseState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="IListDrawable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="BaseMenuInputHandler.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="IListDrawable.h" />
     <ClInclude Include="NotPlayingWindow.h" />
     <ClInclude Include="Application.h" />

@@ -1,22 +1,19 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "GameObject.h"
 
 namespace Arkanoid
 {
 	enum class Direction;
 
-	class Platform
+	class Platform : public GameObject
 	{
 	public:
 		Platform();
 		void SetMovingDirection(const Direction direction);
-		void Update(const float deltaTime);
-		void Draw(sf::RenderWindow& window) const;
-		sf::FloatRect GetRect() const;
+		void Update(const float deltaTime) override;
+		void Reset();
 	private:
-		sf::Vector2f HalfSize() const;
-		sf::Sprite sprite;
-		sf::Texture texture;
 		Direction direction;
 	};
 }

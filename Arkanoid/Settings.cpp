@@ -46,7 +46,7 @@ namespace Arkanoid
 
 		platformSize.x = 100.f;
 		platformSize.y = 10.f;
-		platformSpeed = 300.f;
+		platformSpeed = 400.f;
 
 		ballDiameter = 10.f;
 		ballSpeed = 400.f;

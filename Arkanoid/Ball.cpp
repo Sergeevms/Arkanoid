@@ -5,10 +5,8 @@
 
 namespace Arkanoid
 {
-	Ball::Ball()
+	Ball::Ball() : GameObject("ball.png")
 	{
-		LoadTexture("ball.png", texture);
-		sprite.setTexture(texture);
 		Settings* settings = Application::GetSettings();
 		SetScaleBySize(sprite, { settings->ballDiameter, settings->ballDiameter });
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
@@ -28,11 +26,6 @@ namespace Arkanoid
 		{
 			direction.y *= -1.f;
 		}
-	}
-
-	void Ball::Draw(sf::RenderWindow& window)
-	{
-		window.draw(sprite);
 	}
 
 	void Ball::CheckPlatformCollision(const Platform* platform)
@@ -68,11 +61,5 @@ namespace Arkanoid
 		sprite.setPosition(settings->ScreenCenter());
 		const float angleDegree = 45.f + rand() % 90;
 		direction = DirectionVecFromDegree(angleDegree);
-	}
-
-	sf::Vector2f Ball::HalfSize() const
-	{
-		sf::Vector2f size{ sprite.getLocalBounds().width, sprite.getLocalBounds().height };
-		return size / 2.f;
 	}
 }
