@@ -7,6 +7,7 @@
 #include "MainMenuState.h"
 #include "RecordsState.h"
 #include "PauseState.h"
+#include "GameWinnedState.h"
 
 namespace Arkanoid
 {
@@ -47,6 +48,11 @@ namespace Arkanoid
 
 	void Game::SwitchToState(GameState newState)
 	{
+		if (newState != GameState::Playing)
+		{
+			backGroundMusic.stop();
+		}
+
 		switch (newState)
 		{
 		case GameState::MainMenu:
@@ -57,6 +63,10 @@ namespace Arkanoid
 		}
 		case GameState::Playing:
 		{
+			if (Application::GetSettings()->musicOn)
+			{
+				backGroundMusic.play();
+			}
 			if (dynamic_cast<PauseState*>(stateStack.back().get()))
 			{
 				stateStack.pop_back();
@@ -85,25 +95,17 @@ namespace Arkanoid
 			stateStack.emplace_back(std::make_unique<PauseState>());
 			break;
 		}
+		case GameState::GameWinned:
+		{
+			stateStack.emplace_back(std::make_unique<GameWinnedState>());
+			break;
+		}
 		}
 	}
 
 	void Game::ShutDown()
 	{
 		isShuttingDown = true;
-	}
-
-	void Game::SwitchMusicPlaying(bool playing)
-	{
-		Settings* settings = Application::GetSettings();
-		if (playing && settings->musicOn)
-		{
-			backGroundMusic.play();
-		}
-		else
-		{
-			backGroundMusic.stop();
-		}
 	}
 
 	void Game::PlaySound(const SoundType sound)

@@ -8,32 +8,29 @@
 #include "PlayingInputHandler.h"
 #include "Platform.h"
 #include "Ball.h"
+#include "Block.h"
 
 namespace Arkanoid
 {
 	PlayingState::PlayingState() : BaseState()
 	{
 		gameObjects.push_back(std::make_shared<Platform>());
-		gameObjects.push_back(std::make_shared<Ball>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
+		gameObjects.push_back(std::make_shared<Ball>());
 		Settings* settings = Application::GetSettings();
 
-#ifdef _DEBUG
-		assert(font.loadFromFile(settings->fontPath +  "Roboto-Regular.ttf"));
-#else
-		font.loadFromFile(settings->fontPath + "Roboto-Regular.ttf");
-#endif // DEBUG
+		for (int j = 0; j < settings->blockRowCount; j++)
+		{
+			for (int i = 0; i < settings->blocksInRow; i++)
+			{
+				sf::Vector2f position;
+				//Getting coordinates of block center considering spacing between the blocks and one empty row at top
+				position.x = settings->blockSpacing * (1 + i) + settings->blockSize.x * (i + 0.5f);
+				position.y = settings->blockSpacing * (1 + j) + settings->blockSize.y * (j + 1 + 0.5f);
+				gameObjects.push_back(std::make_shared<Block>(position));
+			}
+		}
 
-		scoreText.setFont(font);
-		scoreText.setFillColor(sf::Color::Green);
-		scoreText.setCharacterSize(40);
-		
-		std::wstring currentScore(L"Очки:\n");
-		scoreText.setString(currentScore + std::to_wstring(scoreCount));
-		SetOriginByRelative(scoreText, relativePositions.at(RelativePosition::TopRight));
-		scoreText.setPosition({ settings->screenWidth - 10.f, 5.f });
-
-		Application::GetInstance().GetGame()->SwitchMusicPlaying(true);
 		ResetSessionDelay();
 	}
 
@@ -43,30 +40,53 @@ namespace Arkanoid
 		{
 			object->Draw(window);
 		}
-		window.draw(scoreText);
 	}
 
 	void PlayingState::Update(const float deltaTime)
-	{
-		if (isGameOvered)
+	{		
+		if (sessionDelay <= 0.f)
 		{
-			Application::GetInstance().GetGame()->SwitchMusicPlaying(false);
+			//Updating objects
+			for (auto& object : gameObjects)
+			{
+				object->Update(deltaTime);
+			}
+
+			//Collision checks
+			Ball* ball = std::dynamic_pointer_cast<Ball>(gameObjects[1]).get();
+			for (int i = 2; i < gameObjects.size(); ++i)
+			{
+				if (ball->CheckCollision(gameObjects[i].get()))
+				{
+					if (std::dynamic_pointer_cast<Block>(gameObjects[i]))
+					{
+						std::swap(gameObjects[i], gameObjects.back());
+						gameObjects.pop_back();
+						Application::GetInstance().GetGame()->PlaySound(SoundType::OnSnakeHit);
+					}
+				}
+			}
+
+			//Win & loose conditions check
+			if (gameObjects.size() <= 2)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
+			}
+			Platform* platform = std::dynamic_pointer_cast<Platform>(gameObjects.front()).get();
+			bool platformCollided = ball->CheckCollision(platform);
+			if (platformCollided)
+			{
+				Application::GetInstance().GetGame()->PlaySound(SoundType::OnSnakeHit);
+			}
+			if (ball->GetRect().top + ball->HalfSize().y > platform->GetRect().top && !platformCollided)
+			{
+				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
+			}
 		}
 		else
 		{
-			if (sessionDelay <= 0.f)
-			{
-				for (auto& object : gameObjects)
-				{
-					object->Update(deltaTime);
-				}
-				std::dynamic_pointer_cast<Ball>(gameObjects[1])->CheckPlatformCollision(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
-			}
-			else
-			{
-				sessionDelay -= deltaTime;
-			}
-		}
+			sessionDelay -= deltaTime;
+		}		
 	}
 
 	void PlayingState::ResetSessionDelay()

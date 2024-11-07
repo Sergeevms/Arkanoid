@@ -29,6 +29,12 @@ namespace Arkanoid
 
 		sf::Color halfTrasparentWhite;
 
+		//Block settings
+		int blocksInRow;
+		int blockRowCount;
+		float blockSpacing;
+		sf::Vector2f blockSize;
+
 		//Sound settings
 
 		bool musicOn;

@@ -38,8 +38,6 @@ namespace Arkanoid
 		keyMap[sf::Keyboard::Enter] = ActionsTypesOnInput::Forward;
 		keyMap[sf::Keyboard::BackSpace] = ActionsTypesOnInput::BackSpace;
 
-		keyMap[sf::Keyboard::R] = ActionsTypesOnInput::RecordTable;
-
 		recordsFileName = "Records.dat";
 		smallRecordsSize = 5;
 		bigRecordsSize = 10;
@@ -52,6 +50,12 @@ namespace Arkanoid
 		ballSpeed = 400.f;
 
 		sessionDelayTime = 1.f;
+
+		blocksInRow = 5;
+		blockRowCount = 3;
+		blockSpacing = 3.f;
+		blockSize.y = 30.f;
+		blockSize.x = (screenWidth - (1 + blocksInRow) * blockSpacing) / blocksInRow;
 	}
 
 

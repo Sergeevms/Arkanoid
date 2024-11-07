@@ -18,12 +18,6 @@ namespace Arkanoid
 				}
 				Application::GetInstance().GetGame()->SwitchToState(GameState::Pause);
 			};
-
-		actionMapping[ActionsTypesOnInput::RecordTable] =
-			[](BaseInputHandler* handler)
-			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
-			};
 	}
 
 	void PlayingInputHandler::HandleInputEvents(const std::vector<sf::Event>& input)

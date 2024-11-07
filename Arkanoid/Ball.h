@@ -11,7 +11,7 @@ namespace Arkanoid
 	public:
 		Ball();
 		void Update(const float deltaTime) override;
-		void CheckPlatformCollision(const Platform* platform);
+		bool CheckCollision(const GameObject * object);
 		void Reset();
 	private:
 		sf::Vector2f direction;

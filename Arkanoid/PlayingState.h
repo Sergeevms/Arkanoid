@@ -15,12 +15,9 @@ namespace Arkanoid
         virtual void Update(const float deltaTime) override;
         void ResetSessionDelay();
     private:
+        /*Contains game objects. First element always is platform, second - ball*/
         std::vector<std::shared_ptr<GameObject>> gameObjects;
-        bool isGameOvered{ false };
-        bool sessionStarted{ false };
+        //Deley in seconds before game start from menu or after pause
         float sessionDelay{ 0.f };
-        int scoreCount{ 0 };
-        sf::Font font;
-        sf::Text scoreText;
     };
 }

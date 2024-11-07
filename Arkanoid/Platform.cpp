@@ -6,7 +6,6 @@ namespace Arkanoid
 {
 	Platform::Platform() : GameObject("platform.png")
 	{
-		direction = Direction::None;
 		Settings* settings = Application::GetSettings();
 		SetScaleBySize(sprite, settings->platformSize);
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
@@ -45,6 +44,7 @@ namespace Arkanoid
 
 	void Platform::Reset()
 	{
+		direction = Direction::None;
 		Settings* settings = Application::GetSettings();
 		sprite.setPosition(settings->ScreenCenter().x, settings->screenHeight - HalfSize().y);
 	}
