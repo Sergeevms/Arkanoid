@@ -4,15 +4,12 @@
 
 namespace Arkanoid
 {
-	Platform::Platform()
+	Platform::Platform() : GameObject("platform.png")
 	{
-		direction = Direction::None;
-		LoadTexture("platform.png", texture);
-		sprite.setTexture(texture);
 		Settings* settings = Application::GetSettings();
 		SetScaleBySize(sprite, settings->platformSize);
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
-		sprite.setPosition(settings->ScreenCenter().x, settings->screenHeight - HalfSize().y);
+		Reset();
 	}
 
 	void Platform::SetMovingDirection(const Direction direction)
@@ -45,19 +42,10 @@ namespace Arkanoid
 		direction = Direction::None;
 	}
 
-	void Platform::Draw(sf::RenderWindow& window) const
+	void Platform::Reset()
 	{
-		window.draw(sprite);
-	}
-
-	sf::FloatRect Platform::GetRect() const
-	{
-		return sprite.getGlobalBounds();
-	}
-
-	sf::Vector2f Platform::HalfSize() const
-	{
-		sf::Vector2f size{ sprite.getLocalBounds().width, sprite.getLocalBounds().height };
-		return size / 2.f;
+		direction = Direction::None;
+		Settings* settings = Application::GetSettings();
+		sprite.setPosition(settings->ScreenCenter().x, settings->screenHeight - HalfSize().y);
 	}
 }

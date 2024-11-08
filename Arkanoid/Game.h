@@ -27,7 +27,6 @@ namespace Arkanoid
 		void Draw(sf::RenderWindow&) const;
 		void SwitchToState(GameState newState);
 		void ShutDown();
-		void SwitchMusicPlaying(bool playing);
 		void PlaySound(const SoundType sound);
 		void SetLastSessionScore(const int score);
 		int GetLastSessionScore() const;

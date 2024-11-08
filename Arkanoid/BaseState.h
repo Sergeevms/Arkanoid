@@ -12,6 +12,7 @@ namespace Arkanoid
 		MainMenu,
 		Playing,
 		Records,
+		GameWinned,
 		Pause
 	};
 

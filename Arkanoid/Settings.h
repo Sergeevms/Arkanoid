@@ -23,10 +23,17 @@ namespace Arkanoid
 		float popUpSpacing;
 		float popUpBorder;
 		float timePerFrame;
+		float sessionDelayTime;
 		int smallRecordsSize;
 		int bigRecordsSize;
 
 		sf::Color halfTrasparentWhite;
+
+		//Block settings
+		int blocksInRow;
+		int blockRowCount;
+		float blockSpacing;
+		sf::Vector2f blockSize;
 
 		//Sound settings
 

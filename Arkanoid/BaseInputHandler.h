@@ -16,10 +16,7 @@ namespace Arkanoid
 		Back,
 		Forward,
 		Pause,
-		BackSpace,
-
-//Temporary Action type for testing Record table on Game Over
-		RecordTable
+		BackSpace
 	};
 
 	class BaseInputHandler;

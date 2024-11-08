@@ -2,13 +2,12 @@
 #include "Platform.h"
 #include "Utility.h"
 #include "Application.h"
+#include "PlayingState.h"
 
 namespace Arkanoid
 {
-	Ball::Ball()
+	Ball::Ball() : GameObject("ball.png")
 	{
-		LoadTexture("ball.png", texture);
-		sprite.setTexture(texture);
 		Settings* settings = Application::GetSettings();
 		SetScaleBySize(sprite, { settings->ballDiameter, settings->ballDiameter });
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
@@ -24,42 +23,32 @@ namespace Arkanoid
 		{
 			direction.x *= -1.f;
 		}
-		if (newPosition.y <= HalfSize().y || newPosition.y >= settings->screenHeight - HalfSize().y)
+		if (newPosition.y <= HalfSize().y)
 		{
 			direction.y *= -1.f;
 		}
 	}
 
-	void Ball::Draw(sf::RenderWindow& window)
+	bool Ball::CheckCollision(const GameObject * object)
 	{
-		window.draw(sprite);
-	}
-
-	void Ball::CheckPlatformCollision(const Platform* platform)
-	{
-		sf::FloatRect platformRect = platform->GetRect();
+		sf::FloatRect objectRect = object->GetRect();
 		sf::Vector2f position = sprite.getPosition();
-		bool collided = false;
-		auto sqr = [](float x) {return x * x; };
 
-		if (position.x < platformRect.left)
+		bool collided = GetRect().intersects(objectRect);
+
+		if (collided)
 		{
-			collided = sqr(position.x - platformRect.left) + sqr(position.y - platformRect.top) < sqr(HalfSize().x);
-		}
-		else if (position.x > platformRect.left + platformRect.width)
-		{
-			collided = sqr(position.x - platformRect.left - platformRect.width) + sqr(position.y - platformRect.top) < sqr(HalfSize().x);
-		}
-		else
-		{
-			collided = std::fabs(position.y - platformRect.top) <= HalfSize().y;
+			if (position.y < objectRect.top || position.y > objectRect.top + objectRect.height)
+			{
+				direction.y *= -1.f;
+			}
+			if (position.x < objectRect.left || position.x > objectRect.left + objectRect.width)
+			{
+				direction.x *= -1.f;
+			}
 		}
 
-		//Second condition to prevent catching ball inside platform while there no game over condition
-		if (collided && direction.y >= 0.f)
-		{
-			direction.y *= -1.f;
-		}
+		return collided;
 	}
 
 	void Ball::Reset()
@@ -68,11 +57,5 @@ namespace Arkanoid
 		sprite.setPosition(settings->ScreenCenter());
 		const float angleDegree = 45.f + rand() % 90;
 		direction = DirectionVecFromDegree(angleDegree);
-	}
-
-	sf::Vector2f Ball::HalfSize() const
-	{
-		sf::Vector2f size{ sprite.getLocalBounds().width, sprite.getLocalBounds().height };
-		return size / 2.f;
 	}
 }
