@@ -12,6 +12,7 @@ namespace Arkanoid
 		virtual void Update(const float deltaTime) override {} ;
 		virtual bool GetCollision(Collidable* object) const override;
 		virtual bool IsBroken();
+		virtual bool IsBallReboundable();
 	protected:
 		virtual void OnHit() override;
 		int HitCount = 1;
@@ -21,7 +22,9 @@ namespace Arkanoid
 	{
 		Simple,
 		SmoothDestroyable,
-		Unbreackble
+		Unbreackble,
+		MultiHit,
+		Glass
 	};
 
 	class UnbreakbleBlock : public Block
@@ -42,6 +45,22 @@ namespace Arkanoid
 		virtual void OnHit() override;
 		virtual void FinalAction() override;
 		virtual void UpdateAction(float deltaTime) override;
+	};
+
+	class MultiHitBlock : public Block
+	{
+	public:
+		MultiHitBlock(const sf::Vector2f& position);
+	protected:
+		virtual void OnHit() override;
+	};
+
+	class GlassBlock : public Block
+	{
+	public:
+		GlassBlock(const sf::Vector2f& position);
+		virtual bool CheckCollision(Collidable* object) override;
+		virtual bool IsBallReboundable() override;
 	};
 
 	std::shared_ptr<Block> CreateRandomBlock(sf::Vector2f position);

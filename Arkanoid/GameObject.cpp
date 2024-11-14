@@ -26,7 +26,7 @@ namespace Arkanoid
 
 	sf::Vector2f GameObject::HalfSize() const
 	{
-		sf::Vector2f size{ sprite.getLocalBounds().width, sprite.getLocalBounds().height };
+		sf::Vector2f size{ sprite.getGlobalBounds().width, sprite.getGlobalBounds().height };
 		return size / 2.f;
 	}
 

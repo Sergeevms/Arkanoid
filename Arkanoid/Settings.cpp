@@ -54,7 +54,7 @@ namespace Arkanoid
 
 		sessionDelayTime = 1.f;
 
-		blocksInRow = 5;
+		blocksInRow = 10;
 		blockRowCount = 3;
 		blockSpacing = 3.f;
 		blockSize.y = 30.f;
@@ -62,11 +62,16 @@ namespace Arkanoid
 		availiableBlockTypes.push_back(BlockType::Simple);
 		availiableBlockTypes.push_back(BlockType::SmoothDestroyable);
 		availiableBlockTypes.push_back(BlockType::Unbreackble);
+		availiableBlockTypes.push_back(BlockType::MultiHit);
+		availiableBlockTypes.push_back(BlockType::Glass);
 		blockColors[BlockType::Simple] = sf::Color::Red;
 		blockColors[BlockType::Unbreackble] = sf::Color(132, 139, 148, 255);
 		blockColors[BlockType::SmoothDestroyable] = sf::Color::Green;
+		blockColors[BlockType::MultiHit] = sf::Color(154, 73, 209, 255);
+		blockColors[BlockType::Glass] = sf::Color::Cyan;
 
 		smoothBlockDestroyTime = 1.5f;
+		multiHitBlockCount = 3;
 	}
 
 

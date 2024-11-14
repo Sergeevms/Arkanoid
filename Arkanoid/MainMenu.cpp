@@ -13,7 +13,7 @@ namespace Arkanoid
 		selectedStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		LoadTexture("Check.png", checkTexture);
 
-		currentNode = InitializeRootNode(L"Змейка", &headerStyle, &subMenuStyle);
+		currentNode = InitializeRootNode(L"Арканоид", &headerStyle, &subMenuStyle);
 		InitializeNode(currentNode, L"Начать игру", &selectedStyle,
 			[](MenuNode*) 
 			{

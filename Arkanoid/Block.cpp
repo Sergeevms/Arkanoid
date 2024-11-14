@@ -26,6 +26,11 @@ namespace Arkanoid
 		return HitCount <= 0;
 	}
 
+	bool Block::IsBallReboundable()
+	{
+		return true;
+	}
+
 	void Block::OnHit()
 	{
 		--HitCount;
@@ -48,17 +53,35 @@ namespace Arkanoid
 		switch (newBlockType)
 		{
 		case Arkanoid::BlockType::Simple:
+		{
 			return std::make_shared<Block>(position);
 			break;
+		}
 		case Arkanoid::BlockType::SmoothDestroyable:
+		{
 			return std::make_shared<SmoothDestroyableBlock>(position);
 			break;
+		}
 		case Arkanoid::BlockType::Unbreackble:
+		{
 			return std::make_shared<UnbreakbleBlock>(position);
 			break;
+		}
+		case Arkanoid::BlockType::MultiHit:
+		{
+			return std::make_shared<MultiHitBlock>(position);
+			break;
+		}
+		case Arkanoid::BlockType::Glass:
+		{
+			return std::make_shared<GlassBlock>(position);
+			break;
+		}
 		default:
+		{
 			return nullptr;
 			break;
+		}
 		}
 	}
 
@@ -93,8 +116,38 @@ namespace Arkanoid
 
 	void SmoothDestroyableBlock::UpdateAction(float deltaTime)
 	{
-		sf::Color color = sprite.getColor();
-		color.a = static_cast<sf::Uint8> (255 * currentTime / delayDuration);
-		sprite.setColor(color);
+		ChangeSpriteOpacity(sprite, static_cast<sf::Uint8> (255 * currentTime / delayDuration));
+	}
+
+	MultiHitBlock::MultiHitBlock(const sf::Vector2f& position) : Block(position)
+	{
+		HitCount = Application::GetSettings()->multiHitBlockCount;
+		sprite.setColor(Application::GetSettings()->blockColors[BlockType::MultiHit]);
+	}
+
+	void MultiHitBlock::OnHit()
+	{
+		--HitCount;
+		ChangeSpriteOpacity(sprite, 255 * HitCount / Application::GetSettings()->multiHitBlockCount);
+	}
+
+	GlassBlock::GlassBlock(const sf::Vector2f& position) : Block(position)
+	{
+		sprite.setColor(Application::GetSettings()->blockColors[BlockType::Glass]);
+	}
+
+	bool GlassBlock::CheckCollision(Collidable* object)
+	{
+		if (GetCollision(object))
+		{
+			OnHit();
+			return true;
+		}
+		return false;
+	}
+
+	bool GlassBlock::IsBallReboundable()
+	{
+		return false;
 	}
 }

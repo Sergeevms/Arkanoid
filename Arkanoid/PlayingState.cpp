@@ -61,7 +61,10 @@ namespace Arkanoid
 						sf::Vector2f ballPosition = ball->GetPosition();
 						sf::FloatRect blockRect = block->GetRect();
 
-						GetBallInverse(ballPosition, blockRect, needInvertX, needInvertY);
+						if (block->IsBallReboundable())
+						{
+							GetBallInverse(ballPosition, blockRect, needInvertX, needInvertY);
+						}
 					}
 					return block->IsBroken();
 				}),

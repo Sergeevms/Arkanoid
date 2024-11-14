@@ -94,4 +94,5 @@ namespace Arkanoid
 	RelativePosition RelativePositionByOrientationAndAlignment(const Orientation orientation, const Alignment alignment);
 
 	sf::Vector2f DirectionVecFromDegree(const float angleDegree);
+	void ChangeSpriteOpacity(sf::Sprite& sprite, const sf::Uint8 alpha);
 }

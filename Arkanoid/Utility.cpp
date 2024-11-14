@@ -58,4 +58,11 @@ namespace Arkanoid
         const float angleRadian = (pi / 180.f) * angleDegree;
         return { cos(angleRadian), sin(angleRadian) };           
     }
+
+    void ChangeSpriteOpacity(sf::Sprite& sprite, const sf::Uint8 alpha)
+    {
+        sf::Color color = sprite.getColor();
+        color.a = alpha;
+        sprite.setColor(color);
+    }
 }

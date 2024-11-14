@@ -39,6 +39,7 @@ namespace Arkanoid
 		std::vector<BlockType> availiableBlockTypes;
 		std::unordered_map<BlockType, sf::Color> blockColors;
 		float smoothBlockDestroyTime;
+		int multiHitBlockCount;
 
 		//Sound settings
 
