@@ -175,6 +175,7 @@
     <ClInclude Include="BaseMenuInputHandler.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Collidable.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameWinnedMenu.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayingInputHandler.h" />
     <ClInclude Include="PlayingState.h" />
+    <ClInclude Include="Randomizer.h" />
     <ClInclude Include="RecordsState.h" />
     <ClInclude Include="RecordsStateInputHandlers.h" />
     <ClInclude Include="RecordsStateMenus.h" />

@@ -1,18 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
+#include "Collidable.h"
 
 namespace Arkanoid
 {
 	enum class Direction;
 
-	class Platform : public GameObject
+	class Platform : public GameObject, public Collidable
 	{
 	public:
 		Platform();
 		void SetMovingDirection(const Direction direction);
 		void Update(const float deltaTime) override;
 		void Reset();
+		virtual bool CheckCollision(Collidable* object);
+		virtual bool GetCollision(Collidable* object) const override;
+	protected:
+		void OnHit() override {};
 	private:
 		Direction direction;
 	};

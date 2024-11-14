@@ -10,7 +10,7 @@ namespace Arkanoid
 	{
 		OnKeyHit,
 		OnLose,
-		OnSnakeHit,
+		OnBallHit,
 		OnSessionStart
 	};
 

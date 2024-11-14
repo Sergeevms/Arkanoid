@@ -23,7 +23,7 @@ namespace Arkanoid
 		backGroundMusic.setLoop(true);
 		LoadSound(SoundType::OnKeyHit, "Owlstorm__Snake_hit.wav");
 		LoadSound(SoundType::OnLose, "Maodin204__Lose.wav");
-		LoadSound(SoundType::OnSnakeHit, "Theevilsocks__menu-hover.wav");
+		LoadSound(SoundType::OnBallHit, "Theevilsocks__menu-hover.wav");
 		LoadSound(SoundType::OnSessionStart, "Timgormly__Enter.wav");
 	}
 

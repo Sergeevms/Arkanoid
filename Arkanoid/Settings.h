@@ -61,5 +61,7 @@ namespace Arkanoid
 
 		float ballDiameter;
 		float ballSpeed;
+		float angleRandomChange;
+		float anglePlatformReboundChange;
 	};
 };

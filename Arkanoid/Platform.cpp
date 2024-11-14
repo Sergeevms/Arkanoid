@@ -1,6 +1,7 @@
 #include "Platform.h"
 #include "Utility.h"
 #include "Application.h"
+#include "Ball.h"
 
 namespace Arkanoid
 {
@@ -47,5 +48,57 @@ namespace Arkanoid
 		direction = Direction::None;
 		Settings* settings = Application::GetSettings();
 		sprite.setPosition(settings->ScreenCenter().x, settings->screenHeight - HalfSize().y);
+	}
+
+	bool Platform::CheckCollision(Collidable* object)
+	{
+		auto ball = dynamic_cast<Ball*>(object);
+		if (!ball)
+		{
+			return false;
+		}
+		else
+		{
+			if (GetCollision(ball))
+			{
+				auto platformRect = GetRect();
+				auto ballPositionOnPlatform = (ball->GetPosition().x - (platformRect.left + platformRect.width / 2.f)) / (platformRect.width / 2.f);
+				ball->ChangeAngle(90.f - Application::GetSettings()->anglePlatformReboundChange * ballPositionOnPlatform);
+				return true;
+			}
+			return false;
+		}
+	}
+
+	bool Platform::GetCollision(Collidable* object) const
+	{
+		auto ball = dynamic_cast<Ball*>(object);
+
+		if (!ball)
+		{
+			return false;
+		}
+		else
+		{
+			const Settings* settings = Application::GetSettings();
+			const auto ballPosition = ball->GetPosition();
+			const auto platformRect = GetRect();
+			auto sqr = [](float x)
+				{
+					return x * x;
+				};
+
+			if (ballPosition.x < platformRect.left)
+			{
+				return sqr(ballPosition.x - platformRect.left) + sqr(ballPosition.y - platformRect.top) < sqr(settings->ballDiameter / 2.f);
+			}
+
+			if (ballPosition.x > platformRect.left + platformRect.width)
+			{
+				return sqr(ballPosition.x - platformRect.left - platformRect.width) + sqr(ballPosition.y - platformRect.top) < sqr(settings->ballDiameter / 2.f);
+			}
+
+			return std::fabs(ballPosition.y - platformRect.top) <= settings->ballDiameter / 2.f;
+		}
 	}
 }

@@ -48,6 +48,8 @@ namespace Arkanoid
 
 		ballDiameter = 10.f;
 		ballSpeed = 400.f;
+		angleRandomChange = 5.f;
+		anglePlatformReboundChange = 20.f;
 
 		sessionDelayTime = 1.f;
 

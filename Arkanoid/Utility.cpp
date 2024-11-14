@@ -2,6 +2,7 @@
 #include "Utility.h"
 #include "Settings.h"
 #include "Application.h"
+#include "Randomizer.h"
 
 namespace Arkanoid
 {

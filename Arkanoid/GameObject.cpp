@@ -19,6 +19,11 @@ namespace Arkanoid
 		return sprite.getGlobalBounds();
 	}
 
+	sf::Vector2f GameObject::GetPosition() const
+	{
+		return sprite.getPosition();
+	}
+
 	sf::Vector2f GameObject::HalfSize() const
 	{
 		sf::Vector2f size{ sprite.getLocalBounds().width, sprite.getLocalBounds().height };

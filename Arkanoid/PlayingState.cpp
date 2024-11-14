@@ -17,29 +17,19 @@ namespace Arkanoid
 		gameObjects.push_back(std::make_shared<Platform>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		gameObjects.push_back(std::make_shared<Ball>());
-		Settings* settings = Application::GetSettings();
-
-		for (int j = 0; j < settings->blockRowCount; j++)
-		{
-			for (int i = 0; i < settings->blocksInRow; i++)
-			{
-				sf::Vector2f position;
-				//Getting coordinates of block center considering spacing between the blocks and one empty row at top
-				position.x = settings->blockSpacing * (1 + i) + settings->blockSize.x * (i + 0.5f);
-				position.y = settings->blockSpacing * (1 + j) + settings->blockSize.y * (j + 1 + 0.5f);
-				gameObjects.push_back(std::make_shared<Block>(position));
-			}
-		}
-
+		Settings* settings = Application::GetSettings();		
+		CreateBlocks();
 		ResetSessionDelay();
 	}
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
 	{
-		for (auto& object : gameObjects)
-		{
-			object->Draw(window);
-		}
+		auto drawFunctor = [&window](auto object)
+			{
+				object->Draw(window);
+			};
+		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunctor);
+		std::for_each(blocks.begin(), blocks.end(), drawFunctor);
 	}
 
 	void PlayingState::Update(const float deltaTime)
@@ -47,36 +37,57 @@ namespace Arkanoid
 		if (sessionDelay <= 0.f)
 		{
 			//Updating objects
-			for (auto& object : gameObjects)
-			{
-				object->Update(deltaTime);
-			}
+			auto updateFunctor = [deltaTime](auto object)
+				{
+					object->Update(deltaTime);
+				};
+			std::for_each(gameObjects.begin(), gameObjects.end(), updateFunctor);
+			std::for_each(blocks.begin(), blocks.end(), updateFunctor);
+
 
 			//Collision checks
 			Ball* ball = std::dynamic_pointer_cast<Ball>(gameObjects[1]).get();
-			for (int i = 2; i < gameObjects.size(); ++i)
-			{
-				if (ball->CheckCollision(gameObjects[i].get()))
+
+			bool needInvertX = false;
+			bool needInvertY = false;
+			bool hasBrokeOneBlock = false;
+			blocks.erase(std::remove_if(blocks.begin(), blocks.end(),
+				[ball, &hasBrokeOneBlock, &needInvertX, &needInvertY, this](auto block)
 				{
-					if (std::dynamic_pointer_cast<Block>(gameObjects[i]))
+					if ((!hasBrokeOneBlock) && (block->CheckCollision(ball)))
 					{
-						std::swap(gameObjects[i], gameObjects.back());
-						gameObjects.pop_back();
-						Application::GetInstance().GetGame()->PlaySound(SoundType::OnSnakeHit);
+						Application::GetInstance().GetGame()->PlaySound(SoundType::OnBallHit);
+						hasBrokeOneBlock = true;
+						sf::Vector2f ballPosition = ball->GetPosition();
+						sf::FloatRect blockRect = block->GetRect();
+
+						GetBallInverse(ballPosition, blockRect, needInvertX, needInvertY);
 					}
-				}
+					return block->IsBroken();
+				}),
+				blocks.end());
+
+			if (needInvertX)
+			{
+				ball->InvertX();
+			}
+
+			if (needInvertY)
+			{
+				ball->InvertY();
+			}
+
+			Platform* platform = std::dynamic_pointer_cast<Platform>(gameObjects.front()).get();
+			bool platformCollided = platform->CheckCollision(ball);
+			if (platformCollided)
+			{
+				Application::GetInstance().GetGame()->PlaySound(SoundType::OnBallHit);
 			}
 
 			//Win & loose conditions check
-			if (gameObjects.size() <= 2)
+			if (blocks.size() <= 0)
 			{
 				Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
-			}
-			Platform* platform = std::dynamic_pointer_cast<Platform>(gameObjects.front()).get();
-			bool platformCollided = ball->CheckCollision(platform);
-			if (platformCollided)
-			{
-				Application::GetInstance().GetGame()->PlaySound(SoundType::OnSnakeHit);
 			}
 			if (ball->GetRect().top + ball->HalfSize().y > platform->GetRect().top && !platformCollided)
 			{
@@ -92,5 +103,34 @@ namespace Arkanoid
 	void PlayingState::ResetSessionDelay()
 	{
 		sessionDelay = Application::GetSettings()->sessionDelayTime;
+	}
+
+	void PlayingState::CreateBlocks()
+	{
+		const Settings* settings = Application::GetSettings();
+		for (int j = 0; j < settings->blockRowCount; j++)
+		{
+			for (int i = 0; i < settings->blocksInRow; i++)
+			{
+				sf::Vector2f position;
+				//Getting coordinates of block center considering spacing between the blocks and one empty row at top
+				position.x = settings->blockSpacing * (1 + i) + settings->blockSize.x * (i + 0.5f);
+				position.y = settings->blockSpacing * (1 + j) + settings->blockSize.y * (j + 1 + 0.5f);
+				blocks.push_back(std::make_shared<Block>(position));
+			}
+		}
+	}
+
+	void PlayingState::GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY)
+	{
+		if (ballPos.y > blockRect.top + blockRect.height)
+		{
+			needInverseY = true;
+		}
+
+		if (ballPos.x < blockRect.left || ballPos.x > blockRect.left + blockRect.width)
+		{
+			needInverseX = true;
+		}
 	}
 }

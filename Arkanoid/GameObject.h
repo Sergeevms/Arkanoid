@@ -11,6 +11,7 @@ namespace Arkanoid
 		virtual void Draw(sf::RenderWindow& window) const;
 		virtual void Update(const float deltaTime) = 0;
 		sf::FloatRect GetRect() const;
+		sf::Vector2f GetPosition() const;
 		sf::Vector2f HalfSize() const;
 	protected:
 		sf::Texture texture;

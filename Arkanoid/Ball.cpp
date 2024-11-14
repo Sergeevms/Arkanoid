@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Application.h"
 #include "PlayingState.h"
+#include "Randomizer.h"
 
 namespace Arkanoid
 {
@@ -19,43 +20,53 @@ namespace Arkanoid
 		Settings* settings = Application::GetSettings();
 		sf::Vector2f newPosition = sprite.getPosition() + direction * settings->ballSpeed * deltaTime;
 		sprite.setPosition(newPosition);
-		if (newPosition.x <= HalfSize().x || newPosition.x >= settings->screenWidth - HalfSize().x)
+		if (newPosition.x < HalfSize().x || newPosition.x > settings->screenWidth - HalfSize().x)
 		{
-			direction.x *= -1.f;
+			InvertX();
 		}
-		if (newPosition.y <= HalfSize().y)
+		if (newPosition.y < HalfSize().y || newPosition.y > settings->screenHeight - HalfSize().y)
 		{
-			direction.y *= -1.f;
+			InvertY();
 		}
+	}	
+
+	void Ball::OnHit()
+	{
+		float angleChange = Application::GetSettings()->angleRandomChange;
+		previosAngle += random<float>(-1 * angleChange, angleChange);
+		ChangeAngle(previosAngle);
 	}
 
-	bool Ball::CheckCollision(const GameObject * object)
+	void Ball::ChangeAngle(float angle)
 	{
-		sf::FloatRect objectRect = object->GetRect();
-		sf::Vector2f position = sprite.getPosition();
+		previosAngle = angle;
+		const auto pi = std::acos(-1.f);
+		direction.x = (angle / abs(angle)) * std::cos(pi / 180.f * angle);
+		direction.y = -1 * abs(std::sin(pi / 180.f * angle));
+	}
 
-		bool collided = GetRect().intersects(objectRect);
+	void Ball::InvertX()
+	{
+		direction.x *= -1.f;
+	}
 
-		if (collided)
-		{
-			if (position.y < objectRect.top || position.y > objectRect.top + objectRect.height)
-			{
-				direction.y *= -1.f;
-			}
-			if (position.x < objectRect.left || position.x > objectRect.left + objectRect.width)
-			{
-				direction.x *= -1.f;
-			}
-		}
+	void Ball::InvertY()
+	{
+		direction.y *= -1.f;
+	}
 
-		return collided;
+	bool Ball::GetCollision(Collidable *object) const
+	{
+		auto gameObject = dynamic_cast<GameObject*>(object);
+		assert(gameObject);
+		return GetRect().intersects(gameObject->GetRect());
 	}
 
 	void Ball::Reset()
 	{
 		Settings* settings = Application::GetSettings();
 		sprite.setPosition(settings->ScreenCenter());
-		const float angleDegree = 45.f + rand() % 90;
-		direction = DirectionVecFromDegree(angleDegree);
+		previosAngle = 90.f;
+		direction = DirectionVecFromDegree(previosAngle);
 	}
 }
