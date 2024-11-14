@@ -21,8 +21,13 @@ namespace Arkanoid
 		sf::Vector2f newPosition = sprite.getPosition() + direction * settings->ballSpeed * deltaTime;
 		sprite.setPosition(newPosition);
 		if (newPosition.x < HalfSize().x || newPosition.x > settings->screenWidth - HalfSize().x)
-		{
-			InvertX();
+		{			
+			bool movingDown = direction.y > 0.f;
+			ChangeAngle(180.f - previosAngle);
+			if (movingDown)
+			{
+				InvertY();
+			}
 		}
 		if (newPosition.y < HalfSize().y || newPosition.y > settings->screenHeight - HalfSize().y)
 		{

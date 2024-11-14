@@ -1,10 +1,12 @@
 #pragma once
 #include <unordered_map>
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 namespace Arkanoid
 {
 	enum class ActionsTypesOnInput;
+	enum class BlockType;
 
 	class Settings
 	{
@@ -34,6 +36,9 @@ namespace Arkanoid
 		int blockRowCount;
 		float blockSpacing;
 		sf::Vector2f blockSize;
+		std::vector<BlockType> availiableBlockTypes;
+		std::unordered_map<BlockType, sf::Color> blockColors;
+		float smoothBlockDestroyTime;
 
 		//Sound settings
 

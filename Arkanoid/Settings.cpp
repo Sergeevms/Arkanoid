@@ -2,6 +2,7 @@
 #include <filesystem>
 #include "BaseInputHandler.h"
 #include "Utility.h"
+#include "Block.h"
 
 namespace Arkanoid
 {
@@ -43,7 +44,7 @@ namespace Arkanoid
 		bigRecordsSize = 10;
 
 		platformSize.x = 100.f;
-		platformSize.y = 10.f;
+		platformSize.y = 15.f;
 		platformSpeed = 400.f;
 
 		ballDiameter = 10.f;
@@ -58,6 +59,14 @@ namespace Arkanoid
 		blockSpacing = 3.f;
 		blockSize.y = 30.f;
 		blockSize.x = (screenWidth - (1 + blocksInRow) * blockSpacing) / blocksInRow;
+		availiableBlockTypes.push_back(BlockType::Simple);
+		availiableBlockTypes.push_back(BlockType::SmoothDestroyable);
+		availiableBlockTypes.push_back(BlockType::Unbreackble);
+		blockColors[BlockType::Simple] = sf::Color::Red;
+		blockColors[BlockType::Unbreackble] = sf::Color(132, 139, 148, 255);
+		blockColors[BlockType::SmoothDestroyable] = sf::Color::Green;
+
+		smoothBlockDestroyTime = 1.5f;
 	}
 
 

@@ -85,7 +85,18 @@ namespace Arkanoid
 			}
 
 			//Win & loose conditions check
-			if (blocks.size() <= 0)
+			size_t unbreakbleBloks = std::count_if(blocks.begin(), blocks.end(),
+				[](auto block)
+				{
+					if (std::dynamic_pointer_cast<UnbreakbleBlock>(block))
+					{
+						return true;
+					}
+					return false;
+				}
+			);
+
+			if (blocks.size() <= unbreakbleBloks)
 			{
 				Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
 			}
@@ -113,10 +124,10 @@ namespace Arkanoid
 			for (int i = 0; i < settings->blocksInRow; i++)
 			{
 				sf::Vector2f position;
-				//Getting coordinates of block center considering spacing between the blocks and one empty row at top
+				//Getting coordinates of block center considering spacing between the blocks and one two row at top
 				position.x = settings->blockSpacing * (1 + i) + settings->blockSize.x * (i + 0.5f);
-				position.y = settings->blockSpacing * (1 + j) + settings->blockSize.y * (j + 1 + 0.5f);
-				blocks.push_back(std::make_shared<Block>(position));
+				position.y = settings->blockSpacing * (2 + j) + settings->blockSize.y * (j + 2 + 0.5f);
+				blocks.push_back(CreateRandomBlock(position));
 			}
 		}
 	}
