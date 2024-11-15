@@ -1,7 +1,7 @@
 #include "PauseState.h"
 #include "Application.h"
 #include "Utility.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "BaseMenuInputHandler.h"
 
 namespace Arkanoid
@@ -10,15 +10,15 @@ namespace Arkanoid
 		BaseState(), menu()
 	{
 		inputHandler = std::make_unique<BaseMenuInputHandler>(&menu);
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		overallBackground.setPosition(relativePositions.at(RelativePosition::TopLeft));
-		overallBackground.setSize(settings->ScreenSize());
-		overallBackground.setFillColor(settings->halfTrasparentWhite);
+		overallBackground.setSize(world->ScreenSize());
+		overallBackground.setFillColor(world->halfTrasparentWhite);
 
 		sf::FloatRect menuRect = menu.GetRect();
-		menuBackground.setSize({menuRect.width + settings->popUpSpacing, menuRect.height + settings->popUpSpacing });
+		menuBackground.setSize({menuRect.width + world->popUpSpacing, menuRect.height + world->popUpSpacing });
 		SetOriginByRelative(menuBackground, relativePositions.at(RelativePosition::Center));
-		menuBackground.setPosition(settings->ScreenCenter());
+		menuBackground.setPosition(world->ScreenCenter());
 		menuBackground.setFillColor(sf::Color::Black);
 		menuBackground.setOutlineColor(sf::Color::White);
 		menuBackground.setOutlineThickness(-3.f);
@@ -28,6 +28,6 @@ namespace Arkanoid
 	{
 		window.draw(overallBackground);
 		window.draw(menuBackground);
-		menu.Draw(window, { Application::GetSettings()->ScreenCenter() }, RelativePosition::Center);
+		menu.Draw(window, { GameWorld::GetWorld()->ScreenCenter() }, RelativePosition::Center);
 	}
 }

@@ -10,13 +10,13 @@ namespace Arkanoid
 		gameOverMenu = std::make_unique<GameWinnedMenu>();
 		inputHandler = std::make_unique<BaseMenuInputHandler>(gameOverMenu.get());
 
-		background.setFillColor(Application::GetSettings()->halfTrasparentWhite);
-		background.setSize(Application::GetSettings()->ScreenSize());
+		background.setFillColor(GameWorld::GetWorld()->halfTrasparentWhite);
+		background.setSize(GameWorld::GetWorld()->ScreenSize());
 	}
 
 	void GameWinnedState::Draw(sf::RenderWindow& window) const
 	{
 		window.draw(background);
-		gameOverMenu->Draw(window, Application::GetSettings()->ScreenCenter(), RelativePosition::Center);
+		gameOverMenu->Draw(window, GameWorld::GetWorld()->ScreenCenter(), RelativePosition::Center);
 	}
 }

@@ -1,6 +1,6 @@
 #include <assert.h>
 #include "Utility.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "Application.h"
 #include "Randomizer.h"
 
@@ -8,11 +8,11 @@ namespace Arkanoid
 {
     void TextStyle::Init(const std::string fontName, const sf::Color newColor, const sf::Text::Style newTextStyle, const unsigned int newSize)
     {
-        Settings* settings = Application::GetSettings();
+        GameWorld* world = GameWorld::GetWorld();
 #ifdef _DEBUG
-        assert(font.loadFromFile(settings->fontPath + fontName));
+        assert(font.loadFromFile(world->fontPath + fontName));
 #else
-        font.loadFromFile(settings->fontPath + fontName);
+        font.loadFromFile(world->fontPath + fontName);
 #endif // DEBUG
         color = newColor;
         textStyle = newTextStyle;
@@ -22,9 +22,9 @@ namespace Arkanoid
     void LoadTexture(std::string const& fileName, sf::Texture& texture)
     {
 #ifndef NDEBUG
-        assert(texture.loadFromFile(Application::GetSettings()->texturePath + fileName));
+        assert(texture.loadFromFile(GameWorld::GetWorld()->texturePath + fileName));
 #else 
-        texture.loadFromFile(Application::GetSettings()->texturePath + fileName);
+        texture.loadFromFile(GameWorld::GetWorld()->texturePath + fileName);
 #endif
     }
 

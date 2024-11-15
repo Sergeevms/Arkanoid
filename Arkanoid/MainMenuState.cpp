@@ -1,5 +1,5 @@
 #include "MainMenuState.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "BaseMenuInputHandler.h"
 #include "Application.h"
 
@@ -12,6 +12,6 @@ namespace Arkanoid
 
 	void MainMenuState::Draw(sf::RenderWindow& window) const
 	{
-		menu.Draw(window, { Application::GetSettings()->ScreenCenter() }, RelativePosition::Center);
+		menu.Draw(window, { GameWorld::GetWorld()->ScreenCenter() }, RelativePosition::Center);
 	}
 }

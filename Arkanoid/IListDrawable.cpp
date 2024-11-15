@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "IListDrawable.h"
 #include "Utility.h"
-#include "Settings.h"
+#include "GameWorld.h"
 
 namespace Arkanoid
 {

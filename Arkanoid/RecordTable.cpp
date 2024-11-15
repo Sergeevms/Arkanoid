@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "Settings.h"
+#include "GameWorld.h"
 #include "Application.h"
 
 namespace Arkanoid
@@ -23,7 +23,7 @@ namespace Arkanoid
 		const std::multimap<int, std::wstring> orderedTable = GetOrderedTable();
 		int index = 1;
 		std::multimap<int, std::wstring>::const_reverse_iterator current = orderedTable.rbegin();
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		while (current != orderedTable.rend() && index <= count)
 		{
 			std::wostringstream currentString;
@@ -37,14 +37,14 @@ namespace Arkanoid
 
 	bool RecordTable::Serialize() const
 	{
-		Settings* settings = Application::GetSettings();
-		std::wofstream output(settings->recordsFileName);
+		GameWorld* world = GameWorld::GetWorld();
+		std::wofstream output(world->recordsFileName);
 		if (output.is_open())
 		{
 			const std::multimap<int, std::wstring> orderedTable = GetOrderedTable();
 			int index = 0;
 			std::multimap<int, std::wstring>::const_reverse_iterator current = orderedTable.rbegin();
-			while (current != orderedTable.rend() && index < settings->bigRecordsSize)
+			while (current != orderedTable.rend() && index < world->bigRecordsSize)
 			{
 				output << current->first << L" " << current->second << std::endl;
 				++index;
@@ -61,10 +61,10 @@ namespace Arkanoid
 
 	void RecordTable::Deserialize()
 	{
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		recordTable.clear();
-		recordTable.reserve(settings->bigRecordsSize);
-		std::wifstream input(settings->recordsFileName);
+		recordTable.reserve(world->bigRecordsSize);
+		std::wifstream input(world->recordsFileName);
 		if (input.is_open())
 		{	
 			std::wstring name;
@@ -79,9 +79,9 @@ namespace Arkanoid
 		}
 		else
 		{
-			for (int i = 1; i <= settings->bigRecordsSize; ++i)
+			for (int i = 1; i <= world->bigRecordsSize; ++i)
 			{
-				recordTable.insert({ settings->defaultPlayerName, i * 10});
+				recordTable.insert({ world->defaultPlayerName, i * 10});
 			}
 		}
 	}

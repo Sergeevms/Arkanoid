@@ -167,7 +167,7 @@
     <ClCompile Include="RecordsStateInputHandlers.cpp" />
     <ClCompile Include="RecordsStateMenus.cpp" />
     <ClCompile Include="RecordTable.cpp" />
-    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -198,7 +198,7 @@
     <ClInclude Include="RecordsStateInputHandlers.h" />
     <ClInclude Include="RecordsStateMenus.h" />
     <ClInclude Include="RecordTable.h" />
-    <ClInclude Include="Settings.h" />
+    <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

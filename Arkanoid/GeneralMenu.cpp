@@ -1,6 +1,6 @@
 #include <assert.h>
 #include "GeneralMenu.h"
-#include "Settings.h"
+#include "GameWorld.h"
 
 namespace Arkanoid
 {

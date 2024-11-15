@@ -7,7 +7,7 @@
 namespace Arkanoid
 {
 	Application::Application() :
-		window(sf::VideoMode(GetSettings()->screenWidth, GetSettings()->screenHeight), GetSettings()->gameName), game(std::make_unique<Game>())
+		window(sf::VideoMode(GameWorld::GetWorld()->screenWidth, GameWorld::GetWorld()->screenHeight), GameWorld::GetWorld()->gameName), game(std::make_unique<Game>())
 	{
 	}
 
@@ -48,7 +48,7 @@ namespace Arkanoid
 				}
 			}
 
-			game->Update(GetSettings()->timePerFrame, inputEvents);
+			game->Update(GameWorld::GetWorld()->timePerFrame, inputEvents);
 			
 			window.clear();
 			game->Draw(window);
@@ -62,9 +62,9 @@ namespace Arkanoid
 			const float endTime = clock.getElapsedTime().asSeconds();
 			const float deltaTime = endTime - startTime;
 
-			if (deltaTime < GetSettings()->timePerFrame)
+			if (deltaTime < GameWorld::GetWorld()->timePerFrame)
 			{
-				sf::sleep(sf::seconds(GetSettings()->timePerFrame - deltaTime));
+				sf::sleep(sf::seconds(GameWorld::GetWorld()->timePerFrame - deltaTime));
 			}			
 		}
 	}

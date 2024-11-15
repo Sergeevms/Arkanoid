@@ -9,18 +9,18 @@ namespace Arkanoid
 {
 	Ball::Ball() : GameObject("ball.png")
 	{
-		Settings* settings = Application::GetSettings();
-		SetScaleBySize(sprite, { settings->ballDiameter, settings->ballDiameter });
+		GameWorld* world = GameWorld::GetWorld();
+		SetScaleBySize(sprite, { world->ballDiameter, world->ballDiameter });
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
 		Reset();
 	}
 
 	void Ball::Update(const float deltaTime)
 	{
-		Settings* settings = Application::GetSettings();
-		sf::Vector2f newPosition = sprite.getPosition() + direction * settings->ballSpeed * deltaTime;
+		GameWorld* world = GameWorld::GetWorld();
+		sf::Vector2f newPosition = sprite.getPosition() + direction * world->ballSpeed * deltaTime;
 		sprite.setPosition(newPosition);
-		if (newPosition.x < HalfSize().x || newPosition.x > settings->screenWidth - HalfSize().x)
+		if (newPosition.x < HalfSize().x || newPosition.x > world->screenWidth - HalfSize().x)
 		{			
 			bool movingDown = direction.y > 0.f;
 			ChangeAngle(180.f - previosAngle);
@@ -29,7 +29,7 @@ namespace Arkanoid
 				InvertY();
 			}
 		}
-		if (newPosition.y < HalfSize().y || newPosition.y > settings->screenHeight - HalfSize().y)
+		if (newPosition.y < HalfSize().y || newPosition.y > world->screenHeight - HalfSize().y)
 		{
 			InvertY();
 		}
@@ -37,7 +37,7 @@ namespace Arkanoid
 
 	void Ball::OnHit()
 	{
-		float angleChange = Application::GetSettings()->angleRandomChange;
+		float angleChange = GameWorld::GetWorld()->angleRandomChange;
 		previosAngle += random<float>(-1 * angleChange, angleChange);
 		ChangeAngle(previosAngle);
 	}
@@ -69,8 +69,8 @@ namespace Arkanoid
 
 	void Ball::Reset()
 	{
-		Settings* settings = Application::GetSettings();
-		sprite.setPosition(settings->ScreenCenter());
+		GameWorld* world = GameWorld::GetWorld();
+		sprite.setPosition(world->ScreenCenter());
 		previosAngle = 90.f;
 		direction = DirectionVecFromDegree(previosAngle);
 	}

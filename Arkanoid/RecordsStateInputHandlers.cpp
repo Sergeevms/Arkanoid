@@ -43,13 +43,13 @@ namespace Arkanoid
 			}
 			case (sf::Event::KeyPressed):
 			{
-				Settings* settings = Application::GetSettings();
-				if (settings->keyMap.contains(inputEvent.key.code))
+				GameWorld* world = GameWorld::GetWorld();
+				if (world->keyMap.contains(inputEvent.key.code))
 				{
-					if (actionMapping.contains(settings->keyMap[inputEvent.key.code]))
+					if (actionMapping.contains(world->keyMap[inputEvent.key.code]))
 					{
 						Application::GetInstance().GetGame()->PlaySound(SoundType::OnKeyHit);
-						actionMapping.at(settings->keyMap[inputEvent.key.code]) (this);
+						actionMapping.at(world->keyMap[inputEvent.key.code]) (this);
 					}
 				}
 				break;

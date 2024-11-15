@@ -6,9 +6,9 @@ namespace Arkanoid
 {
 	Block::Block(const sf::Vector2f& position) : GameObject("platform.png")
 	{
-		Settings* settings = Application::GetSettings();
-		sprite.setColor(settings->blockColors[BlockType::Simple]);
-		SetScaleBySize(sprite, settings->blockSize);
+		GameWorld* world = GameWorld::GetWorld();
+		sprite.setColor(world->blockColors[BlockType::Simple]);
+		SetScaleBySize(sprite, world->blockSize);
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
 		sprite.setPosition(position);
 	}
@@ -38,7 +38,7 @@ namespace Arkanoid
 
 	UnbreakbleBlock::UnbreakbleBlock(const sf::Vector2f& position) : Block(position)
 	{
-		sprite.setColor(Application::GetSettings()->blockColors[BlockType::Unbreackble]);
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Unbreackble]);
 	}
 
 	void UnbreakbleBlock::OnHit()
@@ -48,8 +48,8 @@ namespace Arkanoid
 
 	std::shared_ptr<Block> CreateRandomBlock(sf::Vector2f position)
 	{
-		Settings* settings = Application::GetSettings();
-		BlockType newBlockType = settings->availiableBlockTypes[rand() % settings->availiableBlockTypes.size()];
+		GameWorld* world = GameWorld::GetWorld();
+		BlockType newBlockType = world->availiableBlockTypes[rand() % world->availiableBlockTypes.size()];
 		switch (newBlockType)
 		{
 		case Arkanoid::BlockType::Simple:
@@ -87,7 +87,7 @@ namespace Arkanoid
 
 	SmoothDestroyableBlock::SmoothDestroyableBlock(const sf::Vector2f& position) : Block(position)
 	{
-		sprite.setColor(Application::GetSettings()->blockColors[BlockType::SmoothDestroyable]);
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::SmoothDestroyable]);
 	}
 
 	bool SmoothDestroyableBlock::GetCollision(Collidable* object) const
@@ -106,7 +106,7 @@ namespace Arkanoid
 
 	void SmoothDestroyableBlock::OnHit()
 	{
-		StartTimer(Application::GetSettings()->smoothBlockDestroyTime);
+		StartTimer(GameWorld::GetWorld()->smoothBlockDestroyTime);
 	}
 
 	void SmoothDestroyableBlock::FinalAction()
@@ -121,19 +121,19 @@ namespace Arkanoid
 
 	MultiHitBlock::MultiHitBlock(const sf::Vector2f& position) : Block(position)
 	{
-		HitCount = Application::GetSettings()->multiHitBlockCount;
-		sprite.setColor(Application::GetSettings()->blockColors[BlockType::MultiHit]);
+		HitCount = GameWorld::GetWorld()->multiHitBlockCount;
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::MultiHit]);
 	}
 
 	void MultiHitBlock::OnHit()
 	{
 		--HitCount;
-		ChangeSpriteOpacity(sprite, 255 * HitCount / Application::GetSettings()->multiHitBlockCount);
+		ChangeSpriteOpacity(sprite, 255 * HitCount / GameWorld::GetWorld()->multiHitBlockCount);
 	}
 
 	GlassBlock::GlassBlock(const sf::Vector2f& position) : Block(position)
 	{
-		sprite.setColor(Application::GetSettings()->blockColors[BlockType::Glass]);
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Glass]);
 	}
 
 	bool GlassBlock::CheckCollision(Collidable* object)

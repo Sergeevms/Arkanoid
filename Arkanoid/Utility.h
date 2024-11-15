@@ -63,7 +63,7 @@ namespace Arkanoid
 
 	/*Concept for function to set object scale to reach desired size*/
 	template<typename T>
-	concept haveMethodsForSettingScaleBySize = requires(T & a, float x)
+	concept haveMethodsForworldcaleBySize = requires(T & a, float x)
 	{
 		{ a.getLocalBounds() }-> std::same_as<sf::FloatRect>;
 		a.setScale(x, x);
@@ -72,7 +72,7 @@ namespace Arkanoid
 	/*Funtion to set scale to reach desired size*/
 	template<typename T>
 	void SetScaleBySize(T& object, sf::Vector2f const& desiredSize)
-		requires haveMethodsForSettingScaleBySize<T>
+		requires haveMethodsForworldcaleBySize<T>
 	{
 		const sf::FloatRect objectBoundRect = object.getLocalBounds();
 		const float xScale = desiredSize.x / objectBoundRect.width;

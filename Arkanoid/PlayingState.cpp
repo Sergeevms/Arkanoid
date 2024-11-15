@@ -2,7 +2,7 @@
 #include <string>
 #include "PlayingState.h"
 #include "Application.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "Game.h"
 #include "Utility.h"
 #include "PlayingInputHandler.h"
@@ -17,7 +17,7 @@ namespace Arkanoid
 		gameObjects.push_back(std::make_shared<Platform>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		gameObjects.push_back(std::make_shared<Ball>());
-		Settings* settings = Application::GetSettings();		
+		GameWorld* world = GameWorld::GetWorld();		
 		CreateBlocks();
 		ResetSessionDelay();
 	}
@@ -116,20 +116,20 @@ namespace Arkanoid
 
 	void PlayingState::ResetSessionDelay()
 	{
-		sessionDelay = Application::GetSettings()->sessionDelayTime;
+		sessionDelay = GameWorld::GetWorld()->sessionDelayTime;
 	}
 
 	void PlayingState::CreateBlocks()
 	{
-		const Settings* settings = Application::GetSettings();
-		for (int j = 0; j < settings->blockRowCount; j++)
+		const GameWorld* world = GameWorld::GetWorld();
+		for (int j = 0; j < world->blockRowCount; j++)
 		{
-			for (int i = 0; i < settings->blocksInRow; i++)
+			for (int i = 0; i < world->blocksInRow; i++)
 			{
 				sf::Vector2f position;
 				//Getting coordinates of block center considering spacing between the blocks and one two row at top
-				position.x = settings->blockSpacing * (1 + i) + settings->blockSize.x * (i + 0.5f);
-				position.y = settings->blockSpacing * (2 + j) + settings->blockSize.y * (j + 2 + 0.5f);
+				position.x = world->blockSpacing * (1 + i) + world->blockSize.x * (i + 0.5f);
+				position.y = world->blockSpacing * (2 + j) + world->blockSize.y * (j + 2 + 0.5f);
 				blocks.push_back(CreateRandomBlock(position));
 			}
 		}

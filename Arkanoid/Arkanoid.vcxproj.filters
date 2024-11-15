@@ -57,7 +57,7 @@
     <ClCompile Include="PlayingInputHandler.cpp">
       <Filter>Source Files\InputHandlers</Filter>
     </ClCompile>
-    <ClCompile Include="Settings.cpp">
+    <ClCompile Include="GameWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PauseState.cpp">
@@ -131,7 +131,7 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Settings.h">
+    <ClInclude Include="GameWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">

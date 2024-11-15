@@ -8,15 +8,18 @@ namespace Arkanoid
 	enum class ActionsTypesOnInput;
 	enum class BlockType;
 
-	class Settings
+	class GameWorld
 	{
 	public:
-		Settings();
-
+		static GameWorld* GetWorld()
+		{
+			static GameWorld world;
+			return &world;
+		};
 		sf::Vector2f ScreenCenter();
 		sf::Vector2f ScreenSize();
 
-		//General settings
+		//General world
 
 		int screenWidth;
 		int screenHeight;
@@ -31,7 +34,7 @@ namespace Arkanoid
 
 		sf::Color halfTrasparentWhite;
 
-		//Block settings
+		//Block world
 		int blocksInRow;
 		int blockRowCount;
 		float blockSpacing;
@@ -41,7 +44,7 @@ namespace Arkanoid
 		float smoothBlockDestroyTime;
 		int multiHitBlockCount;
 
-		//Sound settings
+		//Sound world
 
 		bool musicOn;
 		bool soundOn;		
@@ -55,19 +58,24 @@ namespace Arkanoid
 
 		std::string recordsFileName;
 		
-		//Control settings
+		//Control world
 		std::unordered_map<sf::Keyboard::Key, ActionsTypesOnInput> keyMap;
 
-		//Platform settings
+		//Platform world
 
 		sf::Vector2f platformSize;
 		float platformSpeed;
 
-		//Ball settings
+		//Ball world
 
 		float ballDiameter;
 		float ballSpeed;
 		float angleRandomChange;
 		float anglePlatformReboundChange;
+	private:
+		GameWorld();
+		~GameWorld() = default;
+		GameWorld(const GameWorld&) = delete;
+		GameWorld operator= (const GameWorld&) = delete;
 	};
 };

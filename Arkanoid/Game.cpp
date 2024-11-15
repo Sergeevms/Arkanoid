@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "Game.h"
 #include "Application.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "BaseState.h"
 #include "PlayingState.h"
 #include "MainMenuState.h"
@@ -13,12 +13,12 @@ namespace Arkanoid
 {
 	Game::Game()
 	{	
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		stateStack.emplace_back(std::make_unique<MainMenuState>());
 #ifdef _DEBUG
-		assert(backGroundMusic.openFromFile(settings->soundPath + "Clinthammer__Background_Music.wav"));
+		assert(backGroundMusic.openFromFile(world->soundPath + "Clinthammer__Background_Music.wav"));
 #else// _DEBUG
-		backGroundMusic.openFromFile(settings->soundPath + "Clinthammer__Background_Music.wav");
+		backGroundMusic.openFromFile(world->soundPath + "Clinthammer__Background_Music.wav");
 #endif
 		backGroundMusic.setLoop(true);
 		LoadSound(SoundType::OnKeyHit, "Owlstorm__Snake_hit.wav");
@@ -63,7 +63,7 @@ namespace Arkanoid
 		}
 		case GameState::Playing:
 		{
-			if (Application::GetSettings()->musicOn)
+			if (GameWorld::GetWorld()->musicOn)
 			{
 				backGroundMusic.play();
 			}
@@ -110,8 +110,8 @@ namespace Arkanoid
 
 	void Game::PlaySound(const SoundType sound)
 	{
-		Settings* settings = Application::GetSettings();
-		if (sounds.contains(sound) && settings->soundOn)
+		GameWorld* world = GameWorld::GetWorld();
+		if (sounds.contains(sound) && world->soundOn)
 		{
 			sounds.at(sound).play();
 		}
@@ -141,12 +141,12 @@ namespace Arkanoid
 
 	void Game::LoadSound(const SoundType type, std::string fileName)
 	{
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		soundBuffers.push_back(std::make_unique<sf::SoundBuffer>());
 #ifdef _DEBUG
-		assert((*soundBuffers.back()).loadFromFile(settings->soundPath + fileName));
+		assert((*soundBuffers.back()).loadFromFile(world->soundPath + fileName));
 #else
-		(*soundBuffers.back()).loadFromFile(settings->soundPath + fileName);
+		(*soundBuffers.back()).loadFromFile(world->soundPath + fileName);
 #endif // _DEBUG
 		sounds[type] = sf::Sound(*soundBuffers.back());
 	}

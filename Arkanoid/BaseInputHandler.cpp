@@ -1,22 +1,22 @@
 #include "BaseInputHandler.h"
 #include "Application.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "Game.h"
 
 namespace Arkanoid
 {
 	void BaseInputHandler::HandleInputEvents(const std::vector<sf::Event>& input)
 	{	
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 		Game* game = Application::GetInstance().GetGame();
 		for (auto& inputEvent : input)
 		{
-			if (settings->keyMap.contains(inputEvent.key.code))
+			if (world->keyMap.contains(inputEvent.key.code))
 			{
-				if (actionMapping.contains(settings->keyMap[inputEvent.key.code]))
+				if (actionMapping.contains(world->keyMap[inputEvent.key.code]))
 				{
 					game->PlaySound(SoundType::OnKeyHit);
-					actionMapping.at(settings->keyMap[inputEvent.key.code]) (this);
+					actionMapping.at(world->keyMap[inputEvent.key.code]) (this);
 				}
 			}
 		}		

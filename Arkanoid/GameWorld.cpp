@@ -1,4 +1,4 @@
-#include "Settings.h"
+#include "GameWorld.h"
 #include <filesystem>
 #include "BaseInputHandler.h"
 #include "Utility.h"
@@ -6,7 +6,7 @@
 
 namespace Arkanoid
 {
-	Settings::Settings()
+	GameWorld::GameWorld()
 	{
 		resourcesPath = "Resources\\";
 		soundPath = resourcesPath + "Sounds\\";
@@ -75,12 +75,12 @@ namespace Arkanoid
 	}
 
 
-	sf::Vector2f Settings::ScreenCenter()
+	sf::Vector2f GameWorld::ScreenCenter()
 	{
 		return ScreenSize() * 0.5f;
 	}
 
-	sf::Vector2f Settings::ScreenSize()
+	sf::Vector2f GameWorld::ScreenSize()
 	{
 		return sf::Vector2f({static_cast<float>(screenWidth), static_cast<float>(screenHeight)});
 	}

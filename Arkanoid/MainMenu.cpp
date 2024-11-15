@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 #include "Application.h"
-#include "Settings.h"
+#include "GameWorld.h"
 #include "IListDrawable.h"
 #include "BaseState.h"
 
@@ -26,7 +26,7 @@ namespace Arkanoid
 				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
 			});
 
-		MenuNode* settingsNode = InitializeNode(currentNode, L"Настройки", &normalStyle, nullptr, &subMenuStyle);
+		MenuNode* worldNode = InitializeNode(currentNode, L"Настройки", &normalStyle, nullptr, &subMenuStyle);
 
 		InitializeNode(currentNode, L"Выход", &normalStyle,
 			[](MenuNode*) 
@@ -34,7 +34,7 @@ namespace Arkanoid
 				Application::GetInstance().GetGame()->ShutDown();
 			});
 		
-		Settings* settings = Application::GetSettings();
+		GameWorld* world = GameWorld::GetWorld();
 
 		auto switchOption = [](MenuNode* node)
 			{
@@ -43,8 +43,8 @@ namespace Arkanoid
 					currentNode->SwitchChecked();
 				}
 			};
-		InitializeCheckBoxNode(settingsNode, L"Звук", settings->soundOn, 30.f, checkTexture, &selectedStyle, switchOption, &(settings->soundOn));
-		InitializeCheckBoxNode(settingsNode, L"Музыка", settings->musicOn, 30.f, checkTexture, &normalStyle, switchOption, &(settings->musicOn));
+		InitializeCheckBoxNode(worldNode, L"Звук", world->soundOn, 30.f, checkTexture, &selectedStyle, switchOption, &(world->soundOn));
+		InitializeCheckBoxNode(worldNode, L"Музыка", world->musicOn, 30.f, checkTexture, &normalStyle, switchOption, &(world->musicOn));
 	}
 
 	CheckBoxMenuNode* MainMenu::InitializeCheckBoxNode(MenuNode* parent, const std::wstring& newName, bool checked, float spacing, 

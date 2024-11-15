@@ -7,8 +7,8 @@ namespace Arkanoid
 {
 	Platform::Platform() : GameObject("platform.png")
 	{
-		Settings* settings = Application::GetSettings();
-		SetScaleBySize(sprite, settings->platformSize);
+		GameWorld* world = GameWorld::GetWorld();
+		SetScaleBySize(sprite, world->platformSize);
 		SetOriginByRelative(sprite, relativePositions.at(RelativePosition::Center));
 		Reset();
 	}
@@ -36,9 +36,9 @@ namespace Arkanoid
 		default:
 			break;
 		}
-		Settings* settings = Application::GetSettings();
-		sf::Vector2f newPosition = sprite.getPosition() + directionVector * settings->platformSpeed * deltaTime;
-		newPosition.x = std::clamp(newPosition.x, HalfSize().x, settings->screenWidth - HalfSize().x);
+		GameWorld* world = GameWorld::GetWorld();
+		sf::Vector2f newPosition = sprite.getPosition() + directionVector * world->platformSpeed * deltaTime;
+		newPosition.x = std::clamp(newPosition.x, HalfSize().x, world->screenWidth - HalfSize().x);
 		sprite.setPosition(newPosition);
 		direction = Direction::None;
 	}
@@ -46,8 +46,8 @@ namespace Arkanoid
 	void Platform::Reset()
 	{
 		direction = Direction::None;
-		Settings* settings = Application::GetSettings();
-		sprite.setPosition(settings->ScreenCenter().x, settings->screenHeight - HalfSize().y);
+		GameWorld* world = GameWorld::GetWorld();
+		sprite.setPosition(world->ScreenCenter().x, world->screenHeight - HalfSize().y);
 	}
 
 	bool Platform::CheckCollision(Collidable* object)
@@ -63,7 +63,7 @@ namespace Arkanoid
 			{
 				auto platformRect = GetRect();
 				auto ballPositionOnPlatform = (ball->GetPosition().x - (platformRect.left + platformRect.width / 2.f)) / (platformRect.width / 2.f);
-				ball->ChangeAngle(90.f - Application::GetSettings()->anglePlatformReboundChange * ballPositionOnPlatform);
+				ball->ChangeAngle(90.f - GameWorld::GetWorld()->anglePlatformReboundChange * ballPositionOnPlatform);
 				return true;
 			}
 			return false;
@@ -80,7 +80,7 @@ namespace Arkanoid
 		}
 		else
 		{
-			const Settings* settings = Application::GetSettings();
+			const GameWorld* world = GameWorld::GetWorld();
 			const auto ballPosition = ball->GetPosition();
 			const auto platformRect = GetRect();
 			auto sqr = [](float x)
@@ -90,15 +90,15 @@ namespace Arkanoid
 
 			if (ballPosition.x < platformRect.left)
 			{
-				return sqr(ballPosition.x - platformRect.left) + sqr(ballPosition.y - platformRect.top) < sqr(settings->ballDiameter / 2.f);
+				return sqr(ballPosition.x - platformRect.left) + sqr(ballPosition.y - platformRect.top) < sqr(world->ballDiameter / 2.f);
 			}
 
 			if (ballPosition.x > platformRect.left + platformRect.width)
 			{
-				return sqr(ballPosition.x - platformRect.left - platformRect.width) + sqr(ballPosition.y - platformRect.top) < sqr(settings->ballDiameter / 2.f);
+				return sqr(ballPosition.x - platformRect.left - platformRect.width) + sqr(ballPosition.y - platformRect.top) < sqr(world->ballDiameter / 2.f);
 			}
 
-			return std::fabs(ballPosition.y - platformRect.top) <= settings->ballDiameter / 2.f;
+			return std::fabs(ballPosition.y - platformRect.top) <= world->ballDiameter / 2.f;
 		}
 	}
 }
