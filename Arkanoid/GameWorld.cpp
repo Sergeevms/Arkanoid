@@ -12,6 +12,7 @@ namespace Arkanoid
 		soundPath = resourcesPath + "Sounds\\";
 		fontPath = resourcesPath + "Fonts\\";
 		texturePath = resourcesPath + "Textures\\";
+		levelConfig = resourcesPath + "levels.cnfg";
 
 		screenWidth = 800;
 		screenHeight = 600;
@@ -54,19 +55,17 @@ namespace Arkanoid
 
 		sessionDelayTime = 1.f;
 
-		blocksInRow = 10;
+		blocksInRow = 15;
 		blockRowCount = 3;
 		blockSpacing = 3.f;
 		blockSize.y = 30.f;
 		blockSize.x = (screenWidth - (1 + blocksInRow) * blockSpacing) / blocksInRow;
 		availiableBlockTypes.push_back(BlockType::Simple);
-		availiableBlockTypes.push_back(BlockType::SmoothDestroyable);
 		availiableBlockTypes.push_back(BlockType::Unbreackble);
 		availiableBlockTypes.push_back(BlockType::MultiHit);
 		availiableBlockTypes.push_back(BlockType::Glass);
-		blockColors[BlockType::Simple] = sf::Color::Red;
 		blockColors[BlockType::Unbreackble] = sf::Color(132, 139, 148, 255);
-		blockColors[BlockType::SmoothDestroyable] = sf::Color::Green;
+		blockColors[BlockType::Simple] = sf::Color::Red;
 		blockColors[BlockType::MultiHit] = sf::Color(154, 73, 209, 255);
 		blockColors[BlockType::Glass] = sf::Color::Cyan;
 

@@ -1,10 +1,14 @@
 #pragma once
 #include "BaseState.h"
+#include <unordered_map>
 
 namespace Arkanoid
 {
     class GameObject;
     class Block;
+    enum class BlockType;
+    class BlockFactory;
+    class LevelLoader;
 
     class PlayingState :
         public BaseState
@@ -22,6 +26,10 @@ namespace Arkanoid
         std::vector<std::shared_ptr<GameObject>> gameObjects;
         std::vector<std::shared_ptr<Block>> blocks;
         //Deley in seconds before game start from menu or after pause
-        float sessionDelay{ 0.f };
+        float sessionDelay = 0.f;
+        std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
+        int unbreakbleBlocksCount = 0;
+        int currentLevel = 0;
+        std::unique_ptr<LevelLoader> levelLoader;
     };
 }

@@ -19,7 +19,7 @@ namespace Arkanoid
 		sf::Vector2f ScreenCenter();
 		sf::Vector2f ScreenSize();
 
-		//General world
+		//General settings
 
 		int screenWidth;
 		int screenHeight;
@@ -34,7 +34,7 @@ namespace Arkanoid
 
 		sf::Color halfTrasparentWhite;
 
-		//Block world
+		//Block settings
 		int blocksInRow;
 		int blockRowCount;
 		float blockSpacing;
@@ -44,7 +44,7 @@ namespace Arkanoid
 		float smoothBlockDestroyTime;
 		int multiHitBlockCount;
 
-		//Sound world
+		//Sound settings
 
 		bool musicOn;
 		bool soundOn;		
@@ -55,18 +55,18 @@ namespace Arkanoid
 		std::string soundPath;
 		std::string fontPath;
 		std::string texturePath;
-
 		std::string recordsFileName;
+		std::string levelConfig;
 		
-		//Control world
+		//Control settings
 		std::unordered_map<sf::Keyboard::Key, ActionsTypesOnInput> keyMap;
 
-		//Platform world
+		//Platform settings
 
 		sf::Vector2f platformSize;
 		float platformSpeed;
 
-		//Ball world
+		//Ball settings
 
 		float ballDiameter;
 		float ballSpeed;

@@ -54,11 +54,6 @@ namespace Arkanoid
 		{
 		case Arkanoid::BlockType::Simple:
 		{
-			return std::make_shared<Block>(position);
-			break;
-		}
-		case Arkanoid::BlockType::SmoothDestroyable:
-		{
 			return std::make_shared<SmoothDestroyableBlock>(position);
 			break;
 		}
@@ -87,7 +82,7 @@ namespace Arkanoid
 
 	SmoothDestroyableBlock::SmoothDestroyableBlock(const sf::Vector2f& position) : Block(position)
 	{
-		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::SmoothDestroyable]);
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Simple]);
 	}
 
 	bool SmoothDestroyableBlock::GetCollision(Collidable* object) const

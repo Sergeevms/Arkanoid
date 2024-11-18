@@ -9,15 +9,21 @@
 #include "Platform.h"
 #include "Ball.h"
 #include "Block.h"
+#include "BlockFactory.h"
+#include "LevelLoader.h"
 
 namespace Arkanoid
 {
-	PlayingState::PlayingState() : BaseState()
+	PlayingState::PlayingState() : BaseState(), levelLoader(std::make_unique<LevelLoader>())
 	{
 		gameObjects.push_back(std::make_shared<Platform>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		gameObjects.push_back(std::make_shared<Ball>());
 		GameWorld* world = GameWorld::GetWorld();		
+		factories.emplace(BlockType::Simple, std::make_unique<SimpleBlockFactory>());
+		factories.emplace(BlockType::Unbreackble, std::make_unique<UnbreakableBlockFactory>());
+		factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
+		factories.emplace(BlockType::MultiHit, std::make_unique<MultipleHitBlockFactory>());
 		CreateBlocks();
 		ResetSessionDelay();
 	}
@@ -101,7 +107,16 @@ namespace Arkanoid
 
 			if (blocks.size() <= unbreakbleBloks)
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
+				if (currentLevel >= levelLoader->GetLevelCount())
+				{
+					Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
+				}
+				else
+				{
+					blocks.clear();
+					++currentLevel;
+					CreateBlocks();
+				}
 			}
 			if (ball->GetRect().top + ball->HalfSize().y > platform->GetRect().top && !platformCollided)
 			{
@@ -122,17 +137,26 @@ namespace Arkanoid
 	void PlayingState::CreateBlocks()
 	{
 		const GameWorld* world = GameWorld::GetWorld();
-		for (int j = 0; j < world->blockRowCount; j++)
+		
+		for (auto& pair : factories)
 		{
-			for (int i = 0; i < world->blocksInRow; i++)
-			{
-				sf::Vector2f position;
-				//Getting coordinates of block center considering spacing between the blocks and one two row at top
-				position.x = world->blockSpacing * (1 + i) + world->blockSize.x * (i + 0.5f);
-				position.y = world->blockSpacing * (2 + j) + world->blockSize.y * (j + 2 + 0.5f);
-				blocks.push_back(CreateRandomBlock(position));
-			}
+			pair.second->ClearBreakableCounter();
 		}
+		auto& level = levelLoader->GetLevel(currentLevel);
+		for (auto& block : level.blocks)
+		{
+			sf::Vector2f position;
+			//Getting coordinates of block center considering spacing between the blocks and one two row at top
+			position.x = world->blockSpacing * (1 + block.first.x) + world->blockSize.x * (block.first.x + 0.5f);
+			position.y = world->blockSpacing * (2 + block.first.y) + world->blockSize.y * (block.first.y + 2 + 0.5f);
+			blocks.push_back(factories.at(block.second)->CreateBlock(position));
+		}
+		int breakableBlocksCount = 0;
+		for (auto& pair : factories)
+		{
+			breakableBlocksCount += pair.second->GetBreakableBlockCount();
+		}
+		unbreakbleBlocksCount = static_cast<int>(blocks.size()) - breakableBlocksCount;
 	}
 
 	void PlayingState::GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY)

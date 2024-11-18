@@ -21,7 +21,6 @@ namespace Arkanoid
 	enum class BlockType
 	{
 		Simple,
-		SmoothDestroyable,
 		Unbreackble,
 		MultiHit,
 		Glass
