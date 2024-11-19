@@ -17,13 +17,13 @@ namespace Arkanoid
 		InitializeNode(currentNode, L"Начать игру", &selectedStyle,
 			[](MenuNode*) 
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Playing);
+				Application::GetInstance().GetGame()->StartGame();
 			});
 
 		InitializeNode(currentNode, L"Таблица рекордов", &normalStyle, 
 			[](MenuNode*) 
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
+				Application::GetInstance().GetGame()->ShowRecords();
 			});
 
 		MenuNode* worldNode = InitializeNode(currentNode, L"Настройки", &normalStyle, nullptr, &subMenuStyle);
@@ -31,7 +31,7 @@ namespace Arkanoid
 		InitializeNode(currentNode, L"Выход", &normalStyle,
 			[](MenuNode*) 
 			{
-				Application::GetInstance().GetGame()->ShutDown();
+				Application::GetInstance().GetGame()->Shutdown();
 			});
 		
 		GameWorld* world = GameWorld::GetWorld();

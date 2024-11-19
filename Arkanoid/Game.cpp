@@ -29,13 +29,30 @@ namespace Arkanoid
 
 	bool Game::IsGameShuttingDown() const
 	{
-		return isShuttingDown;
+		return stateStack.empty();
 	}
 
-	void Game::Update(const float deltaTime, const std::vector<sf::Event>& inputEvents)
+	void Game::Update(const float deltaTime)
 	{
-		stateStack.rbegin()->get()->HandleInput(inputEvents);
 		stateStack.rbegin()->get()->Update(deltaTime);
+	}
+
+	void Game::HandleInputEvents(sf::RenderWindow& window)
+	{
+		std::vector<sf::Event> inputEvents;
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::TextEntered)
+			{
+				inputEvents.push_back(event);
+			}
+		}
+		stateStack.rbegin()->get()->HandleInput(inputEvents);
 	}
 
 	void Game::Draw(sf::RenderWindow& window) const
@@ -100,12 +117,12 @@ namespace Arkanoid
 			stateStack.emplace_back(std::make_unique<GameWinnedState>());
 			break;
 		}
+		case GameState::None:
+		{
+			stateStack.clear();
+			break;
 		}
-	}
-
-	void Game::ShutDown()
-	{
-		isShuttingDown = true;
+		}
 	}
 
 	void Game::PlaySound(const SoundType sound)
@@ -149,5 +166,81 @@ namespace Arkanoid
 		(*soundBuffers.back()).loadFromFile(world->soundPath + fileName);
 #endif // _DEBUG
 		sounds[type] = sf::Sound(*soundBuffers.back());
+	}
+
+	void Game::StartGame()
+	{
+		SwitchToState(GameState::Playing);
+	}
+
+	void Game::PauseGame()
+	{
+		SwitchToState(GameState::Pause);
+	}
+
+	void Game::WinGame()
+	{
+		SwitchToState(GameState::GameWinned);
+	}
+
+	void Game::LooseGame()
+	{
+		PlaySound(SoundType::OnLose);
+		SwitchToState(GameState::Records);
+	}
+
+	void Game::UpdateGame(const float deltaTime, sf::RenderWindow& window)
+	{
+		HandleInputEvents(window);
+		if (IsGameShuttingDown())
+		{
+			window.close();
+		}		
+		else
+		{
+			Update(deltaTime);
+			window.clear();
+			Draw(window);
+			window.display();
+		}
+	}
+
+	void Game::ToMainMenu()
+	{
+		SwitchToState(GameState::MainMenu);
+	}
+
+	void Game::ShowRecords()
+	{
+		SwitchToState(GameState::Records);
+	}
+
+	void Game::LoadNextLevel()
+	{
+		auto playingState = dynamic_cast<PlayingState*>(stateStack.back().get());
+		if (playingState)
+		{
+			playingState->LoadNextLevel();
+		}
+	}
+
+	void Game::Shutdown()
+	{
+		SwitchToState(GameState::None);
+	}
+
+	void Game::PlaySoundOnKeyHit()
+	{
+		PlaySound(SoundType::OnKeyHit);
+	}
+
+	void Game::PlaySoundOnBallHit()
+	{
+		PlaySound(SoundType::OnBallHit);
+	}
+
+	void Game::PlaySoundOnSessionStart()
+	{
+		PlaySound(SoundType::OnSessionStart);
 	}
 }

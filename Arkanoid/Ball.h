@@ -13,7 +13,7 @@ namespace Arkanoid
 		virtual bool GetCollision(Collidable* object) const override;
 		void InvertX();
 		void InvertY();
-		void Reset();
+		virtual void Reset() override;
 		void ChangeAngle(float angle);
 	protected:
 		virtual void OnHit() override;

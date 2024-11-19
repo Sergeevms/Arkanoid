@@ -37,6 +37,7 @@ namespace Arkanoid
 
 	void Ball::OnHit()
 	{
+		Application::GetInstance().GetGame()->PlaySoundOnBallHit();
 		float angleChange = GameWorld::GetWorld()->angleRandomChange;
 		previosAngle += random<float>(-1 * angleChange, angleChange);
 		ChangeAngle(previosAngle);

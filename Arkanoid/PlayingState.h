@@ -19,6 +19,7 @@ namespace Arkanoid
         virtual void Draw(sf::RenderWindow& window) const override;
         virtual void Update(const float deltaTime) override;
         void ResetSessionDelay();
+        void LoadNextLevel();
     private:
         void CreateBlocks();
         void GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY);
@@ -29,7 +30,7 @@ namespace Arkanoid
         float sessionDelay = 0.f;
         std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
         int unbreakbleBlocksCount = 0;
-        int currentLevel = 0;
+        int nextLevel = 0;
         std::unique_ptr<LevelLoader> levelLoader;
     };
 }

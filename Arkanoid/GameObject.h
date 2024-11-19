@@ -13,6 +13,7 @@ namespace Arkanoid
 		sf::FloatRect GetRect() const;
 		sf::Vector2f GetPosition() const;
 		sf::Vector2f HalfSize() const;
+		virtual void Reset() { };
 	protected:
 		sf::Texture texture;
 		sf::Sprite sprite;

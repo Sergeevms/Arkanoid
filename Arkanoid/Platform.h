@@ -13,7 +13,7 @@ namespace Arkanoid
 		Platform();
 		void SetMovingDirection(const Direction direction);
 		void Update(const float deltaTime) override;
-		void Reset();
+		virtual void Reset() override;
 		virtual bool CheckCollision(Collidable* object);
 		virtual bool GetCollision(Collidable* object) const override;
 	protected:

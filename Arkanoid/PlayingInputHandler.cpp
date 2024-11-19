@@ -16,7 +16,7 @@ namespace Arkanoid
 				{
 					state->ResetSessionDelay();
 				}
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Pause);
+				Application::GetInstance().GetGame()->PauseGame();
 			};
 	}
 

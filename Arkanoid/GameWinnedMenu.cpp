@@ -13,12 +13,12 @@ namespace Arkanoid
 		InitializeNode(currentNode, L"Да", &selectedStyle,
 			[](MenuNode*)
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Playing);
+				Application::GetInstance().GetGame()->StartGame();
 			});
 		InitializeNode(currentNode, L"Нет", &normalStyle,
 			[](MenuNode*)
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::MainMenu);
+				Application::GetInstance().GetGame()->ToMainMenu();
 			});
 	}
 }

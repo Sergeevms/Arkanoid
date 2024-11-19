@@ -61,6 +61,7 @@ namespace Arkanoid
 		{
 			if (GetCollision(ball))
 			{
+				Application::GetInstance().GetGame()->PlaySoundOnBallHit();
 				auto platformRect = GetRect();
 				auto ballPositionOnPlatform = (ball->GetPosition().x - (platformRect.left + platformRect.width / 2.f)) / (platformRect.width / 2.f);
 				ball->ChangeAngle(90.f - GameWorld::GetWorld()->anglePlatformReboundChange * ballPositionOnPlatform);

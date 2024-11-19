@@ -32,32 +32,9 @@ namespace Arkanoid
 
 		while (window.isOpen())
 		{
-			const float startTime = clock.getElapsedTime().asSeconds();
+			const float startTime = clock.getElapsedTime().asSeconds();			
 
-			std::vector<sf::Event> inputEvents;
-			sf::Event event;
-			while (window.pollEvent(event))
-			{
-				if (event.type == sf::Event::Closed)
-				{
-					window.close();
-				}
-				if (event.type == sf::Event::KeyPressed || event.type == sf::Event::TextEntered)
-				{
-					inputEvents.push_back(event);
-				}
-			}
-
-			game->Update(GameWorld::GetWorld()->timePerFrame, inputEvents);
-			
-			window.clear();
-			game->Draw(window);
-			window.display();
-
-			if (game->IsGameShuttingDown())
-			{
-				window.close();
-			}
+			game->UpdateGame(GameWorld::GetWorld()->timePerFrame, window);
 
 			const float endTime = clock.getElapsedTime().asSeconds();
 			const float deltaTime = endTime - startTime;

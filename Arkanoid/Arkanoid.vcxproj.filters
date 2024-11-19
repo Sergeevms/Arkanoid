@@ -227,5 +227,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\levels.cnfg" />
+    <None Include="Resources\winTestlevels.cnfg" />
   </ItemGroup>
 </Project>

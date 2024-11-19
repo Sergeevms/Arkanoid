@@ -24,8 +24,7 @@ namespace Arkanoid
 		factories.emplace(BlockType::Unbreackble, std::make_unique<UnbreakableBlockFactory>());
 		factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
 		factories.emplace(BlockType::MultiHit, std::make_unique<MultipleHitBlockFactory>());
-		CreateBlocks();
-		ResetSessionDelay();
+		LoadNextLevel();
 	}
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
@@ -62,7 +61,6 @@ namespace Arkanoid
 				{
 					if ((!hasBrokeOneBlock) && (block->CheckCollision(ball)))
 					{
-						Application::GetInstance().GetGame()->PlaySound(SoundType::OnBallHit);
 						hasBrokeOneBlock = true;
 						sf::Vector2f ballPosition = ball->GetPosition();
 						sf::FloatRect blockRect = block->GetRect();
@@ -88,39 +86,16 @@ namespace Arkanoid
 
 			Platform* platform = std::dynamic_pointer_cast<Platform>(gameObjects.front()).get();
 			bool platformCollided = platform->CheckCollision(ball);
-			if (platformCollided)
-			{
-				Application::GetInstance().GetGame()->PlaySound(SoundType::OnBallHit);
-			}
 
 			//Win & loose conditions check
-			size_t unbreakbleBloks = std::count_if(blocks.begin(), blocks.end(),
-				[](auto block)
-				{
-					if (std::dynamic_pointer_cast<UnbreakbleBlock>(block))
-					{
-						return true;
-					}
-					return false;
-				}
-			);
-
-			if (blocks.size() <= unbreakbleBloks)
+			
+			if (blocks.size() <= unbreakbleBlocksCount)
 			{
-				if (currentLevel >= levelLoader->GetLevelCount())
-				{
-					Application::GetInstance().GetGame()->SwitchToState(GameState::GameWinned);
-				}
-				else
-				{
-					blocks.clear();
-					++currentLevel;
-					CreateBlocks();
-				}
+				LoadNextLevel();
 			}
 			if (ball->GetRect().top + ball->HalfSize().y > platform->GetRect().top && !platformCollided)
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::Records);
+				Application::GetInstance().GetGame()->LooseGame();
 			}
 		}
 		else
@@ -134,6 +109,25 @@ namespace Arkanoid
 		sessionDelay = GameWorld::GetWorld()->sessionDelayTime;
 	}
 
+	void PlayingState::LoadNextLevel()
+	{
+		if (nextLevel >= levelLoader->GetLevelCount())
+		{
+			Application::GetInstance().GetGame()->WinGame();
+		}
+		else
+		{
+			blocks.clear();
+			CreateBlocks();
+			for (auto& object : gameObjects)
+			{
+				object->Reset();
+			}
+			ResetSessionDelay();
+			++nextLevel;
+		}
+	}
+
 	void PlayingState::CreateBlocks()
 	{
 		const GameWorld* world = GameWorld::GetWorld();
@@ -142,7 +136,7 @@ namespace Arkanoid
 		{
 			pair.second->ClearBreakableCounter();
 		}
-		auto& level = levelLoader->GetLevel(currentLevel);
+		auto& level = levelLoader->GetLevel(nextLevel);
 		for (auto& block : level.blocks)
 		{
 			sf::Vector2f position;

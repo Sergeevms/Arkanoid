@@ -48,7 +48,7 @@ namespace Arkanoid
 				{
 					if (actionMapping.contains(world->keyMap[inputEvent.key.code]))
 					{
-						Application::GetInstance().GetGame()->PlaySound(SoundType::OnKeyHit);
+						Application::GetInstance().GetGame()->PlaySoundOnKeyHit();
 						actionMapping.at(world->keyMap[inputEvent.key.code]) (this);
 					}
 				}
@@ -73,7 +73,7 @@ namespace Arkanoid
 		actionMapping[ActionsTypesOnInput::Back] =
 			[](BaseInputHandler*)
 			{
-				Application::GetInstance().GetGame()->SwitchToState(GameState::MainMenu);
+				Application::GetInstance().GetGame()->ToMainMenu();
 			};
 	}
 }

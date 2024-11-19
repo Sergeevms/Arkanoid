@@ -20,20 +20,32 @@ namespace Arkanoid
 	class Game
 	{
 	public:
-		Game();
+		void StartGame();
+		void PauseGame();
+		void WinGame();
+		void LooseGame();
+		void UpdateGame(const float deltaTime, sf::RenderWindow& window);
+		void ToMainMenu();
+		void ShowRecords();
+		void LoadNextLevel();
+		void Shutdown();
 
-		bool IsGameShuttingDown() const;
-		void Update(const float deltaTime, const std::vector<sf::Event>& inputEvents);
-		void Draw(sf::RenderWindow&) const;
-		void SwitchToState(GameState newState);
-		void ShutDown();
-		void PlaySound(const SoundType sound);
+		void PlaySoundOnKeyHit();
+		void PlaySoundOnBallHit();
+		void PlaySoundOnSessionStart();
+
+		Game();
 		void SetLastSessionScore(const int score);
 		int GetLastSessionScore() const;
 		BaseState* GetState() const;
 
 	private:
-		bool isShuttingDown{ false };
+		void Update(const float deltaTime);
+		void HandleInputEvents(sf::RenderWindow& window);
+		void Draw(sf::RenderWindow&) const;
+		void SwitchToState(GameState newState);
+		bool IsGameShuttingDown() const;
+		void PlaySound(const SoundType sound);
 		int lastSessionScore{ 0 };
 		sf::Music backGroundMusic;
 		std::vector<std::unique_ptr<BaseState>> stateStack;

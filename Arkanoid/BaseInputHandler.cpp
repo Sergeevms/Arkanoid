@@ -15,7 +15,7 @@ namespace Arkanoid
 			{
 				if (actionMapping.contains(world->keyMap[inputEvent.key.code]))
 				{
-					game->PlaySound(SoundType::OnKeyHit);
+					game->PlaySoundOnKeyHit();
 					actionMapping.at(world->keyMap[inputEvent.key.code]) (this);
 				}
 			}

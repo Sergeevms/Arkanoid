@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\levels.cnfg" />
+    <None Include="Resources\winTestlevels.cnfg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
