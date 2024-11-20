@@ -14,7 +14,7 @@ namespace Arkanoid
 	Game::Game()
 	{	
 		GameWorld* world = GameWorld::GetWorld();
-		stateStack.emplace_back(std::make_unique<MainMenuState>());
+		stateStack.emplace_back(std::make_shared<MainMenuState>());
 #ifdef _DEBUG
 		assert(backGroundMusic.openFromFile(world->soundPath + "Clinthammer__Background_Music.wav"));
 #else// _DEBUG
@@ -75,7 +75,7 @@ namespace Arkanoid
 		case GameState::MainMenu:
 		{			
 			stateStack.clear();
-			stateStack.emplace_back(std::make_unique<MainMenuState>());
+			stateStack.emplace_back(std::make_shared<MainMenuState>());
 			break;
 		}
 		case GameState::Playing:
@@ -91,7 +91,8 @@ namespace Arkanoid
 			else
 			{
 				stateStack.clear();
-				stateStack.emplace_back(std::make_unique<PlayingState>());
+				stateStack.emplace_back(std::make_shared<PlayingState>());
+				stateStack.back()->Init();
 			}
 			break;
 		}
@@ -99,22 +100,22 @@ namespace Arkanoid
 		{
 			if (dynamic_cast<PlayingState*>(stateStack.back().get()))
 			{
-				stateStack.emplace_back(std::make_unique<RecordsState>(true));
+				stateStack.emplace_back(std::make_shared<RecordsState>(true));
 			}
 			else
 			{
-				stateStack.emplace_back(std::make_unique<RecordsState>(false));
+				stateStack.emplace_back(std::make_shared<RecordsState>(false));
 			}
 			break;
 		}
 		case GameState::Pause:
 		{
-			stateStack.emplace_back(std::make_unique<PauseState>());
+			stateStack.emplace_back(std::make_shared<PauseState>());
 			break;
 		}
 		case GameState::GameWinned:
 		{
-			stateStack.emplace_back(std::make_unique<GameWinnedState>());
+			stateStack.emplace_back(std::make_shared<GameWinnedState>());
 			break;
 		}
 		case GameState::None:

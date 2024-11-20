@@ -33,6 +33,7 @@ namespace Arkanoid
 		{
 			InvertY();
 		}
+		Emit();
 	}	
 
 	void Ball::OnHit()

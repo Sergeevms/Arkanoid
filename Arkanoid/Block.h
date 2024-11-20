@@ -2,10 +2,11 @@
 #include "GameObject.h"
 #include "Collidable.h"
 #include "IDelayedAction.h"
+#include "IObserver.h"
 
 namespace Arkanoid
 {
-	class Block : public GameObject, public Collidable
+	class Block : public GameObject, public Collidable, public IObservable
 	{
 	public:
 		Block(const sf::Vector2f& position);

@@ -2,10 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
 #include "Collidable.h"
+#include "IObserver.h"
 
 namespace Arkanoid
 {
-	class Ball : public GameObject, public Collidable
+	class Ball : public GameObject, public Collidable, public IObservable
 	{
 	public:
 		Ball();

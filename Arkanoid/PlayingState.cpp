@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <string>
+#include <memory>
 #include "PlayingState.h"
 #include "Application.h"
 #include "GameWorld.h"
@@ -19,12 +20,10 @@ namespace Arkanoid
 		gameObjects.push_back(std::make_shared<Platform>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		gameObjects.push_back(std::make_shared<Ball>());
-		GameWorld* world = GameWorld::GetWorld();		
 		factories.emplace(BlockType::Simple, std::make_unique<SimpleBlockFactory>());
 		factories.emplace(BlockType::Unbreackble, std::make_unique<UnbreakableBlockFactory>());
 		factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
 		factories.emplace(BlockType::MultiHit, std::make_unique<MultipleHitBlockFactory>());
-		LoadNextLevel();
 	}
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
@@ -34,7 +33,7 @@ namespace Arkanoid
 				object->Draw(window);
 			};
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunctor);
-		std::for_each(blocks.begin(), blocks.end(), drawFunctor);
+		std::for_each(blocks->begin(), blocks->end(), drawFunctor);
 	}
 
 	void PlayingState::Update(const float deltaTime)
@@ -47,7 +46,7 @@ namespace Arkanoid
 					object->Update(deltaTime);
 				};
 			std::for_each(gameObjects.begin(), gameObjects.end(), updateFunctor);
-			std::for_each(blocks.begin(), blocks.end(), updateFunctor);
+			std::for_each(blocks->begin(), blocks->end(), updateFunctor);
 
 
 			//Collision checks
@@ -56,7 +55,8 @@ namespace Arkanoid
 			bool needInvertX = false;
 			bool needInvertY = false;
 			bool hasBrokeOneBlock = false;
-			blocks.erase(std::remove_if(blocks.begin(), blocks.end(),
+			std::shared_ptr<std::vector<std::shared_ptr<Block>>> blocks = PlayingState::blocks;
+			blocks->erase(std::remove_if(blocks->begin(), blocks->end(),
 				[ball, &hasBrokeOneBlock, &needInvertX, &needInvertY, this](auto block)
 				{
 					if ((!hasBrokeOneBlock) && (block->CheckCollision(ball)))
@@ -72,7 +72,7 @@ namespace Arkanoid
 					}
 					return block->IsBroken();
 				}),
-				blocks.end());
+				blocks->end());
 
 			if (needInvertX)
 			{
@@ -84,24 +84,22 @@ namespace Arkanoid
 				ball->InvertY();
 			}
 
-			Platform* platform = std::dynamic_pointer_cast<Platform>(gameObjects.front()).get();
-			bool platformCollided = platform->CheckCollision(ball);
-
-			//Win & loose conditions check
-			
-			if (blocks.size() <= unbreakbleBlocksCount)
-			{
-				LoadNextLevel();
-			}
-			if (ball->GetRect().top + ball->HalfSize().y > platform->GetRect().top && !platformCollided)
-			{
-				Application::GetInstance().GetGame()->LooseGame();
-			}
+			std::dynamic_pointer_cast<Platform>(gameObjects.front())->CheckCollision(ball);
 		}
 		else
 		{
 			sessionDelay -= deltaTime;
 		}		
+	}
+
+	void PlayingState::Init()
+	{
+		auto self = weak_from_this();
+		if (auto ball = std::dynamic_pointer_cast<IObservable>(gameObjects[1]); ball)
+		{
+			ball->AddObserver(weak_from_this());
+		}
+		LoadNextLevel();
 	}
 
 	void PlayingState::ResetSessionDelay()
@@ -117,7 +115,7 @@ namespace Arkanoid
 		}
 		else
 		{
-			blocks.clear();
+			blocks = std::make_shared <std::vector<std::shared_ptr<Block>>>();
 			CreateBlocks();
 			for (auto& object : gameObjects)
 			{
@@ -125,6 +123,25 @@ namespace Arkanoid
 			}
 			ResetSessionDelay();
 			++nextLevel;
+		}
+	}
+
+	void PlayingState::Notify(std::shared_ptr<IObservable> observable)
+	{
+		if (auto block = std::dynamic_pointer_cast<Block>(observable); block)
+		{
+			if (--breakableBlocksCount <= 0)
+			{
+				Application::GetInstance().GetGame()->LoadNextLevel();
+			};
+		}
+		else
+		if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
+		{
+			if (ball->GetPosition().y > gameObjects.front()->GetRect().top)
+			{
+				Application::GetInstance().GetGame()->LooseGame();
+			}
 		}
 	}
 
@@ -137,20 +154,20 @@ namespace Arkanoid
 			pair.second->ClearBreakableCounter();
 		}
 		auto& level = levelLoader->GetLevel(nextLevel);
+		auto self = weak_from_this();
 		for (auto& block : level.blocks)
 		{
 			sf::Vector2f position;
 			//Getting coordinates of block center considering spacing between the blocks and one two row at top
 			position.x = world->blockSpacing * (1 + block.first.x) + world->blockSize.x * (block.first.x + 0.5f);
 			position.y = world->blockSpacing * (2 + block.first.y) + world->blockSize.y * (block.first.y + 2 + 0.5f);
-			blocks.push_back(factories.at(block.second)->CreateBlock(position));
+			blocks->push_back(factories.at(block.second)->CreateBlock(position));
+			blocks->back()->AddObserver(self);
 		}
-		int breakableBlocksCount = 0;
 		for (auto& pair : factories)
 		{
 			breakableBlocksCount += pair.second->GetBreakableBlockCount();
-		}
-		unbreakbleBlocksCount = static_cast<int>(blocks.size()) - breakableBlocksCount;
+		}		
 	}
 
 	void PlayingState::GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY)

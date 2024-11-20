@@ -153,6 +153,7 @@
     <ClCompile Include="GameWinnedState.cpp" />
     <ClCompile Include="IDelayedAction.cpp" />
     <ClCompile Include="IListDrawable.cpp" />
+    <ClCompile Include="IObserver.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="GameWinnedState.h" />
     <ClInclude Include="IDelayedAction.h" />
     <ClInclude Include="IListDrawable.h" />
+    <ClInclude Include="IObserver.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="NotPlayingWindow.h" />
     <ClInclude Include="Application.h" />

@@ -48,7 +48,7 @@ namespace Arkanoid
 		void PlaySound(const SoundType sound);
 		int lastSessionScore{ 0 };
 		sf::Music backGroundMusic;
-		std::vector<std::unique_ptr<BaseState>> stateStack;
+		std::vector<std::shared_ptr<BaseState>> stateStack;
 		std::vector<std::unique_ptr<sf::SoundBuffer>> soundBuffers;
 		std::unordered_map<SoundType, sf::Sound> sounds;
 		void LoadSound(const SoundType type, std::string fileName);

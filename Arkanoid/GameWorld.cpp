@@ -12,8 +12,8 @@ namespace Arkanoid
 		soundPath = resourcesPath + "Sounds\\";
 		fontPath = resourcesPath + "Fonts\\";
 		texturePath = resourcesPath + "Textures\\";
-		levelConfig = resourcesPath + "winTestlevels.cnfg";
-		//levelConfig = resourcesPath + "levels.cnfg";
+		//levelConfig = resourcesPath + "winTestlevels.cnfg";
+		levelConfig = resourcesPath + "levels.cnfg";
 
 		screenWidth = 800;
 		screenHeight = 600;

@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "BaseState.h"
 #include "NotPlayingWindow.h"
+#include "RecordTable.h"
+#include "RecordsStateMenus.h"
+#include "RecordsStateInputHandlers.h"
 #include "IListDrawable.h"
 #include "Utility.h"
 
@@ -13,8 +16,6 @@ namespace Arkanoid
 		NameInput,
 		RecordTable
 	};
-
-	class RecordTable;
 
 	class RecordsState : public BaseState
 	{
@@ -29,8 +30,6 @@ namespace Arkanoid
 		std::vector<std::unique_ptr<NotPlayingWindow>> windows;
 	};
 
-	class RecordsStateNameMenu;
-
 	//Pop-up window on asking to enter name or keep default
 	class RecordsStateEnterNameDialog : public NotPlayingWindow
 	{
@@ -42,8 +41,6 @@ namespace Arkanoid
 		sf::RectangleShape background;
 		std::unique_ptr<RecordsStateNameMenu> menu;
 	};
-
-	struct TextStyle;
 
 	//Pop-up window on entering name
 	class NameEnteringWindow : public NotPlayingWindow
@@ -76,8 +73,6 @@ namespace Arkanoid
 		std::vector<ListDrawableText> textRows;
 		sf::RectangleShape background;
 	};
-
-	class RecordsStateMenu;
 
 	//Window showing on calling recor table from main menu
 	class RecordStateGameWindow : public NotPlayingWindow

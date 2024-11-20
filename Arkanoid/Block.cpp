@@ -34,6 +34,7 @@ namespace Arkanoid
 	void Block::OnHit()
 	{
 		--HitCount;
+		Emit();
 	}
 
 	UnbreakbleBlock::UnbreakbleBlock(const sf::Vector2f& position) : Block(position)
@@ -107,6 +108,7 @@ namespace Arkanoid
 	void SmoothDestroyableBlock::FinalAction()
 	{
 		--HitCount;
+		Emit();
 	}
 
 	void SmoothDestroyableBlock::UpdateAction(float deltaTime)
@@ -124,6 +126,10 @@ namespace Arkanoid
 	{
 		--HitCount;
 		ChangeSpriteOpacity(sprite, 255 * HitCount / GameWorld::GetWorld()->multiHitBlockCount);
+		if (IsBroken())
+		{
+			Emit();
+		}
 	}
 
 	GlassBlock::GlassBlock(const sf::Vector2f& position) : Block(position)

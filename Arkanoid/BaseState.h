@@ -22,6 +22,8 @@ namespace Arkanoid
 	public:
 		virtual ~BaseState() = default;
 		virtual void Draw(sf::RenderWindow&) const = 0;
+		//Additional initialization after Constructor if needed
+		virtual void Init() {};
 		virtual void Update(const float deltaTime) {};
 		virtual void HandleInput(const std::vector<sf::Event>&);
 	protected:
