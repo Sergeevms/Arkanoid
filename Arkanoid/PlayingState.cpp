@@ -24,6 +24,8 @@ namespace Arkanoid
 		factories.emplace(BlockType::Unbreackble, std::make_unique<UnbreakableBlockFactory>());
 		factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
 		factories.emplace(BlockType::MultiHit, std::make_unique<MultipleHitBlockFactory>());
+		scoreTextStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
+		scoreText.SetStyle(&scoreTextStyle);
 	}
 
 	void PlayingState::Draw(sf::RenderWindow& window) const
@@ -33,11 +35,14 @@ namespace Arkanoid
 				object->Draw(window);
 			};
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunctor);
-		std::for_each(blocks->begin(), blocks->end(), drawFunctor);
+		std::for_each(blocks->begin(), blocks->end(), drawFunctor);		
+		scoreText.Draw(window);
 	}
 
 	void PlayingState::Update(const float deltaTime)
-	{		
+	{
+		scoreText.setString(L"Очки:\n" + std::to_wstring(currentScore));
+		scoreText.PresetPosition({ GameWorld::GetWorld()->screenWidth - 3.f, 3.f }, Orientation::Vertical, Alignment::Max);
 		if (sessionDelay <= 0.f)
 		{
 			//Updating objects
@@ -111,7 +116,9 @@ namespace Arkanoid
 	{
 		if (nextLevel >= levelLoader->GetLevelCount())
 		{
-			Application::GetInstance().GetGame()->WinGame();
+			auto game = Application::GetInstance().GetGame();
+			game->SetLastSessionScore(currentScore);
+			game->WinGame();
 		}
 		else
 		{
@@ -130,6 +137,7 @@ namespace Arkanoid
 	{
 		if (auto block = std::dynamic_pointer_cast<Block>(observable); block)
 		{
+			currentScore += block->GetScore();
 			if (--breakableBlocksCount <= 0)
 			{
 				Application::GetInstance().GetGame()->LoadNextLevel();
@@ -140,7 +148,9 @@ namespace Arkanoid
 		{
 			if (ball->GetPosition().y > gameObjects.front()->GetRect().top)
 			{
-				Application::GetInstance().GetGame()->LooseGame();
+				auto game = Application::GetInstance().GetGame();
+				game->SetLastSessionScore(currentScore);
+				game->LooseGame();
 			}
 		}
 	}

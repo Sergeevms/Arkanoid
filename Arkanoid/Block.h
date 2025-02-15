@@ -14,6 +14,7 @@ namespace Arkanoid
 		virtual bool GetCollision(Collidable* object) const override;
 		virtual bool IsBroken();
 		virtual bool IsBallReboundable();
+		virtual int GetScore() const;
 	protected:
 		virtual void OnHit() override;
 		int HitCount = 1;
@@ -51,6 +52,7 @@ namespace Arkanoid
 	{
 	public:
 		MultiHitBlock(const sf::Vector2f& position);
+		virtual int GetScore() const override;
 	protected:
 		virtual void OnHit() override;
 	};
@@ -59,6 +61,7 @@ namespace Arkanoid
 	{
 	public:
 		GlassBlock(const sf::Vector2f& position);
+		virtual int GetScore() const override;
 		virtual bool CheckCollision(Collidable* object) override;
 		virtual bool IsBallReboundable() override;
 	};

@@ -31,6 +31,11 @@ namespace Arkanoid
 		return true;
 	}
 
+	int Block::GetScore() const
+	{
+		return GameWorld::GetWorld()->blockScore[BlockType::Simple];
+	}
+
 	void Block::OnHit()
 	{
 		--HitCount;
@@ -122,6 +127,11 @@ namespace Arkanoid
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::MultiHit]);
 	}
 
+	int MultiHitBlock::GetScore() const
+	{
+		return GameWorld::GetWorld()->blockScore[BlockType::MultiHit];
+	}
+
 	void MultiHitBlock::OnHit()
 	{
 		--HitCount;
@@ -135,6 +145,11 @@ namespace Arkanoid
 	GlassBlock::GlassBlock(const sf::Vector2f& position) : Block(position)
 	{
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Glass]);
+	}
+
+	int GlassBlock::GetScore() const
+	{
+		return GameWorld::GetWorld()->blockScore[BlockType::Glass];
 	}
 
 	bool GlassBlock::CheckCollision(Collidable* object)

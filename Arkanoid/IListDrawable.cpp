@@ -102,11 +102,21 @@ namespace Arkanoid
 	}
 
 	void ListDrawableText::Draw(sf::RenderWindow& window, const sf::Vector2f& position, const Orientation orientation, const Alignment alignment)
+	{		
+		PresetPosition(position, orientation, alignment);
+		Draw(window);
+	}
+
+	void ListDrawableText::PresetPosition(const sf::Vector2f& position, const Orientation orientation, const Alignment alignment)
 	{
 		sf::FloatRect textRect = getLocalBounds();
 		sf::Vector2f correctPosition{ position.x - textRect.left, position.y - textRect.top };
 		SetOriginByRelative(*this, relativePositions.at(RelativePositionByOrientationAndAlignment(orientation, alignment)));
 		setPosition(correctPosition);
+	}
+
+	void ListDrawableText::Draw(sf::RenderWindow& window) const
+	{
 		window.draw(*this);
 	}
 

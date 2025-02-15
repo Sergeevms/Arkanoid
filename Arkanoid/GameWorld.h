@@ -41,6 +41,7 @@ namespace Arkanoid
 		sf::Vector2f blockSize;
 		std::vector<BlockType> availiableBlockTypes;
 		std::unordered_map<BlockType, sf::Color> blockColors;
+		std::unordered_map<BlockType, int> blockScore;
 		float smoothBlockDestroyTime;
 		int multiHitBlockCount;
 

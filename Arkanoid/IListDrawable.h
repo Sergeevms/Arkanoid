@@ -28,6 +28,8 @@ namespace Arkanoid
 	public:
 		virtual sf::FloatRect GetRect() const override;
 		virtual void Draw(sf::RenderWindow&, const sf::Vector2f&, const Orientation, const Alignment) override;
+		void PresetPosition(const sf::Vector2f&, const Orientation, const Alignment);
+		void Draw(sf::RenderWindow&) const;
 		virtual void SetStyle(const TextStyle* newStyle);
 	};
 

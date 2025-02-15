@@ -5,6 +5,8 @@
 #include "IObserver.h"
 #include "LevelLoader.h"
 #include "BlockFactory.h"
+#include "IListDrawable.h"
+#include "Utility.h"
 
 namespace Arkanoid
 {
@@ -38,6 +40,9 @@ namespace Arkanoid
         std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
         int breakableBlocksCount = 0;
         int nextLevel = 0;
+        int currentScore = 0;
+        TextStyle scoreTextStyle;
+        ListDrawableText scoreText;
         std::unique_ptr<LevelLoader> levelLoader;
     };
 }
