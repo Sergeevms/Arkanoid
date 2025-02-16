@@ -17,6 +17,12 @@ namespace Arkanoid
 				Application::GetInstance().GetGame()->ToMainMenu();
 			});
 
+		InitializeNode(currentNode, L"Сохранить игру и выйти", &normalStyle,
+			[](MenuNode*)
+			{
+				Application::GetInstance().GetGame()->SaveGameAndGoToMenu();
+			});
+
 		InitializeNode(currentNode, L"Продолжить", &normalStyle,
 			[](MenuNode*)
 			{

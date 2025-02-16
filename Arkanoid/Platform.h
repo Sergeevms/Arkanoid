@@ -1,13 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
-#include "Collidable.h"
 
 namespace Arkanoid
 {
 	enum class Direction;
 
-	class Platform : public GameObject, public Collidable
+	class Platform : public GameObject
 	{
 	public:
 		Platform();

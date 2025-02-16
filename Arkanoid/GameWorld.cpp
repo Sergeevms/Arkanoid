@@ -14,6 +14,7 @@ namespace Arkanoid
 		texturePath = resourcesPath + "Textures\\";
 		//levelConfig = resourcesPath + "winTestlevels.cnfg";
 		levelConfig = resourcesPath + "levels.cnfg";
+		saveFile = "save.dat";
 
 		screenWidth = 800;
 		screenHeight = 600;

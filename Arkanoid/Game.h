@@ -29,6 +29,8 @@ namespace Arkanoid
 		void ShowRecords();
 		void LoadNextLevel();
 		void Shutdown();
+		void LoadSavedGame();
+		void SaveGameAndGoToMenu();
 
 		void PlaySoundOnKeyHit();
 		void PlaySoundOnBallHit();

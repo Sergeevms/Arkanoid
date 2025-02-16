@@ -52,6 +52,33 @@ namespace Arkanoid
 		direction.y = -1 * abs(std::sin(pi / 180.f * angle));
 	}
 
+	std::shared_ptr<ISave> Ball::SaveState() const
+	{		
+		std::shared_ptr<BallSave> ballSave = std::make_shared<BallSave>();
+		SaveState(ballSave);
+		return ballSave;
+	}
+
+	void Ball::SaveState(std::shared_ptr<ISave> save) const
+	{
+		GameObject::SaveState(save);
+		if (auto ballSave = std::dynamic_pointer_cast<BallSave>(save))
+		{
+			ballSave->direction = direction;
+			ballSave->previosAngle = previosAngle;
+		}
+	}
+
+	void Ball::LoadState(const std::shared_ptr<ISave> save)
+	{
+		GameObject::LoadState(save);
+		if (auto ballSave = std::dynamic_pointer_cast<BallSave>(save))
+		{
+			direction = ballSave->direction;
+			previosAngle = ballSave->previosAngle;
+		}
+	}
+
 	void Ball::InvertX()
 	{
 		direction.x *= -1.f;
@@ -75,5 +102,17 @@ namespace Arkanoid
 		sprite.setPosition(world->ScreenCenter());
 		previosAngle = 90.f;
 		direction = DirectionVecFromDegree(previosAngle);
+	}
+
+	void BallSave::SaveToFile(std::ofstream& ostream) const
+	{
+		GameObjectSave::SaveToFile(ostream);
+		ostream << direction.x << " " << direction.y << " " << previosAngle << " ";
+	}
+
+	void BallSave::LoadFromFile(std::ifstream& ifstream)
+	{
+		GameObjectSave::LoadFromFile(ifstream);
+		ifstream >> direction.x >> direction.y >> previosAngle;
 	}
 }

@@ -23,7 +23,7 @@ namespace Arkanoid
 
 	bool Block::IsBroken()
 	{
-		return HitCount <= 0;
+		return hitCount <= 0;
 	}
 
 	bool Block::IsBallReboundable()
@@ -36,9 +36,35 @@ namespace Arkanoid
 		return GameWorld::GetWorld()->blockScore[BlockType::Simple];
 	}
 
+	std::shared_ptr<ISave> Block::SaveState() const
+	{
+		auto blockSave = std::make_shared<BlockSave>();
+		SaveState(blockSave);
+		return blockSave;
+	}
+
+	void Block::SaveState(std::shared_ptr<ISave> save) const
+	{
+		if (auto blockSave = std::dynamic_pointer_cast<BlockSave>(save))
+		{
+			GameObject::SaveState(blockSave);
+			blockSave->hitCount = hitCount;
+			blockSave->blockType = GetBlockType(this);
+		}
+	}
+
+	void Block::LoadState(const std::shared_ptr<ISave> save)
+	{
+		GameObject::LoadState(save);
+		if (auto blockSave = std::dynamic_pointer_cast<BlockSave>(save))
+		{
+			hitCount = blockSave->hitCount;
+		}
+	}
+
 	void Block::OnHit()
 	{
-		--HitCount;
+		--hitCount;
 		Emit();
 	}
 
@@ -47,9 +73,33 @@ namespace Arkanoid
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Unbreackble]);
 	}
 
+	void UnbreakbleBlock::SaveState(std::shared_ptr<ISave> save) const
+	{
+		auto blockSave = std::dynamic_pointer_cast<BlockSave>(save);
+		Block::SaveState(blockSave);
+	}
+
 	void UnbreakbleBlock::OnHit()
 	{
 		
+	}
+
+	BlockType Block::GetBlockType(const Block* block)
+	{
+		BlockType blockType = BlockType::Simple;
+		if (dynamic_cast<const UnbreakbleBlock*>(block))
+		{
+			blockType = BlockType::Unbreackble;
+		}
+		else if (dynamic_cast<const MultiHitBlock*>(block))
+		{
+			blockType = BlockType::MultiHit;
+		}
+		else if (dynamic_cast<const GlassBlock*>(block))
+		{
+			blockType = BlockType::Glass;
+		}
+		return blockType;
 	}
 
 	std::shared_ptr<Block> CreateRandomBlock(sf::Vector2f position)
@@ -112,7 +162,7 @@ namespace Arkanoid
 
 	void SmoothDestroyableBlock::FinalAction()
 	{
-		--HitCount;
+		--hitCount;
 		Emit();
 	}
 
@@ -123,7 +173,7 @@ namespace Arkanoid
 
 	MultiHitBlock::MultiHitBlock(const sf::Vector2f& position) : Block(position)
 	{
-		HitCount = GameWorld::GetWorld()->multiHitBlockCount;
+		hitCount = GameWorld::GetWorld()->multiHitBlockCount;
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::MultiHit]);
 	}
 
@@ -134,8 +184,8 @@ namespace Arkanoid
 
 	void MultiHitBlock::OnHit()
 	{
-		--HitCount;
-		ChangeSpriteOpacity(sprite, 255 * HitCount / GameWorld::GetWorld()->multiHitBlockCount);
+		--hitCount;
+		ChangeSpriteOpacity(sprite, 255 * hitCount / GameWorld::GetWorld()->multiHitBlockCount);
 		if (IsBroken())
 		{
 			Emit();
@@ -165,5 +215,24 @@ namespace Arkanoid
 	bool GlassBlock::IsBallReboundable()
 	{
 		return false;
+	}
+
+	void BlockSave::SaveToFile(std::ofstream& ostream) const
+	{
+		GameObjectSave::SaveToFile(ostream);
+		ostream << static_cast<int>(blockType) << " ";
+		ostream << hitCount << " ";
+	}
+
+	void BlockSave::LoadFromFile(std::ifstream& ifstream)
+	{
+		GameObjectSave::LoadFromFile(ifstream);
+		int tBlockType = 0;
+		ifstream >> tBlockType >> hitCount;
+		blockType = static_cast<BlockType>(tBlockType);
+	}
+	BlockType BlockSave::GetBlockType()
+	{
+		return blockType;
 	}
 }

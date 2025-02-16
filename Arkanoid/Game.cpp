@@ -230,6 +230,37 @@ namespace Arkanoid
 		SwitchToState(GameState::None);
 	}
 
+	void Game::LoadSavedGame()
+	{
+		SwitchToState(GameState::Playing);
+		std::ifstream input(GameWorld::GetWorld()->saveFile);
+		if (input.is_open())
+		{
+			auto stateSave = std::make_shared<PlayingStateSave>();
+			stateSave->LoadFromFile(input);
+			std::dynamic_pointer_cast<PlayingState>(stateStack.back())->LoadState(stateSave);
+			input.close();
+		}
+	}
+
+	void Game::SaveGameAndGoToMenu()
+	{
+		for (auto& state : stateStack)
+		{
+			if (auto playingState = std::dynamic_pointer_cast<PlayingState>(state))
+			{
+				std::ofstream output(GameWorld::GetWorld()->saveFile);
+				if (output.is_open())
+				{
+					auto stateSave = playingState->SaveState();
+					stateSave->SaveToFile(output);
+					output.close();
+				}
+			}
+		}
+		SwitchToState(GameState::MainMenu);
+	}
+
 	void Game::PlaySoundOnKeyHit()
 	{
 		PlaySound(SoundType::OnKeyHit);

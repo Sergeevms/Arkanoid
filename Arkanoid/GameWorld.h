@@ -58,6 +58,7 @@ namespace Arkanoid
 		std::string texturePath;
 		std::string recordsFileName;
 		std::string levelConfig;
+		std::string saveFile;
 		
 		//Control settings
 		std::unordered_map<sf::Keyboard::Key, ActionsTypesOnInput> keyMap;

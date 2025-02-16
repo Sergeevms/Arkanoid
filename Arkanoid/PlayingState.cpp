@@ -94,7 +94,7 @@ namespace Arkanoid
 		else
 		{
 			sessionDelay -= deltaTime;
-		}		
+		}
 	}
 
 	void PlayingState::Init()
@@ -102,7 +102,7 @@ namespace Arkanoid
 		auto self = weak_from_this();
 		if (auto ball = std::dynamic_pointer_cast<IObservable>(gameObjects[1]); ball)
 		{
-			ball->AddObserver(weak_from_this());
+			ball->AddObserver(weak_from_this());			
 		}
 		LoadNextLevel();
 	}
@@ -155,7 +155,46 @@ namespace Arkanoid
 		}
 	}
 
-	void PlayingState::CreateBlocks()
+	std::shared_ptr<ISave> PlayingState::SaveState() const
+	{
+		auto save = std::make_shared<PlayingStateSave>();
+		SaveState(save);
+		return save;
+	}
+
+	void PlayingState::SaveState(std::shared_ptr<ISave> save) const
+	{
+		if (auto stateSave = std::dynamic_pointer_cast<PlayingStateSave>(save))
+		{
+			stateSave->currentScore = currentScore;
+			stateSave->nextLevel = nextLevel;
+			stateSave->platform = std::dynamic_pointer_cast<GameObjectSave>(gameObjects[0]->SaveState());
+			stateSave->ball = std::dynamic_pointer_cast<BallSave>(gameObjects[1]->SaveState());
+			stateSave->blocks.clear();
+			for (auto& block : *blocks)
+			{
+				if (!block->IsBroken())
+				{
+					stateSave->blocks.push_back(std::dynamic_pointer_cast<BlockSave>(block->SaveState()));
+				}
+			}
+		}
+	}
+
+	void PlayingState::LoadState(const std::shared_ptr<ISave> save)
+	{
+		if (auto stateSave = std::dynamic_pointer_cast<PlayingStateSave>(save))
+		{
+			currentScore = stateSave->currentScore;
+			nextLevel = stateSave->nextLevel;
+			gameObjects[0]->LoadState(stateSave->platform);
+			gameObjects[1]->LoadState(stateSave->ball);
+			blocks->clear();
+			CreateBlocks(stateSave);
+		}
+	}
+
+	void PlayingState::CreateBlocks(std::shared_ptr<PlayingStateSave> stateSave)
 	{
 		const GameWorld* world = GameWorld::GetWorld();
 		
@@ -163,16 +202,28 @@ namespace Arkanoid
 		{
 			pair.second->ClearBreakableCounter();
 		}
-		auto& level = levelLoader->GetLevel(nextLevel);
 		auto self = weak_from_this();
-		for (auto& block : level.blocks)
+		if (stateSave)
 		{
-			sf::Vector2f position;
-			//Getting coordinates of block center considering spacing between the blocks and one two row at top
-			position.x = world->blockSpacing * (1 + block.first.x) + world->blockSize.x * (block.first.x + 0.5f);
-			position.y = world->blockSpacing * (2 + block.first.y) + world->blockSize.y * (block.first.y + 2 + 0.5f);
-			blocks->push_back(factories.at(block.second)->CreateBlock(position));
-			blocks->back()->AddObserver(self);
+			for (auto& block : stateSave->blocks)
+			{
+				blocks->push_back(factories.at(block->GetBlockType())->CreateBlock());
+				blocks->back()->LoadState(block);
+				blocks->back()->AddObserver(self);
+			}
+		}
+		else
+		{
+			auto& level = levelLoader->GetLevel(nextLevel);
+			for (auto& block : level.blocks)
+			{
+				sf::Vector2f position;
+				//Getting coordinates of block center considering spacing between the blocks and one two row at top
+				position.x = world->blockSpacing * (1 + block.first.x) + world->blockSize.x * (block.first.x + 0.5f);
+				position.y = world->blockSpacing * (2 + block.first.y) + world->blockSize.y * (block.first.y + 2 + 0.5f);
+				blocks->push_back(factories.at(block.second)->CreateBlock(position));
+				blocks->back()->AddObserver(self);
+			}
 		}
 		for (auto& pair : factories)
 		{
@@ -191,5 +242,39 @@ namespace Arkanoid
 		{
 			needInverseX = true;
 		}
+	}
+
+	void PlayingStateSave::SaveToFile(std::ofstream& ostream) const
+	{
+		ostream << nextLevel << " " << currentScore << " ";
+		platform->SaveToFile(ostream);
+		ball->SaveToFile(ostream);
+		ostream << blocks.size() << " ";
+		for (auto& block : blocks)
+		{
+			block->SaveToFile(ostream);
+		}
+	}
+
+	void PlayingStateSave::LoadFromFile(std::ifstream& istream)
+	{		
+		istream >> nextLevel >> currentScore;
+		platform->LoadFromFile(istream);
+		ball->LoadFromFile(istream);
+		size_t blocksCount = 0;
+		istream	>> blocksCount;
+		blocks.clear();
+		blocks.reserve(blocksCount);
+		for (size_t i = 0; i < blocksCount; ++i)
+		{
+			blocks.push_back(std::make_shared<BlockSave>());
+			blocks.back()->LoadFromFile(istream);
+		}
+	}
+
+	PlayingStateSave::PlayingStateSave()
+	{
+		ball = std::make_shared<BallSave>();
+		platform = std::make_shared<GameObjectSave>();
 	}
 }

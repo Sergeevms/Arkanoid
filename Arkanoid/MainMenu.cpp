@@ -3,6 +3,7 @@
 #include "GameWorld.h"
 #include "IListDrawable.h"
 #include "BaseState.h"
+#include <filesystem>
 
 namespace Arkanoid
 {
@@ -19,6 +20,15 @@ namespace Arkanoid
 			{
 				Application::GetInstance().GetGame()->StartGame();
 			});
+
+		if (std::filesystem::exists(GameWorld::GetWorld()->saveFile))
+		{
+			InitializeNode(currentNode, L"Загрузить игру", &normalStyle,
+				[](MenuNode*)
+				{
+					Application::GetInstance().GetGame()->LoadSavedGame();
+				});
+		}
 
 		InitializeNode(currentNode, L"Таблица рекордов", &normalStyle, 
 			[](MenuNode*) 
