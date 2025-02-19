@@ -5,19 +5,22 @@
 namespace Arkanoid
 {
 	class Block;
+	enum class BlockType;
 
 	class BlockFactory
 	{
 	public:
 		virtual ~BlockFactory() = default;
-		virtual std::shared_ptr<Block> CreateBlock(const sf::Vector2f position = { 0.f, 0.f }) = 0;
+		virtual std::shared_ptr<Block> CreateBlock(const sf::Vector2f position = { 0.f, 0.f });
 		int GetBreakableBlockCount() const;
 		void ClearBreakableCounter();
 	protected:
 		int createdBreakableBlocks = 0;
 	};
 
-	class SimpleBlockFactory : public BlockFactory
+	std::unique_ptr<BlockFactory> CreateFactory(const BlockType);
+
+	class SmoothDestroyableBlockFactory : public BlockFactory
 	{
 	public:
 		virtual std::shared_ptr<Block> CreateBlock(const sf::Vector2f position = { 0.f, 0.f }) override;

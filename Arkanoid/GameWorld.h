@@ -42,6 +42,7 @@ namespace Arkanoid
 		std::vector<BlockType> availiableBlockTypes;
 		std::unordered_map<BlockType, sf::Color> blockColors;
 		std::unordered_map<BlockType, int> blockScore;
+		std::unordered_map<char, BlockType> mapCharToBlockTypeMapping;
 		float smoothBlockDestroyTime;
 		int multiHitBlockCount;
 

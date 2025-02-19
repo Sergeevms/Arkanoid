@@ -49,15 +49,14 @@ namespace Arkanoid
 		{
 			GameObject::SaveState(blockSave);
 			blockSave->hitCount = hitCount;
-			blockSave->blockType = GetBlockType(this);
 		}
 	}
 
 	void Block::LoadState(const std::shared_ptr<ISave> save)
 	{
-		GameObject::LoadState(save);
 		if (auto blockSave = std::dynamic_pointer_cast<BlockSave>(save))
 		{
+			GameObject::LoadState(save);
 			hitCount = blockSave->hitCount;
 		}
 	}
@@ -73,42 +72,18 @@ namespace Arkanoid
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Unbreackble]);
 	}
 
-	void UnbreakbleBlock::SaveState(std::shared_ptr<ISave> save) const
-	{
-		auto blockSave = std::dynamic_pointer_cast<BlockSave>(save);
-		Block::SaveState(blockSave);
-	}
-
 	void UnbreakbleBlock::OnHit()
 	{
 		
 	}
 
-	BlockType Block::GetBlockType(const Block* block)
-	{
-		BlockType blockType = BlockType::Simple;
-		if (dynamic_cast<const UnbreakbleBlock*>(block))
-		{
-			blockType = BlockType::Unbreackble;
-		}
-		else if (dynamic_cast<const MultiHitBlock*>(block))
-		{
-			blockType = BlockType::MultiHit;
-		}
-		else if (dynamic_cast<const GlassBlock*>(block))
-		{
-			blockType = BlockType::Glass;
-		}
-		return blockType;
-	}
-
-	std::shared_ptr<Block> CreateRandomBlock(sf::Vector2f position)
+	std::shared_ptr<Block> CreateRandomBlock(const sf::Vector2f position)
 	{
 		GameWorld* world = GameWorld::GetWorld();
 		BlockType newBlockType = world->availiableBlockTypes[rand() % world->availiableBlockTypes.size()];
 		switch (newBlockType)
 		{
-		case Arkanoid::BlockType::Simple:
+		case Arkanoid::BlockType::SmoothDestroyable:
 		{
 			return std::make_shared<SmoothDestroyableBlock>(position);
 			break;
@@ -130,15 +105,28 @@ namespace Arkanoid
 		}
 		default:
 		{
-			return nullptr;
+			return std::make_shared<Block>(position);
 			break;
 		}
 		}
 	}
 
+	std::shared_ptr<BlockSave> CreateEmptySaveByBlockType(const BlockType blockType)
+	{
+		switch (blockType)
+		{
+		case BlockType::SmoothDestroyable:
+			return std::make_shared<SmoothDestroyableBlockSave>();
+			break;
+		default:
+			return std::make_shared<BlockSave>();
+			break;
+		}
+	}
+
 	SmoothDestroyableBlock::SmoothDestroyableBlock(const sf::Vector2f& position) : Block(position)
 	{
-		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Simple]);
+		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::SmoothDestroyable]);
 	}
 
 	bool SmoothDestroyableBlock::GetCollision(Collidable* object) const
@@ -155,6 +143,39 @@ namespace Arkanoid
 		UpdateTimer(deltaTime);
 	}
 
+	int SmoothDestroyableBlock::GetScore() const
+	{
+		return GameWorld::GetWorld()->blockScore[BlockType::SmoothDestroyable];
+	}
+
+	std::shared_ptr<ISave> SmoothDestroyableBlock::SaveState() const
+	{
+		auto blockSave = std::make_shared<SmoothDestroyableBlockSave>();
+		SaveState(blockSave);
+		return blockSave;
+	}
+
+	void SmoothDestroyableBlock::SaveState(std::shared_ptr<ISave> save) const
+	{
+		if (auto blockSave = std::dynamic_pointer_cast<SmoothDestroyableBlockSave>(save))
+		{
+			Block::SaveState(blockSave);
+			blockSave->currentTime = currentTime;
+			blockSave->delayDuration = delayDuration;
+		}
+	}
+
+	void SmoothDestroyableBlock::LoadState(const std::shared_ptr<ISave> save)
+	{
+		if (auto blockSave = std::dynamic_pointer_cast<SmoothDestroyableBlockSave>(save))
+		{
+			Block::LoadState(blockSave);
+			currentTime = blockSave->currentTime;
+			delayDuration = blockSave->delayDuration;
+			UpdateOpacity();
+		}
+	}
+
 	void SmoothDestroyableBlock::OnHit()
 	{
 		StartTimer(GameWorld::GetWorld()->smoothBlockDestroyTime);
@@ -168,7 +189,19 @@ namespace Arkanoid
 
 	void SmoothDestroyableBlock::UpdateAction(float deltaTime)
 	{
-		ChangeSpriteOpacity(sprite, static_cast<sf::Uint8> (255 * currentTime / delayDuration));
+		UpdateOpacity();
+	}
+
+	void SmoothDestroyableBlock::UpdateOpacity()
+	{
+		if (currentTime > 0.f)
+		{
+			ChangeSpriteOpacity(sprite, static_cast<sf::Uint8> (255 * currentTime / delayDuration));
+		}
+		else
+		{
+			ChangeSpriteOpacity(sprite, 255);
+		}
 	}
 
 	MultiHitBlock::MultiHitBlock(const sf::Vector2f& position) : Block(position)
@@ -220,19 +253,24 @@ namespace Arkanoid
 	void BlockSave::SaveToFile(std::ofstream& ostream) const
 	{
 		GameObjectSave::SaveToFile(ostream);
-		ostream << static_cast<int>(blockType) << " ";
 		ostream << hitCount << " ";
 	}
 
-	void BlockSave::LoadFromFile(std::ifstream& ifstream)
+	void BlockSave::LoadFromFile(std::ifstream& istream)
 	{
-		GameObjectSave::LoadFromFile(ifstream);
-		int tBlockType = 0;
-		ifstream >> tBlockType >> hitCount;
-		blockType = static_cast<BlockType>(tBlockType);
+		GameObjectSave::LoadFromFile(istream);
+		istream >> hitCount;
 	}
-	BlockType BlockSave::GetBlockType()
+
+	void SmoothDestroyableBlockSave::SaveToFile(std::ofstream& ostream) const
 	{
-		return blockType;
+		BlockSave::SaveToFile(ostream);
+		ostream << currentTime << " " << delayDuration << " ";
+	}
+
+	void SmoothDestroyableBlockSave::LoadFromFile(std::ifstream& istream)
+	{
+		BlockSave::LoadFromFile(istream);
+		istream >> currentTime >> delayDuration;
 	}
 }

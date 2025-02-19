@@ -56,26 +56,25 @@ namespace Arkanoid
 	BlockType LevelLoader::CharToBlockType(char c)
 	{
 		BlockType blockType;
-		switch (c)
+		auto world = GameWorld::GetWorld();
+		//Check if char is in mapping to blockType and availiable block types
+		if (world->mapCharToBlockTypeMapping.contains(c))
 		{
-		case '1':
-			blockType = BlockType::Simple;
-			break;
-		case '0':
-			blockType = BlockType::Unbreackble;
-			break;
-		case '2':
-			blockType = BlockType::MultiHit;
-			break;
-		case '3':
-			blockType = BlockType::Glass;
-			break;
-		case 'R':
-			blockType = GameWorld::GetWorld()->availiableBlockTypes[rand() % GameWorld::GetWorld()->availiableBlockTypes.size()];
-			break;
-		default:
-			assert(false);
-			break;
+			blockType = world->mapCharToBlockTypeMapping.at(c);
+			assert(std::find(world->availiableBlockTypes.begin(), world->availiableBlockTypes.end(), blockType) != world->availiableBlockTypes.end());
+		}
+		else
+		//Check for special mapping (not direct char to block type
+		{
+			switch (c)
+			{
+			case 'R':
+				blockType = GameWorld::GetWorld()->availiableBlockTypes[rand() % GameWorld::GetWorld()->availiableBlockTypes.size()];
+				break;
+			default:
+				assert(false);
+				break;
+			}
 		}
 		return blockType;
 	}

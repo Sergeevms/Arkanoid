@@ -28,12 +28,13 @@ namespace Arkanoid
         PlayingStateSave();
     private:
         friend class PlayingState;
-        std::vector<std::shared_ptr<BlockSave>> blocks;
+        std::vector<BlockType> blockTypes;
+        std::vector<std::shared_ptr<BlockSave>> blockSaves;
         std::shared_ptr<BallSave> ball;
         std::shared_ptr<GameObjectSave> platform;
         int nextLevel = 0;
         int currentScore = 0;
-    };
+    };    
 
     class PlayingState :
         public BaseState, public IObserver, public std::enable_shared_from_this<PlayingState>, public ISaveable

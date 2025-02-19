@@ -20,10 +20,10 @@ namespace Arkanoid
 		gameObjects.push_back(std::make_shared<Platform>());
 		inputHandler = std::make_unique<PlayingInputHandler>(std::dynamic_pointer_cast<Platform>(gameObjects.front()).get());
 		gameObjects.push_back(std::make_shared<Ball>());
-		factories.emplace(BlockType::Simple, std::make_unique<SimpleBlockFactory>());
-		factories.emplace(BlockType::Unbreackble, std::make_unique<UnbreakableBlockFactory>());
-		factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
-		factories.emplace(BlockType::MultiHit, std::make_unique<MultipleHitBlockFactory>());
+		for (auto& blockType : GameWorld::GetWorld()->availiableBlockTypes)
+		{
+			factories.emplace(blockType, CreateFactory(blockType));
+		}
 		scoreTextStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		scoreText.SetStyle(&scoreTextStyle);
 	}
@@ -170,13 +170,12 @@ namespace Arkanoid
 			stateSave->nextLevel = nextLevel;
 			stateSave->platform = std::dynamic_pointer_cast<GameObjectSave>(gameObjects[0]->SaveState());
 			stateSave->ball = std::dynamic_pointer_cast<BallSave>(gameObjects[1]->SaveState());
-			stateSave->blocks.clear();
+			stateSave->blockTypes.clear();
+			stateSave->blockSaves.clear();
 			for (auto& block : *blocks)
 			{
-				if (!block->IsBroken())
-				{
-					stateSave->blocks.push_back(std::dynamic_pointer_cast<BlockSave>(block->SaveState()));
-				}
+				stateSave->blockTypes.push_back(block->GetBlockType());
+				stateSave->blockSaves.push_back(std::dynamic_pointer_cast<BlockSave>(block->SaveState()));
 			}
 		}
 	}
@@ -202,13 +201,14 @@ namespace Arkanoid
 		{
 			pair.second->ClearBreakableCounter();
 		}
+		breakableBlocksCount = 0;
 		auto self = weak_from_this();
 		if (stateSave)
 		{
-			for (auto& block : stateSave->blocks)
+			for (int i = 0; i < stateSave->blockSaves.size(); ++i)
 			{
-				blocks->push_back(factories.at(block->GetBlockType())->CreateBlock());
-				blocks->back()->LoadState(block);
+				blocks->push_back(factories.at(stateSave->blockTypes[i])->CreateBlock());
+				blocks->back()->LoadState(stateSave->blockSaves[i]);
 				blocks->back()->AddObserver(self);
 			}
 		}
@@ -249,8 +249,12 @@ namespace Arkanoid
 		ostream << nextLevel << " " << currentScore << " ";
 		platform->SaveToFile(ostream);
 		ball->SaveToFile(ostream);
-		ostream << blocks.size() << " ";
-		for (auto& block : blocks)
+		ostream << blockSaves.size() << " ";
+		for (auto& blockType : blockTypes)
+		{
+			ostream << static_cast<int>(blockType) << " ";
+		}
+		for (auto& block : blockSaves)
 		{
 			block->SaveToFile(ostream);
 		}
@@ -263,12 +267,20 @@ namespace Arkanoid
 		ball->LoadFromFile(istream);
 		size_t blocksCount = 0;
 		istream	>> blocksCount;
-		blocks.clear();
-		blocks.reserve(blocksCount);
+		blockSaves.clear();
+		blockSaves.reserve(blocksCount);
+		blockTypes.clear();
+		blockTypes.reserve(blocksCount);
 		for (size_t i = 0; i < blocksCount; ++i)
 		{
-			blocks.push_back(std::make_shared<BlockSave>());
-			blocks.back()->LoadFromFile(istream);
+			int blockType = 0;
+			istream >> blockType;
+			blockTypes.push_back(static_cast<BlockType>(blockType));
+			blockSaves.push_back(CreateEmptySaveByBlockType(blockTypes.back()));
+		}
+		for (auto& blockSave : blockSaves)
+		{
+			blockSave->LoadFromFile(istream);
 		}
 	}
 

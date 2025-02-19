@@ -61,9 +61,9 @@ namespace Arkanoid
 		ostream << position.x << " " << position.y << " " << size.x << " " << size.y << " ";
 	}
 
-	void GameObjectSave::LoadFromFile(std::ifstream& ifstream)
+	void GameObjectSave::LoadFromFile(std::ifstream& istream)
 	{
-		ifstream >> position.x >> position.y >> size.x >> size.y;
+		istream >> position.x >> position.y >> size.x >> size.y;
 	}
 		
 }

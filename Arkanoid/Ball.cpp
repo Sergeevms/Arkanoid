@@ -110,9 +110,9 @@ namespace Arkanoid
 		ostream << direction.x << " " << direction.y << " " << previosAngle << " ";
 	}
 
-	void BallSave::LoadFromFile(std::ifstream& ifstream)
+	void BallSave::LoadFromFile(std::ifstream& istream)
 	{
-		GameObjectSave::LoadFromFile(ifstream);
-		ifstream >> direction.x >> direction.y >> previosAngle;
+		GameObjectSave::LoadFromFile(istream);
+		istream >> direction.x >> direction.y >> previosAngle;
 	}
 }

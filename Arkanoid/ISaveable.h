@@ -8,7 +8,7 @@ namespace Arkanoid
 	{
 	public:
 		virtual void SaveToFile(std::ofstream& ostream) const = 0 ;
-		virtual void LoadFromFile(std::ifstream& ifstream) = 0;
+		virtual void LoadFromFile(std::ifstream& istream) = 0;
 	};
 
 	class ISaveable

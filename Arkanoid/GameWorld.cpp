@@ -63,22 +63,28 @@ namespace Arkanoid
 		blockSize.y = 30.f;
 		blockSize.x = (screenWidth - (1 + blocksInRow) * blockSpacing) / blocksInRow;
 		multiHitBlockCount = 3;
-		availiableBlockTypes.push_back(BlockType::Simple);
+		availiableBlockTypes.push_back(BlockType::SmoothDestroyable);
 		availiableBlockTypes.push_back(BlockType::Unbreackble);
 		availiableBlockTypes.push_back(BlockType::MultiHit);
 		availiableBlockTypes.push_back(BlockType::Glass);
 		blockColors[BlockType::Unbreackble] = sf::Color(132, 139, 148, 255);
-		blockColors[BlockType::Simple] = sf::Color::Red;
+		blockColors[BlockType::Simple] = sf::Color::White;
+		blockColors[BlockType::SmoothDestroyable] = sf::Color::Red;
 		blockColors[BlockType::MultiHit] = sf::Color(154, 73, 209, 255);
 		blockColors[BlockType::Glass] = sf::Color::Cyan;
 		blockScore[BlockType::Unbreackble] = 20;
-		blockScore[BlockType::Simple] = 2;
-		blockScore[BlockType::MultiHit] = blockScore[BlockType::Simple] * multiHitBlockCount;
+		blockScore[BlockType::Simple] = 1;
+		blockScore[BlockType::SmoothDestroyable] = 2;
+		blockScore[BlockType::MultiHit] = blockScore[BlockType::SmoothDestroyable] * multiHitBlockCount;
 		blockScore[BlockType::Glass] = 3;
+		mapCharToBlockTypeMapping['0'] = BlockType::Unbreackble;
+		mapCharToBlockTypeMapping['1'] = BlockType::SmoothDestroyable;
+		mapCharToBlockTypeMapping['2'] = BlockType::MultiHit;
+		mapCharToBlockTypeMapping['3'] = BlockType::Glass;
+		mapCharToBlockTypeMapping['N'] = BlockType::Simple;
 		smoothBlockDestroyTime = 1.5f;
 		
 	}
-
 
 	sf::Vector2f GameWorld::ScreenCenter()
 	{
