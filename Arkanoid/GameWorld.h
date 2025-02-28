@@ -7,6 +7,7 @@ namespace Arkanoid
 {
 	enum class ActionsTypesOnInput;
 	enum class BlockType;
+	enum class BonusType;
 
 	class GameWorld
 	{
@@ -75,6 +76,16 @@ namespace Arkanoid
 		float ballSpeed;
 		float angleRandomChange;
 		float anglePlatformReboundChange;
+
+		float bonusSize;
+		float bonusSpeed;
+		float bonusDuration;
+		float bonusAppearanceChance;
+
+		std::vector<BonusType> avaliableBonuses;
+		std::unordered_map<BonusType, sf::Color> bonusColors;
+
+		float platformBonusFactor;
 	private:
 		GameWorld();
 		~GameWorld() = default;

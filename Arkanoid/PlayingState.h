@@ -5,6 +5,7 @@
 #include "IObserver.h"
 #include "LevelLoader.h"
 #include "BlockFactory.h"
+#include "BonusFactory.h"
 #include "IListDrawable.h"
 #include "Utility.h"
 #include "ISaveable.h"
@@ -14,10 +15,11 @@ namespace Arkanoid
     class GameObject;
     class Block;
     class BlockSave;
+    class BonusSave;
     class GameObjectSave;
     class BallSave;
     enum class BlockType;
-    class BlockFactory;
+    enum class BonusType;
     class LevelLoader;
 
     class PlayingStateSave : public ISave
@@ -30,6 +32,8 @@ namespace Arkanoid
         friend class PlayingState;
         std::vector<BlockType> blockTypes;
         std::vector<std::shared_ptr<BlockSave>> blockSaves;
+        std::vector<BonusType> bonusTypes;
+        std::vector<std::shared_ptr<BonusSave>> bonusSaves;
         std::shared_ptr<BallSave> ball;
         std::shared_ptr<GameObjectSave> platform;
         int nextLevel = 0;
@@ -56,17 +60,29 @@ namespace Arkanoid
     private:
         void CreateBlocks(std::shared_ptr<PlayingStateSave> stateSave = nullptr);
         void GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY);
+        template <class T>
+        void ClearGameObjects();
         /*Contains game objects. First element always is platform, second - ball*/
         std::vector<std::shared_ptr<GameObject>> gameObjects;
-        std::shared_ptr<std::vector<std::shared_ptr<Block>>> blocks;
+        //std::vector<std::shared_ptr<Block>> blocks;
+        std::vector<std::shared_ptr<GameObject>> objectsToDestroy;
         //Delay in seconds before game start from menu or after pause
         float sessionDelay = 0.f;
-        std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
+        std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> blockFactories;
+        std::unordered_map<BonusType, std::unique_ptr<BonusFactory>> bonusFactories;
         int breakableBlocksCount = 0;
         int nextLevel = 0;
         int currentScore = 0;
         TextStyle scoreTextStyle;
         ListDrawableText scoreText;
         std::unique_ptr<LevelLoader> levelLoader;
+    };
+
+    template <class T>
+    void PlayingState::ClearGameObjects()
+    {
+        gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(), [](auto& object) {
+            return std::dynamic_pointer_cast<T>(object);
+            }), gameObjects.end());
     };
 }

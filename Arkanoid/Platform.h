@@ -15,6 +15,8 @@ namespace Arkanoid
 		virtual void Reset() override;
 		virtual bool CheckCollision(Collidable* object);
 		virtual bool GetCollision(Collidable* object) const override;
+		static bool CheckCollisionWithCircle(const sf::FloatRect platformRect, const sf::Vector2f circlePosition, const float circleRadius);
+		void MultiplyWidth(float factor);
 	protected:
 		void OnHit() override {};
 	private:

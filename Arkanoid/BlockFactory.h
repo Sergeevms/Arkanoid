@@ -14,11 +14,12 @@ namespace Arkanoid
 		virtual std::shared_ptr<Block> CreateBlock(const sf::Vector2f position = { 0.f, 0.f });
 		int GetBreakableBlockCount() const;
 		void ClearBreakableCounter();
+		static std::unique_ptr<BlockFactory> CreateFactory(const BlockType);
 	protected:
 		int createdBreakableBlocks = 0;
 	};
 
-	std::unique_ptr<BlockFactory> CreateFactory(const BlockType);
+	
 
 	class SmoothDestroyableBlockFactory : public BlockFactory
 	{

@@ -11,6 +11,8 @@
 #include "Ball.h"
 #include "Block.h"
 #include "BlockFactory.h"
+#include "Bonus.h"
+#include "BonusFactory.h"
 #include "LevelLoader.h"
 
 namespace Arkanoid
@@ -22,8 +24,14 @@ namespace Arkanoid
 		gameObjects.push_back(std::make_shared<Ball>());
 		for (auto& blockType : GameWorld::GetWorld()->availiableBlockTypes)
 		{
-			factories.emplace(blockType, CreateFactory(blockType));
+			blockFactories.emplace(blockType, BlockFactory::CreateFactory(blockType));
 		}
+
+		for (auto& bonusType : GameWorld::GetWorld()->avaliableBonuses)
+		{
+			bonusFactories.emplace(bonusType, BonusFactory::CreateFactory(bonusType));
+		}
+
 		scoreTextStyle.Init("Roboto-Regular.ttf", sf::Color::Green);
 		scoreText.SetStyle(&scoreTextStyle);
 	}
@@ -35,7 +43,6 @@ namespace Arkanoid
 				object->Draw(window);
 			};
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunctor);
-		std::for_each(blocks->begin(), blocks->end(), drawFunctor);		
 		scoreText.Draw(window);
 	}
 
@@ -47,12 +54,10 @@ namespace Arkanoid
 		{
 			//Updating objects
 			auto updateFunctor = [deltaTime](auto object)
-				{
+				{					
 					object->Update(deltaTime);
 				};
 			std::for_each(gameObjects.begin(), gameObjects.end(), updateFunctor);
-			std::for_each(blocks->begin(), blocks->end(), updateFunctor);
-
 
 			//Collision checks
 			Ball* ball = std::dynamic_pointer_cast<Ball>(gameObjects[1]).get();
@@ -60,24 +65,38 @@ namespace Arkanoid
 			bool needInvertX = false;
 			bool needInvertY = false;
 			bool hasBrokeOneBlock = false;
-			std::shared_ptr<std::vector<std::shared_ptr<Block>>> blocks = PlayingState::blocks;
-			blocks->erase(std::remove_if(blocks->begin(), blocks->end(),
-				[ball, &hasBrokeOneBlock, &needInvertX, &needInvertY, this](auto block)
+			auto blockCollisionCheckFunctor =
+				[ball, &hasBrokeOneBlock, &needInvertX, &needInvertY, this](auto object)
 				{
-					if ((!hasBrokeOneBlock) && (block->CheckCollision(ball)))
+					if (auto block = std::dynamic_pointer_cast<Block> (object))
 					{
-						hasBrokeOneBlock = true;
-						sf::Vector2f ballPosition = ball->GetPosition();
-						sf::FloatRect blockRect = block->GetRect();
-
-						if (block->IsBallReboundable())
+						if ((!hasBrokeOneBlock) && (block->CheckCollision(ball)))
 						{
-							GetBallInverse(ballPosition, blockRect, needInvertX, needInvertY);
+							hasBrokeOneBlock = true;
+							sf::Vector2f ballPosition = ball->GetPosition();
+							sf::FloatRect blockRect = block->GetRect();
+
+							if (block->IsBallReboundable())
+							{
+								GetBallInverse(ballPosition, blockRect, needInvertX, needInvertY);
+							}
+						}
+						if (block->IsBroken())
+						{
+							if (auto bonus = BonusFactory::TryToCreateRandomBonus(bonusFactories, block->GetPosition()))
+							{
+								gameObjects.emplace_back(bonus);
+								bonus->AddObserver(weak_from_this());
+							}
+							objectsToDestroy.push_back(block);
 						}
 					}
-					return block->IsBroken();
-				}),
-				blocks->end());
+				};
+
+			for (auto& block : gameObjects)
+			{
+				blockCollisionCheckFunctor(block);
+			}
 
 			if (needInvertX)
 			{
@@ -89,12 +108,23 @@ namespace Arkanoid
 				ball->InvertY();
 			}
 
-			std::dynamic_pointer_cast<Platform>(gameObjects.front())->CheckCollision(ball);
+			auto platform = std::dynamic_pointer_cast<Platform>(gameObjects.front());
+			for (auto& object : gameObjects)
+			{
+				platform->CheckCollision(object.get());
+			}
 		}
 		else
 		{
 			sessionDelay -= deltaTime;
 		}
+		
+		//removing GameObjects needed to be destroyed
+		gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(), [this](auto& object)
+			{
+				return std::find(objectsToDestroy.begin(), objectsToDestroy.end(), object) != objectsToDestroy.end();
+			}), gameObjects.end());
+		objectsToDestroy.clear();
 	}
 
 	void PlayingState::Init()
@@ -122,7 +152,7 @@ namespace Arkanoid
 		}
 		else
 		{
-			blocks = std::make_shared <std::vector<std::shared_ptr<Block>>>();
+			ClearGameObjects<Block>();
 			CreateBlocks();
 			for (auto& object : gameObjects)
 			{
@@ -143,14 +173,27 @@ namespace Arkanoid
 				Application::GetInstance().GetGame()->LoadNextLevel();
 			};
 		}
-		else
-		if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
+		else if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
 		{
 			if (ball->GetPosition().y > gameObjects.front()->GetRect().top)
 			{
 				auto game = Application::GetInstance().GetGame();
 				game->SetLastSessionScore(currentScore);
 				game->LooseGame();
+			}
+		}
+		else if (auto bonus = std::dynamic_pointer_cast<Bonus>(observable); bonus)
+		{
+			if (bonus->IsActivated())
+			{
+				for (auto& object : gameObjects)
+				{
+					bonus->Apply(object);
+				}
+			}
+			else
+			{
+				objectsToDestroy.push_back(bonus);
 			}
 		}
 	}
@@ -172,10 +215,18 @@ namespace Arkanoid
 			stateSave->ball = std::dynamic_pointer_cast<BallSave>(gameObjects[1]->SaveState());
 			stateSave->blockTypes.clear();
 			stateSave->blockSaves.clear();
-			for (auto& block : *blocks)
+			for (auto& object : gameObjects)
 			{
-				stateSave->blockTypes.push_back(block->GetBlockType());
-				stateSave->blockSaves.push_back(std::dynamic_pointer_cast<BlockSave>(block->SaveState()));
+				if (auto block = std::dynamic_pointer_cast<Block>(object))
+				{
+					stateSave->blockTypes.push_back(block->GetBlockType());
+					stateSave->blockSaves.push_back(std::dynamic_pointer_cast<BlockSave>(block->SaveState()));
+				}
+				if (auto bonus = std::dynamic_pointer_cast<Bonus>(object))
+				{
+					stateSave->bonusTypes.push_back(bonus->GetType());
+					stateSave->bonusSaves.push_back(std::dynamic_pointer_cast<BonusSave>(bonus->SaveState()));
+				}
 			}
 		}
 	}
@@ -188,8 +239,15 @@ namespace Arkanoid
 			nextLevel = stateSave->nextLevel;
 			gameObjects[0]->LoadState(stateSave->platform);
 			gameObjects[1]->LoadState(stateSave->ball);
-			blocks->clear();
+			ClearGameObjects<Block>();
 			CreateBlocks(stateSave);
+			ClearGameObjects<Bonus>();
+			for (size_t i = 0; i < stateSave->bonusTypes.size(); ++i)
+			{
+				gameObjects.push_back(CreateBonusByType(bonusFactories, stateSave->bonusTypes[i]));
+				std::dynamic_pointer_cast<IObservable>(gameObjects.back())->AddObserver(weak_from_this());
+				gameObjects.back()->LoadState(stateSave->bonusSaves[i]);
+			}
 		}
 	}
 
@@ -197,7 +255,7 @@ namespace Arkanoid
 	{
 		const GameWorld* world = GameWorld::GetWorld();
 		
-		for (auto& pair : factories)
+		for (auto& pair : blockFactories)
 		{
 			pair.second->ClearBreakableCounter();
 		}
@@ -207,9 +265,9 @@ namespace Arkanoid
 		{
 			for (int i = 0; i < stateSave->blockSaves.size(); ++i)
 			{
-				blocks->push_back(factories.at(stateSave->blockTypes[i])->CreateBlock());
-				blocks->back()->LoadState(stateSave->blockSaves[i]);
-				blocks->back()->AddObserver(self);
+				gameObjects.push_back(blockFactories.at(stateSave->blockTypes[i])->CreateBlock());
+				std::dynamic_pointer_cast<Block>(gameObjects.back())->AddObserver(self);
+				gameObjects.back()->LoadState(stateSave->blockSaves[i]);
 			}
 		}
 		else
@@ -221,11 +279,11 @@ namespace Arkanoid
 				//Getting coordinates of block center considering spacing between the blocks and one two row at top
 				position.x = world->blockSpacing * (1 + block.first.x) + world->blockSize.x * (block.first.x + 0.5f);
 				position.y = world->blockSpacing * (2 + block.first.y) + world->blockSize.y * (block.first.y + 2 + 0.5f);
-				blocks->push_back(factories.at(block.second)->CreateBlock(position));
-				blocks->back()->AddObserver(self);
+				gameObjects.push_back(blockFactories.at(block.second)->CreateBlock(position));
+				std::dynamic_pointer_cast<Block>(gameObjects.back())->AddObserver(self);
 			}
 		}
-		for (auto& pair : factories)
+		for (auto& pair : blockFactories)
 		{
 			breakableBlocksCount += pair.second->GetBreakableBlockCount();
 		}		
@@ -258,6 +316,15 @@ namespace Arkanoid
 		{
 			block->SaveToFile(ostream);
 		}
+		ostream << bonusSaves.size() << " ";
+		for (auto& bonusType : bonusTypes)
+		{
+			ostream << static_cast<int>(bonusType) << " ";
+		}
+		for (auto& bonus : bonusSaves)
+		{
+			bonus->SaveToFile(ostream);
+		}
 	}
 
 	void PlayingStateSave::LoadFromFile(std::ifstream& istream)
@@ -265,6 +332,7 @@ namespace Arkanoid
 		istream >> nextLevel >> currentScore;
 		platform->LoadFromFile(istream);
 		ball->LoadFromFile(istream);
+
 		size_t blocksCount = 0;
 		istream	>> blocksCount;
 		blockSaves.clear();
@@ -282,6 +350,25 @@ namespace Arkanoid
 		{
 			blockSave->LoadFromFile(istream);
 		}
+
+		size_t bonusCount = 0;
+		istream >> bonusCount;
+		bonusSaves.clear();
+		bonusSaves.reserve(bonusCount);
+		bonusTypes.clear();
+		bonusTypes.reserve(bonusCount);
+		for (size_t i = 0; i < bonusCount; ++i)
+		{
+			int bonusType = 0;
+			istream >> bonusType;
+			bonusTypes.push_back(static_cast<BonusType>(bonusType));
+			bonusSaves.push_back(CreateEmptySaveByBonusType(bonusTypes.back()));
+		}
+		for (auto& bonusSave : bonusSaves)
+		{
+			bonusSave->LoadFromFile(istream);
+		}
+
 	}
 
 	PlayingStateSave::PlayingStateSave()

@@ -2,6 +2,7 @@
 #include "Utility.h"
 #include "Application.h"
 #include "Ball.h"
+#include "Bonus.h"
 
 namespace Arkanoid
 {
@@ -51,13 +52,8 @@ namespace Arkanoid
 	}
 
 	bool Platform::CheckCollision(Collidable* object)
-	{
-		auto ball = dynamic_cast<Ball*>(object);
-		if (!ball)
-		{
-			return false;
-		}
-		else
+	{		
+		if (auto ball = dynamic_cast<Ball*>(object))
 		{
 			if (GetCollision(ball))
 			{
@@ -69,37 +65,62 @@ namespace Arkanoid
 			}
 			return false;
 		}
-	}
-
-	bool Platform::GetCollision(Collidable* object) const
-	{
-		auto ball = dynamic_cast<Ball*>(object);
-
-		if (!ball)
+		else if (auto bonus = dynamic_cast<Bonus*>(object))
 		{
+			if (GetCollision(bonus))
+			{
+				bonus->OnHit();
+				return true;
+			}
 			return false;
 		}
 		else
 		{
-			const GameWorld* world = GameWorld::GetWorld();
-			const auto ballPosition = ball->GetPosition();
-			const auto platformRect = GetRect();
-			auto sqr = [](float x)
-				{
-					return x * x;
-				};
-
-			if (ballPosition.x < platformRect.left)
-			{
-				return sqr(ballPosition.x - platformRect.left) + sqr(ballPosition.y - platformRect.top) < sqr(world->ballDiameter / 2.f);
-			}
-
-			if (ballPosition.x > platformRect.left + platformRect.width)
-			{
-				return sqr(ballPosition.x - platformRect.left - platformRect.width) + sqr(ballPosition.y - platformRect.top) < sqr(world->ballDiameter / 2.f);
-			}
-
-			return std::fabs(ballPosition.y - platformRect.top) <= world->ballDiameter / 2.f;
+			return false;
 		}
+	}
+
+	bool Platform::GetCollision(Collidable* object) const
+	{
+		if (auto ball = dynamic_cast<Ball*>(object))
+		{
+			
+			return CheckCollisionWithCircle(GetRect(), ball->GetPosition(), GameWorld::GetWorld()->ballDiameter / 2.f); 
+		}
+		else if (auto bonus = dynamic_cast<Bonus*>(object))
+		{
+			return (!bonus->IsActivated()) && CheckCollisionWithCircle(GetRect(), bonus->GetPosition(), GameWorld::GetWorld()->bonusSize / 2.f);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool Platform::CheckCollisionWithCircle(const sf::FloatRect platformRect, const sf::Vector2f circlePosition, const float circleRadius)
+	{
+		auto sqr = [](float x)
+			{
+				return x * x;
+			};
+
+		if (circlePosition.x < platformRect.left)
+		{
+			return sqr(circlePosition.x - platformRect.left) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
+		}
+
+		if (circlePosition.x > platformRect.left + platformRect.width)
+		{
+			return sqr(circlePosition.x - platformRect.left - platformRect.width) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
+		}
+
+		return std::fabs(circlePosition.y - platformRect.top) <= circleRadius;
+	}
+
+	void Platform::MultiplyWidth(float factor)
+	{
+		sf::Vector2f scale = sprite.getScale();
+		scale.x *= factor;
+		sprite.setScale(scale);
 	}
 }

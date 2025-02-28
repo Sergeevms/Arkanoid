@@ -31,7 +31,7 @@ namespace Arkanoid
 	public:
 		virtual void SaveToFile(std::ofstream& ostream) const override;
 		virtual void LoadFromFile(std::ifstream& istream) override;
-	private:
+	protected:
 		friend class GameObject;
 		sf::Vector2f position;
 		sf::Vector2f size;

@@ -19,9 +19,10 @@ namespace Arkanoid
 	{
 		GameWorld* world = GameWorld::GetWorld();
 		sf::Vector2f newPosition = sprite.getPosition() + direction * world->ballSpeed * deltaTime;
-		sprite.setPosition(newPosition);
 		if (newPosition.x < HalfSize().x || newPosition.x > world->screenWidth - HalfSize().x)
-		{			
+		{
+			//Correcting position to prevent ball from "sticking" to the wall
+			newPosition.x = newPosition.x < HalfSize().x ? HalfSize().x : world->screenWidth - HalfSize().x;
 			bool movingDown = direction.y > 0.f;
 			ChangeAngle(180.f - previosAngle);
 			if (movingDown)
@@ -33,6 +34,7 @@ namespace Arkanoid
 		{
 			InvertY();
 		}
+		sprite.setPosition(newPosition);
 		Emit();
 	}	
 

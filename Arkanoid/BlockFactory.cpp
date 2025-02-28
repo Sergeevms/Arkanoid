@@ -42,7 +42,7 @@ namespace Arkanoid
 		return std::make_shared<UnbreakbleBlock>(position);
 	}
 
-	std::unique_ptr<BlockFactory> CreateFactory(BlockType blockType)
+	std::unique_ptr<BlockFactory> BlockFactory::CreateFactory(BlockType blockType)
 	{
 		switch (blockType)
 		{

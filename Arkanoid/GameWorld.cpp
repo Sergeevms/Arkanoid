@@ -3,6 +3,7 @@
 #include "BaseInputHandler.h"
 #include "Utility.h"
 #include "Block.h"
+#include "Bonus.h"
 
 namespace Arkanoid
 {
@@ -83,7 +84,16 @@ namespace Arkanoid
 		mapCharToBlockTypeMapping['3'] = BlockType::Glass;
 		mapCharToBlockTypeMapping['N'] = BlockType::Simple;
 		smoothBlockDestroyTime = 1.5f;
+
+		bonusSize = 20.f;
+		bonusSpeed = 175.f;
+		bonusDuration = 10.f;
 		
+		avaliableBonuses.push_back(BonusType::platformSize);
+
+		bonusColors[BonusType::platformSize] = sf::Color::Green;
+		platformBonusFactor = 1.5f;
+		bonusAppearanceChance = 50.f;
 	}
 
 	sf::Vector2f GameWorld::ScreenCenter()
