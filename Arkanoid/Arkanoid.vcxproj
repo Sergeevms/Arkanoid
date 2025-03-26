@@ -151,6 +151,7 @@
     <ClCompile Include="BonusFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectDecorator.cpp" />
     <ClCompile Include="GameWinnedMenu.cpp" />
     <ClCompile Include="GameWinnedState.cpp" />
     <ClCompile Include="IDelayedAction.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Collidable.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectDecorator.h" />
     <ClInclude Include="GameWinnedMenu.h" />
     <ClInclude Include="GameWinnedState.h" />
     <ClInclude Include="IDelayedAction.h" />

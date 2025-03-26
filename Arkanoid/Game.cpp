@@ -181,7 +181,7 @@ namespace Arkanoid
 
 	void Game::WinGame()
 	{
-		SwitchToState(GameState::GameWinned);
+		SwitchToState(GameState::Records);
 	}
 
 	void Game::LooseGame()

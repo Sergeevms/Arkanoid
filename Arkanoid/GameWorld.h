@@ -86,6 +86,9 @@ namespace Arkanoid
 		std::unordered_map<BonusType, sf::Color> bonusColors;
 
 		float platformBonusFactor;
+		float ballSpeedBonusFactor;
+		sf::Color acceleratedBallColor;
+		sf::Color oneHitBlockColor;
 	private:
 		GameWorld();
 		~GameWorld() = default;

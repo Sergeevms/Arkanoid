@@ -5,16 +5,24 @@
 
 namespace Arkanoid
 {
-	class Ball : public GameObject, public IObservable
+	class IBallObject : public virtual IGameObject
+	{
+	public:
+		virtual void InvertX() = 0;
+		virtual void InvertY() = 0;
+		virtual void ChangeAngle(float angle) = 0;
+	};
+
+	class Ball : public GameObject, public IBallObject
 	{
 	public:
 		Ball();
 		void Update(const float deltaTime) override;
 		virtual bool GetCollision(Collidable* object) const override;
-		void InvertX();
-		void InvertY();
+		virtual void InvertX() override;
+		virtual void InvertY() override;
 		virtual void Reset() override;
-		void ChangeAngle(float angle);
+		virtual void ChangeAngle(float angle) override;
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
 		virtual void LoadState(const std::shared_ptr<ISave> save) override;

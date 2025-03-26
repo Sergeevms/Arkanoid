@@ -14,16 +14,26 @@ namespace Arkanoid
 		Glass
 	};
 
-	class Block : public GameObject, public IObservable
+	class IBlockObject : public virtual IGameObject
+	{
+	public:
+		virtual bool IsBroken() const = 0;
+		virtual bool IsBreakable() const = 0;
+		virtual bool IsBallReboundable() const = 0;
+		virtual int GetScore() const = 0;
+		virtual BlockType GetBlockType() const = 0;
+	};
+
+	class Block : public GameObject, public virtual IBlockObject
 	{
 	public:
 		Block(const sf::Vector2f& position);
-		virtual void Update(const float deltaTime) override {} ;
 		virtual bool GetCollision(Collidable* object) const override;
-		virtual bool IsBroken();
-		virtual bool IsBallReboundable();
-		virtual int GetScore() const;
-		virtual BlockType GetBlockType() const { return BlockType::Simple; };
+		virtual bool IsBroken() const override;
+		virtual bool IsBreakable() const override;
+		virtual bool IsBallReboundable() const override;
+		int GetScore() const override;
+		virtual BlockType GetBlockType() const override { return BlockType::Simple; };
 
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
@@ -47,6 +57,7 @@ namespace Arkanoid
 	{
 	public:
 		UnbreakbleBlock(const sf::Vector2f& position);
+		virtual bool IsBreakable() const override;
 		virtual BlockType GetBlockType() const override { return BlockType::Unbreackble; };
 	protected:
 		virtual void OnHit() override;
@@ -69,7 +80,6 @@ namespace Arkanoid
 		SmoothDestroyableBlock(const sf::Vector2f& position);
 		virtual bool GetCollision(Collidable* object) const override;
 		virtual void Update(const float deltaTime) override;
-		virtual int GetScore() const override;
 		virtual BlockType GetBlockType() const override { return BlockType::SmoothDestroyable; };
 
 		virtual std::shared_ptr<ISave> SaveState() const override;
@@ -86,7 +96,6 @@ namespace Arkanoid
 	{
 	public:
 		MultiHitBlock(const sf::Vector2f& position);
-		virtual int GetScore() const override;
 		virtual BlockType GetBlockType() const override { return BlockType::MultiHit; };
 	protected:
 		virtual void OnHit() override;
@@ -96,9 +105,8 @@ namespace Arkanoid
 	{
 	public:
 		GlassBlock(const sf::Vector2f& position);
-		virtual int GetScore() const override;
 		virtual bool CheckCollision(Collidable* object) override;
-		virtual bool IsBallReboundable() override;
+		virtual bool IsBallReboundable() const override;
 		virtual BlockType GetBlockType() const override { return BlockType::Glass; };
 	};
 

@@ -22,7 +22,7 @@ namespace Arkanoid
 		if (newPosition.x < HalfSize().x || newPosition.x > world->screenWidth - HalfSize().x)
 		{
 			//Correcting position to prevent ball from "sticking" to the wall
-			newPosition.x = newPosition.x < HalfSize().x ? HalfSize().x : world->screenWidth - HalfSize().x;
+			newPosition.x = std::clamp(newPosition.x, HalfSize().x, world->screenWidth - HalfSize().x);
 			bool movingDown = direction.y > 0.f;
 			ChangeAngle(180.f - previosAngle);
 			if (movingDown)
@@ -30,7 +30,7 @@ namespace Arkanoid
 				InvertY();
 			}
 		}
-		if (newPosition.y < HalfSize().y || newPosition.y > world->screenHeight - HalfSize().y)
+		if (newPosition.y < HalfSize().y)
 		{
 			InvertY();
 		}
@@ -93,7 +93,7 @@ namespace Arkanoid
 
 	bool Ball::GetCollision(Collidable *object) const
 	{
-		auto gameObject = dynamic_cast<GameObject*>(object);
+		auto gameObject = dynamic_cast<IGameObject*>(object);
 		assert(gameObject);
 		return GetRect().intersects(gameObject->GetRect());
 	}

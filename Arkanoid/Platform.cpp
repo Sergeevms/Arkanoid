@@ -53,7 +53,7 @@ namespace Arkanoid
 
 	bool Platform::CheckCollision(Collidable* object)
 	{		
-		if (auto ball = dynamic_cast<Ball*>(object))
+		if (auto ball = dynamic_cast<IBallObject*>(object))
 		{
 			if (GetCollision(ball))
 			{
@@ -69,7 +69,7 @@ namespace Arkanoid
 		{
 			if (GetCollision(bonus))
 			{
-				bonus->OnHit();
+				bonus->CheckCollision(this);
 				return true;
 			}
 			return false;
@@ -82,7 +82,7 @@ namespace Arkanoid
 
 	bool Platform::GetCollision(Collidable* object) const
 	{
-		if (auto ball = dynamic_cast<Ball*>(object))
+		if (auto ball = dynamic_cast<IBallObject*>(object))
 		{
 			
 			return CheckCollisionWithCircle(GetRect(), ball->GetPosition(), GameWorld::GetWorld()->ballDiameter / 2.f); 
@@ -115,12 +115,5 @@ namespace Arkanoid
 		}
 
 		return std::fabs(circlePosition.y - platformRect.top) <= circleRadius;
-	}
-
-	void Platform::MultiplyWidth(float factor)
-	{
-		sf::Vector2f scale = sprite.getScale();
-		scale.x *= factor;
-		sprite.setScale(scale);
 	}
 }
