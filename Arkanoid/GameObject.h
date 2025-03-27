@@ -2,27 +2,11 @@
 #pragma warning( disable : 4250 )
 #include <memory>
 #include "SFML/Graphics.hpp"
-#include "Collidable.h"
+#include "IGameObject.h"
 #include "ISaveable.h"
-#include "IObserver.h"
 
 namespace Arkanoid
-{
-	class IGameObject : public Collidable, public IObservable, public ISaveable
-	{
-	public:
-		virtual ~IGameObject() {};
-		virtual void Draw(sf::RenderWindow& window) const = 0;
-		virtual void Update(const float deltaTime) = 0;
-		virtual sf::FloatRect GetRect() const = 0;
-		virtual sf::Vector2f GetPosition() const = 0;
-		virtual void SetPosition(const sf::Vector2f newPosition) = 0;
-		virtual sf::Vector2f HalfSize() const = 0;
-		virtual void Reset() = 0;
-		virtual sf::Color GetColor() = 0;
-	};
-
-	
+{	
 	class GameObject : public virtual IGameObject, public virtual ISaveable, public std::enable_shared_from_this<GameObject>
 	{
 	public:

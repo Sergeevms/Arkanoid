@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "IBlockObject.h"
 #include "IDelayedAction.h"
-#include "IObserver.h"
 
 namespace Arkanoid
 {
@@ -14,17 +14,7 @@ namespace Arkanoid
 		Glass
 	};
 
-	class IBlockObject : public virtual IGameObject
-	{
-	public:
-		virtual bool IsBroken() const = 0;
-		virtual bool IsBreakable() const = 0;
-		virtual bool IsBallReboundable() const = 0;
-		virtual int GetScore() const = 0;
-		virtual BlockType GetBlockType() const = 0;
-	};
-
-	class Block : public GameObject, public virtual IBlockObject
+	class Block : public GameObject, public IBlockObject
 	{
 	public:
 		Block(const sf::Vector2f& position);

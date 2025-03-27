@@ -1,9 +1,10 @@
 #include "Bonus.h"
 #include "Utility.h"
 #include "GameWorld.h"
-#include "Platform.h"
 #include "BonusFactory.h"
-#include "GameObjectDecorator.h"
+#include "BlockObjectDecorator.h"
+#include "BallObjectDecorator.h"
+#include "PlatformObjectDecorator.h"
 
 namespace Arkanoid
 {
@@ -122,7 +123,7 @@ namespace Arkanoid
 
 	void Bonus::OnEnding(std::shared_ptr<IGameObject>& object) const
 	{
-		if (auto decorator = std::dynamic_pointer_cast<BaseGameObjectDecorator>(object))
+		if (auto decorator = std::dynamic_pointer_cast<GameObjectDecorator>(object))
 		{
 			for (bool decoratorRevomed = false; auto& decoratorToRemove : createdDecorators)
 			{
@@ -157,7 +158,7 @@ namespace Arkanoid
 	{
 		if (auto platform = std::dynamic_pointer_cast<IPlatformObject> (object); platform)
 		{
-			std::shared_ptr<IGameObject> widePlatform = std::make_shared<PlatformSizeDecorator>(object, sf::Vector2f(GameWorld::GetWorld()->platformBonusFactor, 1.f));
+			std::shared_ptr<IGameObject> widePlatform = std::make_shared<PlatformSizeDecorator>(platform, sf::Vector2f(GameWorld::GetWorld()->platformBonusFactor, 1.f));
 			createdDecorators.push_back(widePlatform);
 			object = widePlatform;
 		}
@@ -189,7 +190,7 @@ namespace Arkanoid
 	{
 		if (auto ball = std::dynamic_pointer_cast<IBallObject> (object); ball)
 		{
-			std::shared_ptr<IGameObject> fastBall = std::make_shared<BallSpeedDecorator>(object, GameWorld::GetWorld()->ballSpeedBonusFactor);
+			std::shared_ptr<IGameObject> fastBall = std::make_shared<BallSpeedDecorator>(ball, GameWorld::GetWorld()->ballSpeedBonusFactor);
 			createdDecorators.push_back(fastBall);
 			object = fastBall;
 		}
@@ -210,7 +211,7 @@ namespace Arkanoid
 	{
 		if (auto block = std::dynamic_pointer_cast<IBlockObject> (object); block)
 		{
-			std::shared_ptr<IGameObject> oneHitBlock = std::make_shared<OneHitBlockDecorator>(object);
+			std::shared_ptr<IGameObject> oneHitBlock = std::make_shared<OneHitBlockDecorator>(block);
 			createdDecorators.push_back(oneHitBlock);
 			object = oneHitBlock;
 			oneHitBlock->AddObserver(observerToAdd);

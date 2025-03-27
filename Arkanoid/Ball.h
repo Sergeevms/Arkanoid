@@ -1,18 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
-#include "IObserver.h"
+#include "IBallObject.h"
 
 namespace Arkanoid
 {
-	class IBallObject : public virtual IGameObject
-	{
-	public:
-		virtual void InvertX() = 0;
-		virtual void InvertY() = 0;
-		virtual void ChangeAngle(float angle) = 0;
-	};
-
 	class Ball : public GameObject, public IBallObject
 	{
 	public:

@@ -5,7 +5,7 @@ namespace Arkanoid
 {
 	class Collidable
 	{
-		friend class BaseGameObjectDecorator;
+		friend class GameObjectDecorator;
 	public:
 		virtual bool GetCollision(Collidable* object) const = 0;
 		virtual bool CheckCollision(Collidable* object)

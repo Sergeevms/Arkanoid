@@ -2,8 +2,8 @@
 #include <unordered_map>
 #include <memory.h>
 #include "GameObject.h"
+#include "IBonusObject.h"
 #include "IDelayedAction.h"
-#include "IObserver.h"
 
 namespace Arkanoid
 {
@@ -28,21 +28,8 @@ namespace Arkanoid
 		friend class IncreasePlatformBonus;
 	};
 
-	class IBonusObject :
-		public virtual IGameObject
-	{
-	public:
-		virtual void Apply(std::shared_ptr<IGameObject>& object) = 0;
-		virtual BonusType GetType() = 0;
-		virtual bool IsActivated() = 0;
-		virtual bool IsToBeDestroyed() = 0;
-	protected:
-		virtual void OnActivation(std::shared_ptr<IGameObject>& object) = 0;
-		virtual void OnEnding(std::shared_ptr<IGameObject>& object) const = 0;
-	};
-
 	class Bonus :
-		public virtual IBonusObject, public GameObject, public IDelayedAction
+		public GameObject, public IBonusObject, public IDelayedAction
 	{
 	public:
 		Bonus(const sf::Vector2f position = {0.f, 0.f});

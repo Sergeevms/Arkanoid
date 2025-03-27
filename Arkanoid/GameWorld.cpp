@@ -89,11 +89,11 @@ namespace Arkanoid
 		bonusSpeed = 175.f;
 		bonusDuration = 10.f;
 		
-		//avaliableBonuses.push_back(BonusType::ballSpeed);
-		//avaliableBonuses.push_back(BonusType::platformSize);
+		avaliableBonuses.push_back(BonusType::ballSpeed);
+		avaliableBonuses.push_back(BonusType::platformSize);
 		avaliableBonuses.push_back(BonusType::oneHitBlock);
 
-		bonusAppearanceChance = 100.f;
+		bonusAppearanceChance = 10.f;
 		bonusColors[BonusType::platformSize] = sf::Color::Green;
 		bonusColors[BonusType::ballSpeed] = sf::Color::Red;
 		bonusColors[BonusType::oneHitBlock] = sf::Color::Yellow;

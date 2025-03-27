@@ -1,15 +1,13 @@
 #pragma once
-#include "GameObject.h"
-#include "Ball.h"
-#include "Platform.h"
-#include "Block.h"
+#pragma 
+#include "IGameObject.h"
 
 namespace Arkanoid
 {
-	class BaseGameObjectDecorator : public virtual IGameObject, public std::enable_shared_from_this<BaseGameObjectDecorator>
+	class GameObjectDecorator : public virtual IGameObject, public std::enable_shared_from_this<GameObjectDecorator>
 	{
 	public:
-		BaseGameObjectDecorator(std::shared_ptr<IGameObject> object) : wrappedObject(object) {};
+		GameObjectDecorator(std::shared_ptr<IGameObject> object) : wrappedObject(object) {};
 		virtual void Draw(sf::RenderWindow& window) const override { wrappedObject->Draw(window); };
 		virtual void Update(const float deltaTime) override { wrappedObject->Update(deltaTime); };
 		virtual sf::FloatRect GetRect() const override { return wrappedObject->GetRect(); };
@@ -31,7 +29,7 @@ namespace Arkanoid
 		std::shared_ptr<IGameObject> wrappedObject;
 	};
 
-	class SpriteChangedDecorator : public virtual BaseGameObjectDecorator
+	class SpriteChangedDecorator : public virtual GameObjectDecorator
 	{
 	public:
 		SpriteChangedDecorator(std::shared_ptr<IGameObject> object, const std::string textureName);
@@ -42,66 +40,5 @@ namespace Arkanoid
 	protected:
 		sf::Texture texture;
 		sf::Sprite sprite;
-	};
-
-	class BallDecorator : public virtual IBallObject, public virtual BaseGameObjectDecorator
-	{
-	public:
-		BallDecorator(std::shared_ptr<IGameObject> object);
-		virtual void InvertX() override { std::dynamic_pointer_cast<IBallObject>(wrappedObject)->InvertX(); };
-		virtual void InvertY() override { std::dynamic_pointer_cast<IBallObject>(wrappedObject)->InvertY(); };
-		virtual void ChangeAngle(float angle) override { std::dynamic_pointer_cast<IBallObject>(wrappedObject)->ChangeAngle(angle); };
-	};
-
-	class PlatformDecorator : public virtual IPlatformObject, public virtual BaseGameObjectDecorator
-	{
-	public:
-		PlatformDecorator(std::shared_ptr <IGameObject> object);
-		virtual void SetMovingDirection(const Direction direction) override { std::dynamic_pointer_cast<IPlatformObject>(wrappedObject)->SetMovingDirection(direction); };
-	};
-
-	class BlockDecorator : public virtual IBlockObject, public virtual BaseGameObjectDecorator
-	{
-	public:
-		BlockDecorator(std::shared_ptr<IGameObject> object);
-		virtual bool IsBroken() const override { return std::dynamic_pointer_cast<IBlockObject>(wrappedObject)->IsBroken(); };
-		virtual bool IsBreakable() const override { return std::dynamic_pointer_cast<IBlockObject>(wrappedObject)->IsBreakable(); };
-		virtual bool IsBallReboundable() const { return std::dynamic_pointer_cast<IBlockObject>(wrappedObject)->IsBallReboundable(); };
-		virtual int GetScore() const { return std::dynamic_pointer_cast<IBlockObject>(wrappedObject)->GetScore(); };
-		virtual BlockType GetBlockType() const override { return std::dynamic_pointer_cast<IBlockObject>(wrappedObject)->GetBlockType(); };
-	};
-
-	class PlatformSizeDecorator : public virtual SpriteChangedDecorator, public virtual PlatformDecorator
-	{
-	public:
-		PlatformSizeDecorator(std::shared_ptr<IGameObject> object, const sf::Vector2f scale);
-		virtual void Update(const float deltaTime) override;
-		bool GetCollision(Collidable* object) const override;
-	protected:
-		sf::Vector2f scale;
-	};
-
-	class BallSpeedDecorator : public virtual BallDecorator, public virtual SpriteChangedDecorator
-	{
-	public:
-		BallSpeedDecorator(std::shared_ptr<IGameObject> object, float updateTimeCoefficient);
-		virtual void Update(const float deltaTime) override;
-	protected:
-		float coefficient = 1.f;
-	};
-
-	class OneHitBlockDecorator : public virtual BlockDecorator, public virtual SpriteChangedDecorator
-	{
-	public:
-		OneHitBlockDecorator(std::shared_ptr<IGameObject> object);
-		virtual void Draw(sf::RenderWindow& window) const override;
-		virtual void OnHit() override;
-		virtual bool IsBroken() const override;
-		virtual bool IsBreakable() const override;
-		virtual void Update(const float deltaTime) override;
-		virtual void AddObserver(std::weak_ptr<IObserver> observer) override;
-		virtual std::shared_ptr<IObservable> GetObservablePtr() override;
-	protected:
-		bool isBroken = false;
 	};
 }

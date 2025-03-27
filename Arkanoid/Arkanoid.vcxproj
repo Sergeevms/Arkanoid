@@ -142,11 +142,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="BallObjectDecorator.cpp" />
     <ClCompile Include="BaseInputHandler.cpp" />
     <ClCompile Include="BaseMenuInputHandler.cpp" />
     <ClCompile Include="BaseState.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockFactory.cpp" />
+    <ClCompile Include="BlockObjectDecorator.cpp" />
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="BonusFactory.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -167,6 +169,7 @@
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="PlatformObjectDecorator.cpp" />
     <ClCompile Include="PlayingInputHandler.cpp" />
     <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="RecordsState.cpp" />
@@ -174,15 +177,18 @@
     <ClCompile Include="RecordsStateMenus.cpp" />
     <ClCompile Include="RecordTable.cpp" />
     <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="ScoreCounter.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
+    <ClInclude Include="BallObjectDecorator.h" />
     <ClInclude Include="BaseInputHandler.h" />
     <ClInclude Include="BaseMenuInputHandler.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockFactory.h" />
+    <ClInclude Include="BlockObjectDecorator.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="BonusFactory.h" />
     <ClInclude Include="Collidable.h" />
@@ -191,9 +197,14 @@
     <ClInclude Include="GameObjectDecorator.h" />
     <ClInclude Include="GameWinnedMenu.h" />
     <ClInclude Include="GameWinnedState.h" />
+    <ClInclude Include="IBallObject.h" />
+    <ClInclude Include="IBlockObject.h" />
+    <ClInclude Include="IBonusObject.h" />
     <ClInclude Include="IDelayedAction.h" />
+    <ClInclude Include="IGameObject.h" />
     <ClInclude Include="IListDrawable.h" />
     <ClInclude Include="IObserver.h" />
+    <ClInclude Include="IPlatformObject.h" />
     <ClInclude Include="ISaveable.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="NotPlayingWindow.h" />
@@ -204,6 +215,7 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="PlatformObjectDecorator.h" />
     <ClInclude Include="PlayingInputHandler.h" />
     <ClInclude Include="PlayingState.h" />
     <ClInclude Include="Randomizer.h" />
@@ -212,6 +224,7 @@
     <ClInclude Include="RecordsStateMenus.h" />
     <ClInclude Include="RecordTable.h" />
     <ClInclude Include="GameWorld.h" />
+    <ClInclude Include="ScoreCounter.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>

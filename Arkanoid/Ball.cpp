@@ -1,8 +1,6 @@
 #include "Ball.h"
-#include "Platform.h"
 #include "Utility.h"
 #include "Application.h"
-#include "PlayingState.h"
 #include "Randomizer.h"
 
 namespace Arkanoid

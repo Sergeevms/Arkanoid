@@ -1,8 +1,9 @@
 #include "Platform.h"
 #include "Utility.h"
+#include "GameWorld.h"
+#include "IBallObject.h"
+#include "IBonusObject.h"
 #include "Application.h"
-#include "Ball.h"
-#include "Bonus.h"
 
 namespace Arkanoid
 {
@@ -65,7 +66,7 @@ namespace Arkanoid
 			}
 			return false;
 		}
-		else if (auto bonus = dynamic_cast<Bonus*>(object))
+		else if (auto bonus = dynamic_cast<IBonusObject*>(object))
 		{
 			if (GetCollision(bonus))
 			{
@@ -85,35 +86,15 @@ namespace Arkanoid
 		if (auto ball = dynamic_cast<IBallObject*>(object))
 		{
 			
-			return CheckCollisionWithCircle(GetRect(), ball->GetPosition(), GameWorld::GetWorld()->ballDiameter / 2.f); 
+			return CheckRectCollisionWithCircle(GetRect(), ball->GetPosition(), GameWorld::GetWorld()->ballDiameter / 2.f); 
 		}
-		else if (auto bonus = dynamic_cast<Bonus*>(object))
+		else if (auto bonus = dynamic_cast<IBonusObject*>(object))
 		{
-			return (!bonus->IsActivated()) && CheckCollisionWithCircle(GetRect(), bonus->GetPosition(), GameWorld::GetWorld()->bonusSize / 2.f);
+			return (!bonus->IsActivated()) && CheckRectCollisionWithCircle(GetRect(), bonus->GetPosition(), GameWorld::GetWorld()->bonusSize / 2.f);
 		}
 		else
 		{
 			return false;
 		}
-	}
-
-	bool Platform::CheckCollisionWithCircle(const sf::FloatRect platformRect, const sf::Vector2f circlePosition, const float circleRadius)
-	{
-		auto sqr = [](float x)
-			{
-				return x * x;
-			};
-
-		if (circlePosition.x < platformRect.left)
-		{
-			return sqr(circlePosition.x - platformRect.left) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
-		}
-
-		if (circlePosition.x > platformRect.left + platformRect.width)
-		{
-			return sqr(circlePosition.x - platformRect.left - platformRect.width) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
-		}
-
-		return std::fabs(circlePosition.y - platformRect.top) <= circleRadius;
 	}
 }

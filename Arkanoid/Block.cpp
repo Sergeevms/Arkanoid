@@ -1,6 +1,6 @@
 #include "Block.h"
-#include "Application.h"
 #include "Utility.h"
+#include "GameWorld.h"
 
 namespace Arkanoid
 {
