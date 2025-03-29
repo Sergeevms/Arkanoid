@@ -109,9 +109,14 @@ namespace Arkanoid
 
 	void ListDrawableText::PresetPosition(const sf::Vector2f& position, const Orientation orientation, const Alignment alignment)
 	{
+		PresetPosition(position, RelativePositionByOrientationAndAlignment(orientation, alignment));
+	}
+
+	void ListDrawableText::PresetPosition(const sf::Vector2f& position, RelativePosition relativeOrigin)
+	{
 		sf::FloatRect textRect = getLocalBounds();
 		sf::Vector2f correctPosition{ position.x - textRect.left, position.y - textRect.top };
-		SetOriginByRelative(*this, relativePositions.at(RelativePositionByOrientationAndAlignment(orientation, alignment)));
+		SetOriginByRelative(*this, relativePositions.at(relativeOrigin));
 		setPosition(correctPosition);
 	}
 

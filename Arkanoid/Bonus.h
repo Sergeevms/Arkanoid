@@ -1,14 +1,17 @@
 #pragma once
-#include "GameObject.h"
-#include "IDelayedAction.h"
-#include "IObserver.h"
 #include <unordered_map>
+#include <memory.h>
+#include "GameObject.h"
+#include "IBonusObject.h"
+#include "IDelayedAction.h"
 
 namespace Arkanoid
 {
 	enum class BonusType
 	{
-		platformSize
+		PlatformSize,
+		BallSpeed,
+		OneHitBlock
 	};
 	
 	class BonusFactory;
@@ -25,28 +28,30 @@ namespace Arkanoid
 		friend class IncreasePlatformBonus;
 	};
 
-	std::shared_ptr<BonusSave> CreateEmptySaveByBonusType(BonusType);
-
 	class Bonus :
-		public GameObject, public IDelayedAction, public IObservable
+		public GameObject, public IBonusObject, public IDelayedAction
 	{
 	public:
 		Bonus(const sf::Vector2f position = {0.f, 0.f});
 		virtual void Draw(sf::RenderWindow& window) const override;
 		virtual void Update(const float deltaTime) override;
 		bool GetCollision(Collidable* object) const override;
-		virtual void OnHit() override;
-		virtual bool IsActivated();
-		virtual void Apply(std::weak_ptr <GameObject> object) const;
+		virtual bool IsActivated() override;
+		virtual bool IsToBeDestroyed() override;
+		virtual void Reset() override;
+		virtual void Apply(std::shared_ptr<IGameObject>& object) override;
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
 		virtual void LoadState(const std::shared_ptr<ISave> save) override;
-		virtual BonusType GetType() = 0;
 	protected:
-		virtual void OnActivation(std::weak_ptr <GameObject> object) const = 0;
-		virtual void OnEnding(std::weak_ptr <GameObject> object) const = 0;
+		virtual void OnActivation(std::shared_ptr<IGameObject>& object) = 0;
+		virtual void OnEnding(std::shared_ptr<IGameObject>& object) const;
 		virtual void UpdateAction(float deltaTime) override {};
 		virtual void FinalAction() override;
+		virtual void OnHit() override;
+		sf::Texture iconTexture;
+		sf::Sprite iconSprite;
+		std::vector<std::weak_ptr<IGameObject>> createdDecorators;
 	};
 	
 	std::shared_ptr<Bonus> CreateBonusByType(const std::unordered_map<BonusType, std::unique_ptr<BonusFactory>>& bonusFactories, BonusType bonusType);
@@ -55,16 +60,28 @@ namespace Arkanoid
 	{
 	public:
 		IncreasePlatformBonus(const sf::Vector2f position);
-		virtual void Draw(sf::RenderWindow& window) const override;
-		virtual void Update(const float deltaTime) override;
-		virtual BonusType GetType() override{ return BonusType::platformSize; };
-		virtual void LoadState(const std::shared_ptr<ISave> save) override;
+		virtual BonusType GetType() override { return BonusType::PlatformSize; };
 	protected:
-		virtual void OnActivation(std::weak_ptr <GameObject> object) const override;
-		virtual void OnEnding(std::weak_ptr <GameObject> object) const override;
-	private:
-		sf::Texture miniPlatformTexture;
-		sf::Sprite miniPlatformSprite;
+		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
+	};
+
+	class IncreaseBallSpeedBonus : public Bonus
+	{
+	public:
+		IncreaseBallSpeedBonus(const sf::Vector2f position);
+		virtual BonusType GetType() override { return BonusType::BallSpeed; };
+	protected:
+		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
+	};
+
+	class OneHitBlockBonus : public Bonus
+	{
+	public:
+		OneHitBlockBonus(const sf::Vector2f position, std::weak_ptr<IObserver> observer);
+		virtual BonusType GetType() override { return BonusType::OneHitBlock; };
+	protected:
+		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
+		std::weak_ptr<IObserver> observerToAdd;
 	};
 }
 

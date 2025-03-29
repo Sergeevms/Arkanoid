@@ -24,6 +24,11 @@ namespace Arkanoid
 		return sprite.getPosition();
 	}
 
+	void GameObject::SetPosition(const sf::Vector2f newPosition)
+	{
+		sprite.setPosition(newPosition);
+	}
+
 	sf::Vector2f GameObject::HalfSize() const
 	{
 		sf::Vector2f size{ sprite.getGlobalBounds().width, sprite.getGlobalBounds().height };
@@ -56,6 +61,11 @@ namespace Arkanoid
 		}
 	}
 
+	sf::Color GameObject::GetColor()
+	{
+		return sprite.getColor();
+	}
+
 	void GameObjectSave::SaveToFile(std::ofstream& ostream) const
 	{
 		ostream << position.x << " " << position.y << " " << size.x << " " << size.y << " ";
@@ -65,5 +75,4 @@ namespace Arkanoid
 	{
 		istream >> position.x >> position.y >> size.x >> size.y;
 	}
-		
 }

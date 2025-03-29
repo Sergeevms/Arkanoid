@@ -13,7 +13,6 @@ namespace Arkanoid
 		soundPath = resourcesPath + "Sounds\\";
 		fontPath = resourcesPath + "Fonts\\";
 		texturePath = resourcesPath + "Textures\\";
-		//levelConfig = resourcesPath + "winTestlevels.cnfg";
 		levelConfig = resourcesPath + "levels.cnfg";
 		saveFile = "save.dat";
 
@@ -89,11 +88,19 @@ namespace Arkanoid
 		bonusSpeed = 175.f;
 		bonusDuration = 10.f;
 		
-		avaliableBonuses.push_back(BonusType::platformSize);
+		avaliableBonuses.push_back(BonusType::BallSpeed);
+		avaliableBonuses.push_back(BonusType::PlatformSize);
+		avaliableBonuses.push_back(BonusType::OneHitBlock);
 
-		bonusColors[BonusType::platformSize] = sf::Color::Green;
+		bonusAppearanceChance = 10.f;
+		bonusColors[BonusType::PlatformSize] = sf::Color::Green;
+		bonusColors[BonusType::BallSpeed] = sf::Color::Red;
+		bonusColors[BonusType::OneHitBlock] = sf::Color::Yellow;
 		platformBonusFactor = 1.5f;
-		bonusAppearanceChance = 50.f;
+		ballSpeedBonusFactor = 1.2f;
+		acceleratedBallColor = sf::Color::Red;
+		oneHitBlockColor = blockColors[BlockType::Glass] * blockColors[BlockType::Unbreackble];
+		oneHitBlockColor.a = 100;
 	}
 
 	sf::Vector2f GameWorld::ScreenCenter()

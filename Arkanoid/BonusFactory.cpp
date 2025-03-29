@@ -1,6 +1,7 @@
 #include "BonusFactory.h"
 #include "GameWorld.h"
 #include "Randomizer.h"
+#include "IObserver.h"
 #include "Bonus.h"
 
 namespace Arkanoid
@@ -9,8 +10,14 @@ namespace Arkanoid
 	{
 		switch (bonusType)
 		{
-		case BonusType::platformSize:
+		case BonusType::PlatformSize:
 			return std::make_unique<PlatformSizeBonusFactory>();
+			break;
+		case BonusType::BallSpeed:
+			return std::make_unique<BallSpeedBonusFactory>();
+			break;
+		case BonusType::OneHitBlock:
+			return std::make_unique<OneHitBlockBonusFactory>();
 			break;
 		default:
 			return nullptr;
@@ -36,5 +43,20 @@ namespace Arkanoid
 	std::shared_ptr<Bonus> PlatformSizeBonusFactory::CreateBonus(const sf::Vector2f position)
 	{
 		return std::make_shared<IncreasePlatformBonus>(position);
+	}
+
+	std::shared_ptr<Bonus> BallSpeedBonusFactory::CreateBonus(const sf::Vector2f position)
+	{
+		return std::make_shared<IncreaseBallSpeedBonus>(position);
+	}
+
+	std::shared_ptr<Bonus> OneHitBlockBonusFactory::CreateBonus(const sf::Vector2f position)
+	{
+		return std::make_shared<OneHitBlockBonus>(position, observer);
+	}
+
+	void OneHitBlockBonusFactory::SetObserver(std::weak_ptr<IObserver> observer)
+	{
+		OneHitBlockBonusFactory::observer = observer;
 	}
 }

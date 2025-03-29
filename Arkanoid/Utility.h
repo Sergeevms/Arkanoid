@@ -95,4 +95,5 @@ namespace Arkanoid
 
 	sf::Vector2f DirectionVecFromDegree(const float angleDegree);
 	void ChangeSpriteOpacity(sf::Sprite& sprite, const sf::Uint8 alpha);
+	bool CheckRectCollisionWithCircle(const sf::FloatRect platformRect, const sf::Vector2f circlePosition, const float circleRadius);
 }

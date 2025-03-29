@@ -1,20 +1,20 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
-#include "IObserver.h"
+#include "IBallObject.h"
 
 namespace Arkanoid
 {
-	class Ball : public GameObject, public IObservable
+	class Ball : public GameObject, public IBallObject
 	{
 	public:
 		Ball();
 		void Update(const float deltaTime) override;
 		virtual bool GetCollision(Collidable* object) const override;
-		void InvertX();
-		void InvertY();
+		virtual void InvertX() override;
+		virtual void InvertY() override;
 		virtual void Reset() override;
-		void ChangeAngle(float angle);
+		virtual void ChangeAngle(float angle) override;
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
 		virtual void LoadState(const std::shared_ptr<ISave> save) override;

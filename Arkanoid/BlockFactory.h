@@ -17,9 +17,7 @@ namespace Arkanoid
 		static std::unique_ptr<BlockFactory> CreateFactory(const BlockType);
 	protected:
 		int createdBreakableBlocks = 0;
-	};
-
-	
+	};	
 
 	class SmoothDestroyableBlockFactory : public BlockFactory
 	{

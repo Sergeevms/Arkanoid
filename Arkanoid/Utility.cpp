@@ -65,4 +65,24 @@ namespace Arkanoid
         color.a = alpha;
         sprite.setColor(color);
     }
+
+    bool CheckRectCollisionWithCircle(const sf::FloatRect platformRect, const sf::Vector2f circlePosition, const float circleRadius)
+    {
+        auto sqr = [](float x)
+            {
+                return x * x;
+            };
+
+        if (circlePosition.x < platformRect.left)
+        {
+            return sqr(circlePosition.x - platformRect.left) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
+        }
+
+        if (circlePosition.x > platformRect.left + platformRect.width)
+        {
+            return sqr(circlePosition.x - platformRect.left - platformRect.width) + sqr(circlePosition.y - platformRect.top) < sqr(circleRadius);
+        }
+
+        return std::fabs(circlePosition.y - platformRect.top) <= circleRadius;
+    }
 }

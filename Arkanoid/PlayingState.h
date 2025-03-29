@@ -12,8 +12,11 @@
 
 namespace Arkanoid
 {
+    class IGameObject;
     class GameObject;
     class Block;
+    class BlockFactory;
+    class BonusFactory;
     class BlockSave;
     class BonusSave;
     class GameObjectSave;
@@ -21,6 +24,7 @@ namespace Arkanoid
     enum class BlockType;
     enum class BonusType;
     class LevelLoader;
+    class ScoreImage;
 
     class PlayingStateSave : public ISave
     {
@@ -60,22 +64,20 @@ namespace Arkanoid
     private:
         void CreateBlocks(std::shared_ptr<PlayingStateSave> stateSave = nullptr);
         void GetBallInverse(const sf::Vector2f& ballPos, const sf::FloatRect& blockRect, bool& needInverseX, bool& needInverseY);
+        void CountBreakableBlocks();
         template <class T>
         void ClearGameObjects();
         /*Contains game objects. First element always is platform, second - ball*/
-        std::vector<std::shared_ptr<GameObject>> gameObjects;
-        //std::vector<std::shared_ptr<Block>> blocks;
-        std::vector<std::shared_ptr<GameObject>> objectsToDestroy;
+        std::vector<std::shared_ptr<IGameObject>> gameObjects;
+        std::vector<std::shared_ptr<IGameObject>> objectsToDestroy;
         //Delay in seconds before game start from menu or after pause
         float sessionDelay = 0.f;
         std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> blockFactories;
         std::unordered_map<BonusType, std::unique_ptr<BonusFactory>> bonusFactories;
         int breakableBlocksCount = 0;
         int nextLevel = 0;
-        int currentScore = 0;
-        TextStyle scoreTextStyle;
-        ListDrawableText scoreText;
         std::unique_ptr<LevelLoader> levelLoader;
+        std::shared_ptr<ScoreImage> scoreImage;
     };
 
     template <class T>

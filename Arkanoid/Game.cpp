@@ -8,10 +8,11 @@
 #include "RecordsState.h"
 #include "PauseState.h"
 #include "GameWinnedState.h"
+#include "ScoreCounter.h"
 
 namespace Arkanoid
 {
-	Game::Game()
+	Game::Game() : scoreCounter(std::make_shared<ScoreCounter>())
 	{	
 		GameWorld* world = GameWorld::GetWorld();
 		stateStack.emplace_back(std::make_shared<MainMenuState>());
@@ -25,6 +26,11 @@ namespace Arkanoid
 		LoadSound(SoundType::OnLose, "Maodin204__Lose.wav");
 		LoadSound(SoundType::OnBallHit, "Theevilsocks__menu-hover.wav");
 		LoadSound(SoundType::OnSessionStart, "Timgormly__Enter.wav");
+	}
+
+	std::shared_ptr<ScoreCounter> Game::GetScoreCounter()
+	{
+		return scoreCounter;
 	}
 
 	bool Game::IsGameShuttingDown() const
@@ -135,16 +141,6 @@ namespace Arkanoid
 		}
 	}
 
-	void Game::SetLastSessionScore(const int score)
-	{
-		lastSessionScore = score;
-	}
-
-	int Game::GetLastSessionScore() const
-	{
-		return lastSessionScore;
-	}
-
 	BaseState* Game::GetState() const
 	{
 		if (stateStack.empty())
@@ -181,7 +177,7 @@ namespace Arkanoid
 
 	void Game::WinGame()
 	{
-		SwitchToState(GameState::GameWinned);
+		SwitchToState(GameState::Records);
 	}
 
 	void Game::LooseGame()

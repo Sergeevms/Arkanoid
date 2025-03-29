@@ -1,6 +1,6 @@
 #include "Block.h"
-#include "Application.h"
 #include "Utility.h"
+#include "GameWorld.h"
 
 namespace Arkanoid
 {
@@ -15,25 +15,30 @@ namespace Arkanoid
 
 	bool Block::GetCollision(Collidable* object) const
 	{
-		auto gameObject = dynamic_cast<GameObject*>(object);
+		auto gameObject = dynamic_cast<IGameObject*>(object);
 		assert(gameObject);
 		sf::FloatRect objectRect = gameObject->GetRect();
 		return GetRect().intersects(gameObject->GetRect());
 	}
 
-	bool Block::IsBroken()
+	bool Block::IsBroken() const
 	{
 		return hitCount <= 0;
 	}
 
-	bool Block::IsBallReboundable()
+	bool Block::IsBreakable() const
+	{
+		return true;
+	}
+
+	bool Block::IsBallReboundable() const
 	{
 		return true;
 	}
 
 	int Block::GetScore() const
 	{
-		return GameWorld::GetWorld()->blockScore[BlockType::Simple];
+		return GameWorld::GetWorld()->blockScore[GetBlockType()];
 	}
 
 	std::shared_ptr<ISave> Block::SaveState() const
@@ -70,6 +75,11 @@ namespace Arkanoid
 	UnbreakbleBlock::UnbreakbleBlock(const sf::Vector2f& position) : Block(position)
 	{
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Unbreackble]);
+	}
+
+	bool UnbreakbleBlock::IsBreakable() const
+	{
+		return false;
 	}
 
 	void UnbreakbleBlock::OnHit()
@@ -143,11 +153,6 @@ namespace Arkanoid
 		UpdateTimer(deltaTime);
 	}
 
-	int SmoothDestroyableBlock::GetScore() const
-	{
-		return GameWorld::GetWorld()->blockScore[BlockType::SmoothDestroyable];
-	}
-
 	std::shared_ptr<ISave> SmoothDestroyableBlock::SaveState() const
 	{
 		auto blockSave = std::make_shared<SmoothDestroyableBlockSave>();
@@ -210,11 +215,6 @@ namespace Arkanoid
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::MultiHit]);
 	}
 
-	int MultiHitBlock::GetScore() const
-	{
-		return GameWorld::GetWorld()->blockScore[BlockType::MultiHit];
-	}
-
 	void MultiHitBlock::OnHit()
 	{
 		--hitCount;
@@ -230,11 +230,6 @@ namespace Arkanoid
 		sprite.setColor(GameWorld::GetWorld()->blockColors[BlockType::Glass]);
 	}
 
-	int GlassBlock::GetScore() const
-	{
-		return GameWorld::GetWorld()->blockScore[BlockType::Glass];
-	}
-
 	bool GlassBlock::CheckCollision(Collidable* object)
 	{
 		if (GetCollision(object))
@@ -245,7 +240,7 @@ namespace Arkanoid
 		return false;
 	}
 
-	bool GlassBlock::IsBallReboundable()
+	bool GlassBlock::IsBallReboundable() const
 	{
 		return false;
 	}
