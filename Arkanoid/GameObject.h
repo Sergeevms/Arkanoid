@@ -7,7 +7,7 @@
 
 namespace Arkanoid
 {	
-	class GameObject : public virtual IGameObject, public virtual ISaveable, public std::enable_shared_from_this<GameObject>
+	class GameObject : public virtual IGameObject, public virtual ISaveable//, public std::enable_shared_from_this<GameObject>
 	{
 	public:
 		GameObject(const std::string textureName);
@@ -22,8 +22,7 @@ namespace Arkanoid
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
 		virtual void LoadState(const std::shared_ptr<ISave> save) override;
-		virtual sf::Color GetColor() override;		
-		virtual std::shared_ptr<IObservable> GetObservablePtr();
+		virtual sf::Color GetColor() override;
 	protected:
 		sf::Texture texture;
 		sf::Sprite sprite;

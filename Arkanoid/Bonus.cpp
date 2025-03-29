@@ -78,6 +78,15 @@ namespace Arkanoid
 			(delayDuration > 0.f && currentTime <= 0.f));
 	}
 
+	void Bonus::Reset()
+	{
+		if (IsActivated())
+		{
+			currentTime = 0.f;
+			Emit();
+		}
+	}
+
 	void Bonus::Apply(std::shared_ptr<IGameObject>& object)
 	{
 		if (currentTime > 0.f)
@@ -147,7 +156,7 @@ namespace Arkanoid
 	IncreasePlatformBonus::IncreasePlatformBonus(const sf::Vector2f position) : Bonus(position)
 	{
 		auto world = GameWorld::GetWorld();
-		sprite.setColor(world->bonusColors[BonusType::platformSize]);
+		sprite.setColor(world->bonusColors[BonusType::PlatformSize]);
 		LoadTexture("platform.png", iconTexture);
 		iconSprite.setTexture(iconTexture);
 		SetScaleBySize(iconSprite, { world->bonusSize - 2.f, 4.f });
@@ -179,7 +188,7 @@ namespace Arkanoid
 	IncreaseBallSpeedBonus::IncreaseBallSpeedBonus(const sf::Vector2f position) : Bonus(position)
 	{
 		auto world = GameWorld::GetWorld();
-		sprite.setColor(world->bonusColors[BonusType::ballSpeed]);
+		sprite.setColor(world->bonusColors[BonusType::BallSpeed]);
 		LoadTexture("ball.png", iconTexture);
 		iconSprite.setTexture(iconTexture);
 		SetScaleBySize(iconSprite, { world->bonusSize * 0.5f, world->bonusSize * 0.5f });
@@ -199,7 +208,7 @@ namespace Arkanoid
 	OneHitBlockBonus::OneHitBlockBonus(const sf::Vector2f position, std::weak_ptr<IObserver> observer) : Bonus(position), observerToAdd(observer)
 	{
 		auto world = GameWorld::GetWorld();
-		sprite.setColor(world->bonusColors[BonusType::oneHitBlock]);
+		sprite.setColor(world->bonusColors[BonusType::OneHitBlock]);
 		LoadTexture("platform.png", iconTexture);
 		iconSprite.setTexture(iconTexture);
 		iconSprite.setColor(world->oneHitBlockColor);

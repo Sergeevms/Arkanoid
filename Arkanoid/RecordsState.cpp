@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameWorld.h"
 #include "Game.h"
+#include "ScoreCounter.h"
 
 namespace Arkanoid
 {
@@ -48,11 +49,11 @@ namespace Arkanoid
 			NameEnteringWindow* window = dynamic_cast<NameEnteringWindow*>(windows.back().get());
 			if (window)
 			{
-				table.get()->AddRecord(window->GetName(), Application::GetInstance().GetGame()->GetLastSessionScore());
+				table.get()->AddRecord(window->GetName(), Application::GetInstance().GetGame()->GetScoreCounter()->GetCurrentScore());
 			}
 			else
 			{
-				table.get()->AddRecord(GameWorld::GetWorld()->defaultPlayerName, Application::GetInstance().GetGame()->GetLastSessionScore());
+				table.get()->AddRecord(GameWorld::GetWorld()->defaultPlayerName, Application::GetInstance().GetGame()->GetScoreCounter()->GetCurrentScore());
 			}
 			table.get()->Serialize();
 			windows.pop_back();
@@ -167,7 +168,7 @@ namespace Arkanoid
 		headerTexts.reserve(3);
 		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, L"Количество");
 		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, L"очков:");
-		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, std::to_wstring(Application::GetInstance().GetGame()->GetLastSessionScore()));
+		CreateListDrawableTextInVector(headerTexts, &headerTextStyle, std::to_wstring(Application::GetInstance().GetGame()->GetScoreCounter()->GetCurrentScore()));
 
 		rowTextStyle.Init("Roboto-Regular.ttf");
 		textRows.reserve(world->smallRecordsSize);

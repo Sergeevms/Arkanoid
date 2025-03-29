@@ -58,6 +58,12 @@
     <Filter Include="Source Files\GameObjectsRelated\GameObjectsFactories">
       <UniqueIdentifier>{9e2f72a9-1f6c-4be9-9d97-edbb6475f664}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Interfaces and abstract classes">
+      <UniqueIdentifier>{c2ef2c5f-4fda-48d4-ac9a-a13dc8fc804d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interfaces and abstract classes">
+      <UniqueIdentifier>{7d78b36c-9bce-4dec-beee-3b54ed515b76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,12 +117,6 @@
     <ClCompile Include="BaseMenuInputHandler.cpp">
       <Filter>Source Files\InputHandlers</Filter>
     </ClCompile>
-    <ClCompile Include="IListDrawable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NotPlayingWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BaseState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
@@ -129,13 +129,7 @@
     <ClCompile Include="GameWinnedMenu.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="IDelayedAction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LevelLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IObserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScoreCounter.cpp">
@@ -173,6 +167,18 @@
     </ClCompile>
     <ClCompile Include="BonusFactory.cpp">
       <Filter>Source Files\GameObjectsRelated\GameObjectsFactories</Filter>
+    </ClCompile>
+    <ClCompile Include="NotPlayingWindow.cpp">
+      <Filter>Source Files\Interfaces and abstract classes</Filter>
+    </ClCompile>
+    <ClCompile Include="IListDrawable.cpp">
+      <Filter>Source Files\Interfaces and abstract classes</Filter>
+    </ClCompile>
+    <ClCompile Include="IDelayedAction.cpp">
+      <Filter>Source Files\Interfaces and abstract classes</Filter>
+    </ClCompile>
+    <ClCompile Include="IObserver.cpp">
+      <Filter>Source Files\Interfaces and abstract classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,17 +227,11 @@
     <ClInclude Include="RecordTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NotPlayingWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RecordsStateInputHandlers.h">
       <Filter>Header Files\InputHandlers</Filter>
     </ClInclude>
     <ClInclude Include="BaseMenuInputHandler.h">
       <Filter>Header Files\InputHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="IListDrawable.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RecordsStateMenus.h">
       <Filter>Header Files\GameStates</Filter>
@@ -245,16 +245,7 @@
     <ClInclude Include="Randomizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IDelayedAction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IObserver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ISaveable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScoreCounter.h">
@@ -310,6 +301,21 @@
     </ClInclude>
     <ClInclude Include="BonusFactory.h">
       <Filter>Header Files\GameObjectsRelated\GameObjectsFactories</Filter>
+    </ClInclude>
+    <ClInclude Include="IDelayedAction.h">
+      <Filter>Header Files\Interfaces and abstract classes</Filter>
+    </ClInclude>
+    <ClInclude Include="IListDrawable.h">
+      <Filter>Header Files\Interfaces and abstract classes</Filter>
+    </ClInclude>
+    <ClInclude Include="IObserver.h">
+      <Filter>Header Files\Interfaces and abstract classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ISaveable.h">
+      <Filter>Header Files\Interfaces and abstract classes</Filter>
+    </ClInclude>
+    <ClInclude Include="NotPlayingWindow.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

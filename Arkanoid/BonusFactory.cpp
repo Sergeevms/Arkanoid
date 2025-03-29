@@ -10,13 +10,13 @@ namespace Arkanoid
 	{
 		switch (bonusType)
 		{
-		case BonusType::platformSize:
+		case BonusType::PlatformSize:
 			return std::make_unique<PlatformSizeBonusFactory>();
 			break;
-		case BonusType::ballSpeed:
+		case BonusType::BallSpeed:
 			return std::make_unique<BallSpeedBonusFactory>();
 			break;
-		case BonusType::oneHitBlock:
+		case BonusType::OneHitBlock:
 			return std::make_unique<OneHitBlockBonusFactory>();
 			break;
 		default:

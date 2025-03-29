@@ -66,11 +66,6 @@ namespace Arkanoid
 		return sprite.getColor();
 	}
 
-	std::shared_ptr<IObservable> GameObject::GetObservablePtr()
-	{
-		return std::dynamic_pointer_cast<IObservable>(shared_from_this());
-	}
-
 	void GameObjectSave::SaveToFile(std::ofstream& ostream) const
 	{
 		ostream << position.x << " " << position.y << " " << size.x << " " << size.y << " ";

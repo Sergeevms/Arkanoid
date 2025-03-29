@@ -17,7 +17,7 @@ namespace Arkanoid
 		virtual void Draw(sf::RenderWindow&, const sf::Vector2f&, const Orientation, const Alignment) = 0;
 	};
 
-		sf::FloatRect GetListRect(const std::vector<IListDrawable*> itemList, const sf::Vector2f position, const RelativePosition origin,
+	sf::FloatRect GetListRect(const std::vector<IListDrawable*> itemList, const sf::Vector2f position, const RelativePosition origin,
 		const Orientation orientation, const Alignment alignment, const float spacing);
 		
 	void DrawList(sf::RenderWindow& window, const std::vector<IListDrawable*> itemList, const sf::Vector2f position,
@@ -29,6 +29,7 @@ namespace Arkanoid
 		virtual sf::FloatRect GetRect() const override;
 		virtual void Draw(sf::RenderWindow&, const sf::Vector2f&, const Orientation, const Alignment) override;
 		void PresetPosition(const sf::Vector2f&, const Orientation, const Alignment);
+		void PresetPosition(const sf::Vector2f&, RelativePosition relativeOrigin);
 		void Draw(sf::RenderWindow&) const;
 		virtual void SetStyle(const TextStyle* newStyle);
 	};

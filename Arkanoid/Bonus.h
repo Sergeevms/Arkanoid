@@ -9,9 +9,9 @@ namespace Arkanoid
 {
 	enum class BonusType
 	{
-		platformSize,
-		ballSpeed,
-		oneHitBlock
+		PlatformSize,
+		BallSpeed,
+		OneHitBlock
 	};
 	
 	class BonusFactory;
@@ -38,6 +38,7 @@ namespace Arkanoid
 		bool GetCollision(Collidable* object) const override;
 		virtual bool IsActivated() override;
 		virtual bool IsToBeDestroyed() override;
+		virtual void Reset() override;
 		virtual void Apply(std::shared_ptr<IGameObject>& object) override;
 		virtual std::shared_ptr<ISave> SaveState() const override;
 		virtual void SaveState(std::shared_ptr<ISave> save) const override;
@@ -59,7 +60,7 @@ namespace Arkanoid
 	{
 	public:
 		IncreasePlatformBonus(const sf::Vector2f position);
-		virtual BonusType GetType() override { return BonusType::platformSize; };
+		virtual BonusType GetType() override { return BonusType::PlatformSize; };
 	protected:
 		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
 	};
@@ -68,7 +69,7 @@ namespace Arkanoid
 	{
 	public:
 		IncreaseBallSpeedBonus(const sf::Vector2f position);
-		virtual BonusType GetType() override { return BonusType::ballSpeed; };
+		virtual BonusType GetType() override { return BonusType::BallSpeed; };
 	protected:
 		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
 	};
@@ -77,7 +78,7 @@ namespace Arkanoid
 	{
 	public:
 		OneHitBlockBonus(const sf::Vector2f position, std::weak_ptr<IObserver> observer);
-		virtual BonusType GetType() override { return BonusType::oneHitBlock; };
+		virtual BonusType GetType() override { return BonusType::OneHitBlock; };
 	protected:
 		virtual void OnActivation(std::shared_ptr<IGameObject>& object) override;
 		std::weak_ptr<IObserver> observerToAdd;

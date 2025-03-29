@@ -49,7 +49,7 @@ namespace Arkanoid
 			{
 				wrappedObject = wrapped->RemoveDecorator(objectPtr, decoratorRemoved);
 			}
-			return shared_from_this();
+			return std::dynamic_pointer_cast<IGameObject>(shared_from_this());
 		}
 	}
 }

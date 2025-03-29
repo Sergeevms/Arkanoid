@@ -16,6 +16,7 @@ namespace Arkanoid
 
 	enum class GameState;
 	class BaseState;
+	class ScoreCounter;
 
 	class Game
 	{
@@ -37,8 +38,7 @@ namespace Arkanoid
 		void PlaySoundOnSessionStart();
 
 		Game();
-		void SetLastSessionScore(const int score);
-		int GetLastSessionScore() const;
+		std::shared_ptr<ScoreCounter> GetScoreCounter();
 		BaseState* GetState() const;
 
 	private:
@@ -54,5 +54,6 @@ namespace Arkanoid
 		std::vector<std::unique_ptr<sf::SoundBuffer>> soundBuffers;
 		std::unordered_map<SoundType, sf::Sound> sounds;
 		void LoadSound(const SoundType type, std::string fileName);
+		std::shared_ptr<ScoreCounter> scoreCounter;
 	};
 }

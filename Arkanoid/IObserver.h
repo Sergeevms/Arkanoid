@@ -12,10 +12,9 @@ namespace Arkanoid
 		virtual void Notify(std::shared_ptr<IObservable> observable) = 0;
 	};
 
-	class IObservable
+	class IObservable : public std::enable_shared_from_this<IObservable>
 	{
 	public:
-		virtual std::shared_ptr<IObservable> GetObservablePtr() = 0;
 		virtual void AddObserver(std::weak_ptr<IObserver> observer);
 	protected:
 		virtual void Emit();

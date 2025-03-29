@@ -28,7 +28,6 @@ namespace Arkanoid
 		virtual bool IsBreakable() const override;
 		virtual void Update(const float deltaTime) override;
 		virtual void AddObserver(std::weak_ptr<IObserver> observer) override;
-		virtual std::shared_ptr<IObservable> GetObservablePtr() override;
 	protected:
 		bool isBroken = false;
 	};

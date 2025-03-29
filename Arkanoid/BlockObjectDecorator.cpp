@@ -45,9 +45,4 @@ namespace Arkanoid
 	{
 		observers.push_back(observer);
 	}
-
-	std::shared_ptr<IObservable> OneHitBlockDecorator::GetObservablePtr()
-	{
-		return std::dynamic_pointer_cast<IObservable>(shared_from_this());
-	}
 }

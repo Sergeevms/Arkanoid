@@ -10,7 +10,7 @@ namespace Arkanoid
 
 	void IObservable::Emit()
 	{
-		auto self = GetObservablePtr();
+		auto self = shared_from_this();
 		std::for_each(observers.begin(), observers.end(),
 			[self](auto observer)
 			{
